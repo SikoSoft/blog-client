@@ -1,18 +1,30 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <blog-entries :entries="entries" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import { mapActions, mapGetters } from "vuex";
+
+import BlogEntries from "@/components/BlogEntries.vue";
 
 export default {
   name: "home",
-  components: {
-    HelloWorld
+
+  components: { BlogEntries },
+
+  mounted() {
+    this.getEntries();
+  },
+
+  methods: {
+    ...mapActions(["getEntries"])
+  },
+
+  computed: {
+    ...mapGetters(["entries"])
   }
 };
 </script>

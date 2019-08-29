@@ -1,0 +1,30 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background: linear-gradient(to top, #000, rgb(15, 5, 1));
+  font-family: "Pathway Gothic One", sans-serif;
+  color: #efefef;
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 10px;
+}
+
+#nav {
+  display: none;
+  padding: 30px;
+  a {
+    font-weight: bold;
+    color: #2c3e50;
+    &:visited {
+      color: #fff;
+    }
+    &.router-link-exact-active {
+      color: #42b983;
+    }
+  }
+}
