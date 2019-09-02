@@ -1,6 +1,6 @@
 <template>
   <div class="blog-entry">
-    <h3 class="blog-entry__title">
+    <h3 class="blog-entry__title" :class="{'blog-entry__title--clickable': !fullMode}">
       <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
       <template v-else>{{ title }}</template>
     </h3>
@@ -52,11 +52,6 @@ export default {
 .blog-entry {
   margin: 50px 0;
 
-  a {
-    color: yellow;
-    text-decoration: none;
-  }
-
   &__posted-time {
     color: #888;
   }
@@ -65,9 +60,12 @@ export default {
     margin: 0;
     border-left: 5px rgb(50, 105, 50) solid;
     padding: 5px 10px;
-    //box-shadow: 3px 3px 5px 3px #111;
     color: rgb(87, 173, 87);
     font-size: 36px;
+
+    &--clickable {
+      border-left: 5px yellow solid;
+    }
   }
 
   &__body {
