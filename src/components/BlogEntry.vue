@@ -13,7 +13,15 @@
         <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ $strings.readMore }}</router-link>
       </div>
     </div>
-    <div class="blog-entry__foot">{{ foot }}</div>
+    <div class="blog-entry__foot">
+      <div class="blog-entry__tags" v-if="tags">
+        <ul>
+          <li v-for="tag in tags" :key="tag">
+            <router-link :to="`/tag/${tag}`">{{ tag }}</router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,7 +32,7 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 export default {
   name: "blog-entry",
 
-  props: ["id", "title", "body", "created", "fullMode"],
+  props: ["id", "title", "body", "tags", "created", "fullMode"],
 
   computed: {
     foot() {
@@ -41,7 +49,7 @@ export default {
     hasAccess() {},
 
     renderedBody() {
-      console.log("body", this.body);
+      //console.log("body", this.body);
       return new QuillDeltaToHtmlConverter(this.body, {}).convert();
     }
   }

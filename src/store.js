@@ -7,29 +7,32 @@ Vue.use(Vuex);
 
 const mock = new axisMockAdapter(axios);
 
+const entries = [
+  {
+    created: 1564948499,
+    title: "testing 123",
+    body: [
+      { insert: "Fuck off" },
+      { attributes: { header: 1 }, insert: "\n" },
+      { insert: "\n" },
+      { attributes: { italic: true }, insert: "pretentious" },
+      { insert: "\n\n" },
+      { attributes: { underline: true }, insert: "blah" },
+      { insert: "\n" }
+    ],
+    tags: ["testing", "blog", "poop"]
+  }
+].map(entry => {
+  const date = new Date(entry.created * 1000);
+  return {
+    ...entry,
+    id: `${date.getFullYear()}-${date.getMonth() +
+      1}-${date.getDate()}/${entry.title.toLowerCase().replace(/ /g, "-")}`
+  };
+});
+
 mock.onGet("/entries").reply(200, {
-  entries: [
-    {
-      created: 1564948499,
-      title: "testing 123",
-      body: [
-        { insert: "Fuck off" },
-        { attributes: { header: 1 }, insert: "\n" },
-        { insert: "\n" },
-        { attributes: { italic: true }, insert: "pretentious" },
-        { insert: "\n\n" },
-        { attributes: { underline: true }, insert: "blah" },
-        { insert: "\n" }
-      ]
-    }
-  ].map(entry => {
-    const date = new Date(entry.created * 1000);
-    return {
-      ...entry,
-      id: `${date.getFullYear()}-${date.getMonth() +
-        1}-${date.getDate()}/${entry.title.toLowerCase().replace(/ /g, "-")}`
-    };
-  })
+  entries
 });
 
 mock.onGet("/user").reply(200, {
@@ -43,16 +46,26 @@ mock.onGet("/roles").reply(200, {
   ]
 });
 
+mock.onGet(/\/tag\/\w+/).reply(config => {
+  const tag = config.url.replace(/\/tag\//, "");
+  return [200, { entries: entries.filter(entry => entry.tags.includes(tag)) }];
+});
+
 const state = {
   title: "Title",
   user: {},
   roles: [],
-  entries: []
+  entries: [],
+  entriesByTag: {}
 };
 
 const mutations = {
   setEntries: (state, { entries }) => {
     Vue.set(state, "entries", entries);
+  },
+
+  setEntriesByTag: (state, { tag, entries }) => {
+    Vue.set(state.entriesByTag, tag, entries);
   },
 
   setUser: (state, { user }) => {
@@ -65,10 +78,6 @@ const mutations = {
 
   setTitle: (state, { title }) => {
     state.title = title;
-  },
-
-  getEntries: () => {
-    console.log("test");
   }
 };
 
@@ -84,7 +93,7 @@ const actions = {
     }
 
     axios.get("/user").then(response => {
-      console.log(response.data);
+      //console.log(response.data);
       commit("setUser", { user: response.data });
     });
   },
@@ -95,19 +104,27 @@ const actions = {
     }
 
     axios.get("/roles").then(response => {
-      console.log(response.data.roles);
       commit("setRoles", { roles: response.data.roles });
     });
   },
 
-  getEntries({ state }) {
+  getEntries({ state, commit }) {
     if (state.entries.length > 0) {
       return;
     }
 
     axios.get("/entries").then(response => {
-      console.log("fetched entries");
-      Vue.set(state, "entries", response.data.entries);
+      commit("setEntries", { entries: response.data.entries });
+    });
+  },
+
+  getEntriesByTag({ state, commit }, tag) {
+    if (state.entriesByTag[tag]) {
+      return;
+    }
+
+    axios.get(`/tag/${tag}`).then(response => {
+      commit("setEntriesByTag", { tag, entries: response.data.entries });
     });
   },
 
@@ -118,6 +135,7 @@ const actions = {
 
 const getters = {
   entries: state => state.entries,
+  entriesByTag: state => state.entriesByTag,
   entryById: state => id => {
     return state.entries.filter(entry => entry.id === id)[0];
   }

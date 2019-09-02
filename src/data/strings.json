@@ -1,6 +1,7 @@
 {
   "postedFullDate": "posted {date}",
   "readMore": "Read more...",
+  "entriesWithTag": "Entries tagged with {tag}",
   "months": {
     "short": [
       "Jan.",
