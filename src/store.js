@@ -53,6 +53,7 @@ mock.onGet(/\/tag\/\w+/).reply(config => {
 
 const state = {
   title: "Title",
+  breadcrumbs: [],
   user: {},
   roles: [],
   entries: [],
@@ -78,6 +79,10 @@ const mutations = {
 
   setTitle: (state, { title }) => {
     state.title = title;
+  },
+
+  setBreadcrumbs: (state, { breadcrumbs }) => {
+    state.breadcrumbs = breadcrumbs;
   }
 };
 
@@ -130,6 +135,10 @@ const actions = {
 
   setTitle({ commit }, title) {
     commit("setTitle", { title });
+  },
+
+  setBreadcrumbs({ commit }, breadcrumbs) {
+    commit("setBreadcrumbs", { breadcrumbs });
   }
 };
 
@@ -138,7 +147,8 @@ const getters = {
   entriesByTag: state => state.entriesByTag,
   entryById: state => id => {
     return state.entries.filter(entry => entry.id === id)[0];
-  }
+  },
+  breadcrumbs: state => state.breadcrumbs
 };
 
 export default new Vuex.Store({

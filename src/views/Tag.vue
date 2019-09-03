@@ -23,10 +23,14 @@ export default {
 
   mounted() {
     this.getEntriesByTag(this.tag);
+    this.setBreadcrumbs([
+      { url: "/tags", label: this.$strings.tags },
+      { url: `/tag/${this.tag}`, label: this.tag }
+    ]);
   },
 
   methods: {
-    ...mapActions(["getEntriesByTag"])
+    ...mapActions(["getEntriesByTag", "setBreadcrumbs"])
   },
 
   computed: {
