@@ -16,7 +16,7 @@
     <div class="blog-entry__foot">
       <div class="blog-entry__tags" v-if="tags">
         <ul>
-          <li v-for="tag in tags" :key="tag">
+          <li class="blog-entry__tag" v-for="tag in tags" :key="tag">
             <router-link :to="`/tag/${tag}`">{{ tag }}</router-link>
           </li>
         </ul>
@@ -57,6 +57,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/variables.scss";
+
 .blog-entry {
   margin: 50px 0;
 
@@ -85,6 +87,23 @@ export default {
   }
 
   &__foot {
+  }
+
+  &__tags {
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  &__tag {
+    display: inline-block;
+    text-transform: uppercase;
+
+    &:not(:first-child) {
+      margin-left: $space;
+    }
   }
 }
 </style>
