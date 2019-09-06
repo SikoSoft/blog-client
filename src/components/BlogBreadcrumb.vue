@@ -2,11 +2,11 @@
   <nav class="blog-breadcrumb">
     <ul class="blog-breadcrumb__list">
       <li class="blog-breadcrumb__list-item" v-for="link in links" :key="link.label">
-        <a
+        <router-link
           class="blog-breadcrumb__list-item-link"
           :class="{'blog-breadcrumb__list-item-link--disabled': !!!link.href}"
-          :href="link.href"
-        >{{ link.label }}</a>
+          :to="link.href"
+        >{{ link.label }}</router-link>
       </li>
     </ul>
   </nav>
