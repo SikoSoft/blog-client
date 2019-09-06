@@ -22,19 +22,20 @@ export default {
   },
 
   mounted() {
+    console.log("updated");
     this.getEntriesByTag(this.tag);
     this.setBreadcrumbs([
-      { url: "/tags", label: this.$strings.tags },
-      { url: `/tag/${this.tag}`, label: this.tag }
+      { href: "/tags", label: this.$strings.tags },
+      { href: `/tag/${this.tag}`, label: this.tag }
     ]);
-  },
-
-  methods: {
-    ...mapActions(["getEntriesByTag", "setBreadcrumbs"])
   },
 
   computed: {
     ...mapGetters(["entriesByTag"])
+  },
+
+  methods: {
+    ...mapActions(["getEntriesByTag", "setBreadcrumbs"])
   }
 };
 </script>
