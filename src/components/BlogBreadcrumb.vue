@@ -2,7 +2,11 @@
   <nav class="blog-breadcrumb">
     <ul class="blog-breadcrumb__list">
       <li class="blog-breadcrumb__list-item" v-for="link in links" :key="link.label">
-        <a class="blog-breadcrumb__list-item-link" :href="link.href">{{ link.label }}</a>
+        <a
+          class="blog-breadcrumb__list-item-link"
+          :class="{'blog-breadcrumb__list-item-link--disabled': !!!link.href}"
+          :href="link.href"
+        >{{ link.label }}</a>
       </li>
     </ul>
   </nav>
@@ -18,7 +22,13 @@ export default {
     ...mapGetters(["breadcrumbs"]),
 
     links() {
-      return [{ href: "/", label: this.$config.siteName }, ...this.breadcrumbs];
+      return [
+        { href: "/", label: this.$config.siteName },
+        ...this.breadcrumbs
+      ].map(crumb => ({
+        ...crumb,
+        href: crumb.href !== this.$route.path ? crumb.href : ""
+      }));
     }
   }
 };
@@ -35,12 +45,23 @@ export default {
   }
 
   .blog-breadcrumb__list-item {
+    display: inline-block;
+
     &:not(:first-child) {
       margin-left: $space;
+
+      &:before {
+        content: "\0203A";
+        margin: 0 $space;
+      }
     }
   }
 
   .blog-breadcrumb__list-item-link {
+    &--disabled {
+      color: #fff;
+      cursor: text;
+    }
   }
 }
 </style>
