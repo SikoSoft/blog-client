@@ -42,6 +42,12 @@ mock.onGet("/roles").reply(200, {
   ]
 });
 
+mock.onGet("/tags").reply(200, {
+  tags: entries
+    .map(entry => entry.tags)
+    .reduce((accumulator = [], tags) => [accumulator, tags])
+});
+
 mock.onGet(/\/tag\/\w+/).reply(config => {
   const tag = config.url.replace(/\/tag\//, "");
   return [200, { entries: entries.filter(entry => entry.tags.includes(tag)) }];

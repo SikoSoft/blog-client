@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Entry from "./views/Entry.vue";
+import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
 
 Vue.use(Router);
@@ -19,6 +20,11 @@ export default new Router({
       path: "/entry/:date/:title",
       name: "entry",
       component: Entry
+    },
+    {
+      path: "/tags",
+      name: "tags",
+      component: Tags
     },
     {
       path: "/tag/:tag",

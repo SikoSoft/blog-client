@@ -6,12 +6,14 @@ import "./mock.js";
 Vue.use(Vuex);
 
 const state = {
+  config: {},
   title: "Title",
   breadcrumbs: [],
   user: {},
   roles: [],
   entries: [],
-  entriesByTag: {}
+  entriesByTag: {},
+  tags: []
 };
 
 const mutations = {
@@ -37,6 +39,10 @@ const mutations = {
 
   setBreadcrumbs: (state, { breadcrumbs }) => {
     state.breadcrumbs = breadcrumbs;
+  },
+
+  setTags: (state, { tags }) => {
+    Vue.set(state, "tags", tags);
   }
 };
 
@@ -52,7 +58,6 @@ const actions = {
     }
 
     axios.get("/user").then(response => {
-      //console.log(response.data);
       commit("setUser", { user: response.data });
     });
   },
@@ -93,6 +98,16 @@ const actions = {
 
   setBreadcrumbs({ commit }, breadcrumbs) {
     commit("setBreadcrumbs", { breadcrumbs });
+  },
+
+  getTags({ state, commit }) {
+    if (state.tags.length > 0) {
+      return;
+    }
+
+    axios.get("/tags").then(response => {
+      commit("setTags", { tags: response.data.tags });
+    });
   }
 };
 
@@ -102,7 +117,8 @@ const getters = {
   entryById: state => id => {
     return state.entries.filter(entry => entry.id === id)[0];
   },
-  breadcrumbs: state => state.breadcrumbs
+  breadcrumbs: state => state.breadcrumbs,
+  tags: state => state.tags
 };
 
 export default new Vuex.Store({
