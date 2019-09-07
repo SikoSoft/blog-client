@@ -1,5 +1,6 @@
 import axios from "axios";
 import axisMockAdapter from "axios-mock-adapter";
+import { shortDate } from "@/util/time";
 
 const mock = new axisMockAdapter(axios);
 
@@ -17,13 +18,29 @@ const entries = [
       { insert: "\n" }
     ],
     tags: ["testing", "blog", "poop"]
+  },
+  {
+    created: 1567880688,
+    title: "Where have all the free thinkers gone?",
+    body: [
+      {
+        attributes: { italic: true },
+        insert:
+          "The web development industry is full of pretentious nitwits who have never had a single original thought in their entire lives."
+      },
+      { insert: "\n\n" },
+      { attributes: { bold: true }, insert: "It needs to be said." },
+      { insert: "\n" }
+    ],
+    tags: ["webdev", "fuck"]
   }
 ].map(entry => {
-  const date = new Date(entry.created * 1000);
   return {
     ...entry,
-    id: `${date.getFullYear()}-${date.getMonth() +
-      1}-${date.getDate()}/${entry.title.toLowerCase().replace(/ /g, "-")}`
+    id: `${shortDate(entry.created * 1000)}/${entry.title
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^a-z0-9-]/, "")}`
   };
 });
 
