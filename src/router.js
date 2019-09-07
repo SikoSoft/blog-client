@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
+import Entries from "./views/Entries.vue";
 import Entry from "./views/Entry.vue";
 import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
@@ -13,8 +13,8 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: Home
+      name: "entries",
+      component: Entries
     },
     {
       path: "/entry/:date/:title",
