@@ -62,7 +62,7 @@ mock.onGet("/roles").reply(200, {
 mock.onGet("/tags").reply(200, {
   tags: entries
     .map(entry => entry.tags)
-    .reduce((accumulator = [], tags) => [accumulator, tags])
+    .reduce((accumulator = [], tags) => [...accumulator, ...tags])
 });
 
 mock.onGet(/\/tag\/\w+/).reply(config => {
