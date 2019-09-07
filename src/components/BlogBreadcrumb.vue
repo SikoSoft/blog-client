@@ -38,6 +38,10 @@ export default {
 @import "@/styles/variables";
 
 .blog-breadcrumb {
+  padding: $space-xlarge;
+  background-color: #400;
+  font-size: 2rem;
+
   .blog-breadcrumb__list {
     list-style: none;
     margin: 0;
