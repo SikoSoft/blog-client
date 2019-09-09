@@ -49,7 +49,6 @@ export default {
     hasAccess() {},
 
     renderedBody() {
-      //console.log("body", this.body);
       return new QuillDeltaToHtmlConverter(this.body, {}).convert();
     }
   }

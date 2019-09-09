@@ -23,10 +23,17 @@ export default {
 
   mounted() {
     this.getEntries();
+    console.log(this.entry);
+    this.setBreadcrumbs([
+      {
+        href: `/entry/${this.entry.id}`,
+        label: this.entry.title
+      }
+    ]);
   },
 
   methods: {
-    ...mapActions(["getEntries"])
+    ...mapActions(["getEntries", "setBreadcrumbs"])
   }
 };
 </script>
