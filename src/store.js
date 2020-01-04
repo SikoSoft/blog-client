@@ -13,7 +13,9 @@ const state = {
   roles: [],
   entries: [],
   entriesByTag: {},
-  tags: []
+  tags: [],
+  adminPaneIsOpen: false,
+  entryFormIsOpen: false
 };
 
 const mutations = {
@@ -43,6 +45,14 @@ const mutations = {
 
   setTags: (state, { tags }) => {
     Vue.set(state, "tags", tags);
+  },
+
+  setAdminPaneVisibility: (state, { visibility }) => {
+    state.adminPaneIsOpen = visibility;
+  },
+
+  setEntryFormVisibility: (state, { visibility }) => {
+    state.entryFormIsOpen = visibility;
   }
 };
 
@@ -108,6 +118,18 @@ const actions = {
     axios.get("/tags").then(response => {
       commit("setTags", { tags: response.data.tags });
     });
+  },
+
+  showAdminPane({ commit }) {
+    commit("setAdminPaneVisibility", { visibility: true });
+  },
+
+  showEntryForm({ commit }) {
+    commit("setEntryFormVisibility", { visibility: true });
+  },
+
+  hideEntryForm({ commit }) {
+    commit("setEntryFormVisibility", { visibility: false });
   }
 };
 
@@ -118,7 +140,8 @@ const getters = {
     return state.entries.filter(entry => entry.id === id)[0];
   },
   breadcrumbs: state => state.breadcrumbs,
-  tags: state => state.tags
+  tags: state => state.tags,
+  entryFormIsOpen: state => state.entryFormIsOpen
 };
 
 export default new Vuex.Store({

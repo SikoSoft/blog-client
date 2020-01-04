@@ -1,16 +1,18 @@
 <template>
   <div class="blog-header">
+    <blog-admin />
     <blog-breadcrumb />
   </div>
 </template>
 
 <script>
-import BlogBreadcrumb from "./BlogBreadcrumb.vue";
+import BlogAdmin from "@/components/BlogAdmin.vue";
+import BlogBreadcrumb from "@/components/BlogBreadcrumb.vue";
 
 export default {
   name: "blog-header",
 
-  components: { BlogBreadcrumb }
+  components: { BlogAdmin, BlogBreadcrumb }
 };
 </script>
 

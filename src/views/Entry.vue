@@ -23,7 +23,6 @@ export default {
 
   mounted() {
     this.getEntries();
-    console.log(this.entry);
     this.setBreadcrumbs([
       {
         href: `/entry/${this.entry.id}`,
