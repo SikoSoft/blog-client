@@ -37,6 +37,7 @@ export default {
 @import "@/styles/variables";
 
 .blog-admin {
+  position: relative;
   min-height: 3rem;
   padding: $space-xsmall $space-xlarge;
   background-color: #333;
@@ -44,6 +45,27 @@ export default {
 
   &--open {
     height: auto;
+  }
+
+  &__entry-button {
+    position: absolute;
+    top: $space;
+    right: $space;
+    border-radius: 50%;
+    height: $space-xlarge;
+    width: $space-xlarge;
+    outline: none;
+    font-family: impact;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 24px;
+    background-color: $color-button-bg;
+    border: 2px $color-button-border solid;
+    padding: 0;
+    &:hover {
+      background-color: $color-button-over;
+    }
   }
 }
 </style>

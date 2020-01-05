@@ -26,10 +26,18 @@ main {
 
 strong {
   font-weight: bold;
-  color: orange;
+  color: $color-emphasis;
 }
 
 a {
-  color: yellow;
+  color: $color-link-primary;
   text-decoration: none;
+}
+
+input, select, button, textarea {
+  font-size: 18px;
+  border-radius: 4px;
+  padding: 8px;
+  outline: none;
+  border: 2px #000 solid;
 }
