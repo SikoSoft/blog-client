@@ -1,5 +1,6 @@
 <template>
   <div class="blog-header">
+    <blog-hero />
     <blog-admin v-if="user.role === 1" />
     <blog-breadcrumb />
   </div>
@@ -8,13 +9,14 @@
 <script>
 import { mapGetters } from "vuex";
 
+import BlogHero from "@/components/BlogHero.vue";
 import BlogAdmin from "@/components/BlogAdmin.vue";
 import BlogBreadcrumb from "@/components/BlogBreadcrumb.vue";
 
 export default {
   name: "blog-header",
 
-  components: { BlogAdmin, BlogBreadcrumb },
+  components: { BlogHero, BlogAdmin, BlogBreadcrumb },
 
   computed: mapGetters(["user"])
 };
