@@ -66,7 +66,7 @@ export default {
 @import "@/styles/variables.scss";
 
 .blog-entry {
-  margin: 50px 0;
+  margin: 4rem 0 12rem 0;
 
   &--full &__posted-time {
     border-top: 1px $color-text-subtle solid;
