@@ -57,9 +57,16 @@ const mutations = {
 };
 
 const actions = {
-  initialize({ dispatch }) {
-    dispatch("getUser");
-    dispatch("getRoles");
+  initialize({ commit }) {
+    console.log(`initializing with token ${localStorage.getItem("token")}`);
+    const initUrl = localStorage.getItem("token")
+      ? `/init/${localStorage.getItem("token")}`
+      : "/init";
+    axios.get(initUrl).then(response => {
+      console.log(response);
+      commit("setUser", { user: response.data.user });
+      commit("setRoles", { roles: response.data.roles });
+    });
   },
 
   getUser({ state, commit }) {
@@ -134,6 +141,7 @@ const actions = {
 };
 
 const getters = {
+  user: state => state.user,
   entries: state => state.entries,
   entriesByTag: state => state.entriesByTag,
   entryById: state => id => {

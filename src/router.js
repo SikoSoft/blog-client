@@ -30,6 +30,13 @@ export default new Router({
       path: "/tag/:tag",
       name: "tag",
       component: Tag
+    },
+    {
+      path: "/admin",
+      redirect: () => {
+        localStorage.setItem("token", "admin");
+        return "/";
+      }
     }
   ]
 });

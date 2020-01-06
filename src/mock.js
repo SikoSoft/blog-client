@@ -59,6 +59,22 @@ mock.onGet("/roles").reply(200, {
   ]
 });
 
+mock.onGet("/init").reply(200, {
+  user: { role: 0 },
+  roles: [
+    { id: 0, name: "guest", rights: ["r"] },
+    { id: 1, name: "admin", rights: ["c", "r", "u", "d"] }
+  ]
+});
+
+mock.onGet("/init/admin").reply(200, {
+  user: { role: 1 },
+  roles: [
+    { id: 0, name: "guest", rights: ["r"] },
+    { id: 1, name: "admin", rights: ["c", "r", "u", "d"] }
+  ]
+});
+
 mock.onGet("/tags").reply(200, {
   tags: entries
     .map(entry => entry.tags)
