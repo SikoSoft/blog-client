@@ -1,18 +1,23 @@
 <template>
   <nav class="blog-breadcrumb">
     <ul class="blog-breadcrumb__list">
-      <li
-        class="blog-breadcrumb__list-item"
-        v-for="link in links"
-        :key="link.label"
-      >
-        <router-link
-          class="blog-breadcrumb__list-item-link"
-          :class="{ 'blog-breadcrumb__list-item-link--disabled': !!!link.href }"
-          :to="link.href"
-          >{{ link.label }}</router-link
-        >
-      </li>
+      <template v-for="(link, index) in links">
+        <li class="blog-breadcrumb__list-item" :key="`${link.label}-item`">
+          <div
+            v-if="index > 0"
+            class="blog-breadcrumb__list-arrow"
+            :key="`${link.label}-arrow`"
+          ></div>
+          <router-link
+            class="blog-breadcrumb__list-item-link"
+            :class="{
+              'blog-breadcrumb__list-item-link--disabled': !!!link.href
+            }"
+            :to="link.href"
+            >{{ link.label }}</router-link
+          >
+        </li>
+      </template>
     </ul>
   </nav>
 </template>
@@ -43,7 +48,7 @@ export default {
 @import "@/styles/variables";
 
 .blog-breadcrumb {
-  padding: $space-xlarge;
+  padding-left: $space-xlarge;
   background-color: $color-bg-secondary;
   font-size: 2rem;
 
@@ -51,26 +56,40 @@ export default {
     list-style: none;
     margin: 0;
     padding: 0;
+    //background-color: #0f0;
+    overflow: hidden;
+    height: 8rem;
   }
 
   .blog-breadcrumb__list-item {
     display: inline-block;
+    height: 8rem;
+    line-height: 8rem;
 
     &:not(:first-child) {
       margin-left: $space;
-
-      &:before {
-        content: "\0203A";
-        margin: 0 $space;
-      }
     }
   }
 
   .blog-breadcrumb__list-item-link {
+    display: inline-block;
+    height: 8rem;
     &--disabled {
       color: #fff;
       cursor: text;
     }
+  }
+
+  .blog-breadcrumb__list-arrow {
+    float: left;
+    margin-right: 4rem;
+    position: relative;
+    top: 1rem;
+    width: 4rem;
+    height: 4rem;
+    border: 1rem solid;
+    border-color: #777 transparent transparent #777;
+    transform: rotate(135deg);
   }
 }
 </style>
