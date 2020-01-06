@@ -58,12 +58,10 @@ const mutations = {
 
 const actions = {
   initialize({ commit }) {
-    console.log(`initializing with token ${localStorage.getItem("token")}`);
     const initUrl = localStorage.getItem("token")
       ? `/init/${localStorage.getItem("token")}`
       : "/init";
     axios.get(initUrl).then(response => {
-      console.log(response);
       commit("setUser", { user: response.data.user });
       commit("setRoles", { roles: response.data.roles });
     });
@@ -94,8 +92,14 @@ const actions = {
       return;
     }
 
-    axios.get("/entries").then(response => {
-      commit("setEntries", { entries: response.data.entries });
+    return new Promise((resolve, reject) => {
+      axios
+        .get("/entries")
+        .then(response => {
+          commit("setEntries", { entries: response.data.entries });
+          resolve();
+        })
+        .catch(e => reject(e));
     });
   },
 

@@ -14,6 +14,7 @@ export default {
   components: { BlogEntry },
 
   computed: {
+    ...mapGetters(["entries"]),
     entry: function() {
       return this.$store.getters.entryById(
         `${this.$route.params.date}/${this.$route.params.title}`
@@ -21,8 +22,8 @@ export default {
     }
   },
 
-  mounted() {
-    this.getEntries();
+  async mounted() {
+    await this.getEntries();
     this.setBreadcrumbs([
       {
         href: `/entry/${this.entry.id}`,
