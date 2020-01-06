@@ -22,12 +22,12 @@ export default {
   },
 
   mounted() {
-    console.log("updated");
     this.getEntriesByTag(this.tag);
     this.setBreadcrumbs([
       { href: "/tags", label: this.$strings.tags },
       { href: `/tag/${this.tag}`, label: this.tag }
     ]);
+    this.setTitle(this.$strings.entriesWithTag.replace("{tag}", this.tag));
   },
 
   computed: {
@@ -35,7 +35,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getEntriesByTag", "setBreadcrumbs"])
+    ...mapActions(["getEntriesByTag", "setBreadcrumbs", "setTitle"])
   }
 };
 </script>

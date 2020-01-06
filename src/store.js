@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
+import config from "@/data/config.json";
 import "./mock.js";
 
 Vue.use(Vuex);
@@ -37,6 +38,8 @@ const mutations = {
 
   setTitle: (state, { title }) => {
     state.title = title;
+    document.title =
+      title === config.siteName ? title : title + " | " + config.siteName;
   },
 
   setBreadcrumbs: (state, { breadcrumbs }) => {
@@ -59,8 +62,8 @@ const mutations = {
 const actions = {
   initialize({ commit }) {
     const initUrl = localStorage.getItem("token")
-      ? `/init/${localStorage.getItem("token")}`
-      : "/init";
+      ? `${config.init}/${localStorage.getItem("token")}`
+      : config.init;
     axios.get(initUrl).then(response => {
       commit("setUser", { user: response.data.user });
       commit("setRoles", { roles: response.data.roles });
@@ -145,6 +148,7 @@ const actions = {
 };
 
 const getters = {
+  title: state => state.title,
   user: state => state.user,
   entries: state => state.entries,
   entriesByTag: state => state.entriesByTag,

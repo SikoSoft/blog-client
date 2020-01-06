@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import BlogEntry from "@/components/BlogEntry.vue";
 
 export default {
@@ -15,19 +14,7 @@ export default {
 
   props: ["entries"],
 
-  components: { BlogEntry },
-
-  data() {
-    return {
-      title: this.$config.siteName
-    };
-  },
-
-  mounted() {
-    this.setTitle(this.title);
-  },
-
-  methods: mapActions(["setTitle"])
+  components: { BlogEntry }
 };
 </script>
 

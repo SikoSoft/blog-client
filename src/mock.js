@@ -1,4 +1,5 @@
 import axios from "axios";
+import config from "@/data/config.json";
 import axisMockAdapter from "axios-mock-adapter";
 import { shortDate } from "@/util/time";
 
@@ -59,7 +60,7 @@ mock.onGet("/roles").reply(200, {
   ]
 });
 
-mock.onGet("/init").reply(200, {
+mock.onGet(config.init).reply(200, {
   user: { role: 0 },
   roles: [
     { id: 0, name: "guest", rights: ["r"] },
@@ -67,7 +68,7 @@ mock.onGet("/init").reply(200, {
   ]
 });
 
-mock.onGet("/init/admin").reply(200, {
+mock.onGet(`${config.init}/admin`).reply(200, {
   user: { role: 1 },
   roles: [
     { id: 0, name: "guest", rights: ["r"] },

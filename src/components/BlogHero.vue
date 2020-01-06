@@ -1,14 +1,20 @@
 <template>
   <div class="blog-hero">
     <div class="blog-hero__image"></div>
-    <h2 class="blog-hero__heading">{{ $config.siteName }}</h2>
+    <h2 class="blog-hero__heading">{{ title }}</h2>
     <div class="blog-hero__caption"></div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  name: "blog-hero"
+  name: "blog-hero",
+
+  computed: {
+    ...mapGetters(["title"])
+  }
 };
 </script>
 

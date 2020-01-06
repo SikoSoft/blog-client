@@ -30,10 +30,11 @@ export default {
         label: this.entry.title
       }
     ]);
+    this.setTitle(this.entry.title);
   },
 
   methods: {
-    ...mapActions(["getEntries", "setBreadcrumbs"])
+    ...mapActions(["getEntries", "setBreadcrumbs", "setTitle"])
   }
 };
 </script>

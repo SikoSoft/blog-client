@@ -15,12 +15,13 @@ export default {
   components: { BlogEntries },
 
   mounted() {
+    this.setTitle(this.$config.siteName);
     this.getEntries();
     this.setBreadcrumbs([]);
   },
 
   methods: {
-    ...mapActions(["getEntries", "setBreadcrumbs"])
+    ...mapActions(["getEntries", "setBreadcrumbs", "setTitle"])
   },
 
   computed: {

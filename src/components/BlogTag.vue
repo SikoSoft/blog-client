@@ -5,19 +5,13 @@
 </template>
 
 <script>
-import BlogEntry from "@/components/BlogEntry.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "blog-tag",
 
   props: ["tag"],
 
-  components: { BlogEntry },
-
-  data() {
-    return {
-      title: this.$strings.entriesWithTag.replace("{tag}", this.tag)
-    };
-  }
+  computed: mapGetters(["title"])
 };
 </script>
