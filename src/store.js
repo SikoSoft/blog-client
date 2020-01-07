@@ -16,7 +16,8 @@ const state = {
   entriesByTag: {},
   tags: [],
   adminPaneIsOpen: false,
-  entryFormIsOpen: false
+  entryFormIsOpen: false,
+  api: {}
 };
 
 const mutations = {
@@ -34,6 +35,10 @@ const mutations = {
 
   setRoles: (state, { roles }) => {
     Vue.set(state, "roles", roles);
+  },
+
+  setApi: (state, { api }) => {
+    Vue.set(state, "api", api);
   },
 
   setTitle: (state, { title }) => {
@@ -67,26 +72,7 @@ const actions = {
     axios.get(initUrl).then(response => {
       commit("setUser", { user: response.data.user });
       commit("setRoles", { roles: response.data.roles });
-    });
-  },
-
-  getUser({ state, commit }) {
-    if (state.user.role) {
-      return;
-    }
-
-    axios.get("/user").then(response => {
-      commit("setUser", { user: response.data });
-    });
-  },
-
-  getRoles({ state, commit }) {
-    if (state.roles.length > 0) {
-      return;
-    }
-
-    axios.get("/roles").then(response => {
-      commit("setRoles", { roles: response.data.roles });
+      commit("setApi", { api: response.data.api });
     });
   },
 
@@ -97,7 +83,7 @@ const actions = {
 
     return new Promise((resolve, reject) => {
       axios
-        .get("/entries")
+        .get(state.api.getEntries)
         .then(response => {
           commit("setEntries", { entries: response.data.entries });
           resolve();
@@ -111,9 +97,11 @@ const actions = {
       return;
     }
 
-    axios.get(`/tag/${tag}`).then(response => {
-      commit("setEntriesByTag", { tag, entries: response.data.entries });
-    });
+    axios
+      .get(state.api.getEntriesByTag.replace("{tag}", tag))
+      .then(response => {
+        commit("setEntriesByTag", { tag, entries: response.data.entries });
+      });
   },
 
   setTitle({ commit }, title) {
@@ -129,7 +117,7 @@ const actions = {
       return;
     }
 
-    axios.get("/tags").then(response => {
+    axios.get(state.api.getTags).then(response => {
       commit("setTags", { tags: response.data.tags });
     });
   },

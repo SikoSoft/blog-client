@@ -65,7 +65,8 @@ mock.onGet(config.init).reply(200, {
   roles: [
     { id: 0, name: "guest", rights: ["r"] },
     { id: 1, name: "admin", rights: ["c", "r", "u", "d"] }
-  ]
+  ],
+  api: {}
 });
 
 mock.onGet(`${config.init}/admin`).reply(200, {
@@ -73,7 +74,12 @@ mock.onGet(`${config.init}/admin`).reply(200, {
   roles: [
     { id: 0, name: "guest", rights: ["r"] },
     { id: 1, name: "admin", rights: ["c", "r", "u", "d"] }
-  ]
+  ],
+  api: {
+    getEntries: "/entries",
+    getEntriesByTag: "/tags/{tag}",
+    getTags: "/tags"
+  }
 });
 
 mock.onGet("/tags").reply(200, {
