@@ -15,15 +15,7 @@ import { mapActions } from "vuex";
 import BlogHeader from "./components/BlogHeader.vue";
 
 export default {
-  components: { BlogHeader },
-
-  mounted() {
-    this.initialize();
-  },
-
-  methods: {
-    ...mapActions(["initialize"])
-  }
+  components: { BlogHeader }
 };
 </script>
 

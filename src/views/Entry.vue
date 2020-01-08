@@ -22,19 +22,22 @@ export default {
     }
   },
 
-  async mounted() {
-    await this.getEntries();
-    this.setBreadcrumbs([
-      {
-        href: `/entry/${this.entry.id}`,
-        label: this.entry.title
-      }
-    ]);
-    this.setTitle(this.entry.title);
+  mounted() {
+    this.initialize().then(() => {
+      this.getEntries().then(() => {
+        this.setBreadcrumbs([
+          {
+            href: `/entry/${this.entry.id}`,
+            label: this.entry.title
+          }
+        ]);
+        this.setTitle(this.entry.title);
+      });
+    });
   },
 
   methods: {
-    ...mapActions(["getEntries", "setBreadcrumbs", "setTitle"])
+    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"])
   }
 };
 </script>

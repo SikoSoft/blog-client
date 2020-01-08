@@ -16,12 +16,14 @@ export default {
 
   mounted() {
     this.setTitle(this.$config.siteName);
-    this.getEntries();
+    this.initialize().then(() => {
+      this.getEntries();
+    });
     this.setBreadcrumbs([]);
   },
 
   methods: {
-    ...mapActions(["getEntries", "setBreadcrumbs", "setTitle"])
+    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"])
   },
 
   computed: {

@@ -1,12 +1,7 @@
 <template>
   <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
-    <h3
-      class="blog-entry__title"
-      :class="{ 'blog-entry__title--clickable': !fullMode }"
-    >
-      <router-link :to="`/entry/${id}`" v-if="!fullMode">{{
-        title
-      }}</router-link>
+    <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
+      <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
       <template v-else>{{ title }}</template>
     </h3>
     <div class="blog-entry__meta">
@@ -15,9 +10,7 @@
     <div class="blog-entry__body">
       <div class="body-entry__body-content" v-html="renderedBody"></div>
       <div class="blog-entry__body-more">
-        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{
-          $strings.readMore
-        }}</router-link>
+        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ $strings.readMore }}</router-link>
       </div>
     </div>
     <div class="blog-entry__foot">
