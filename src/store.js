@@ -146,6 +146,7 @@ const actions = {
 };
 
 const getters = {
+  api: state => state.api,
   title: state => state.title,
   user: state => state.user,
   entries: state => state.entries,
