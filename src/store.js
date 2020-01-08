@@ -1,12 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
 import config from "@/data/config.json";
-import "./mock.js";
 
 Vue.use(Vuex);
 
 const state = {
+  initialized: false,
   config: {},
   title: "Title",
   breadcrumbs: [],
@@ -39,6 +38,7 @@ const mutations = {
 
   setApi: (state, { api }) => {
     Vue.set(state, "api", api);
+    console.log(state);
   },
 
   setTitle: (state, { title }) => {
@@ -65,15 +65,23 @@ const mutations = {
 };
 
 const actions = {
-  initialize({ commit }) {
+  initialize({ state, commit }) {
     const initUrl = localStorage.getItem("token")
       ? `${config.init}/${localStorage.getItem("token")}`
       : config.init;
-    axios.get(initUrl).then(response => {
-      commit("setUser", { user: response.data.user });
-      commit("setRoles", { roles: response.data.roles });
-      commit("setApi", { api: response.data.api });
-    });
+
+    if (state.initialized) {
+      return;
+    }
+
+    return fetch(initUrl)
+      .then(response => response.json())
+      .then(json => {
+        console.log("json", json);
+        commit("setUser", { user: json.user });
+        commit("setRoles", { roles: json.roles });
+        commit("setApi", { api: json.api });
+      });
   },
 
   getEntries({ state, commit }) {
@@ -82,10 +90,10 @@ const actions = {
     }
 
     return new Promise((resolve, reject) => {
-      axios
-        .get(state.api.getEntries)
-        .then(response => {
-          commit("setEntries", { entries: response.data.entries });
+      fetch(state.api.getEntries)
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntries", { entries: json.entries });
           resolve();
         })
         .catch(e => reject(e));
@@ -97,10 +105,10 @@ const actions = {
       return;
     }
 
-    axios
-      .get(state.api.getEntriesByTag.replace("{tag}", tag))
-      .then(response => {
-        commit("setEntriesByTag", { tag, entries: response.data.entries });
+    fetch(state.api.getEntriesByTag.replace("{tag}", tag))
+      .then(response => response.json())
+      .then(json => {
+        commit("setEntriesByTag", { tag, entries: json.entries });
       });
   },
 
@@ -117,9 +125,11 @@ const actions = {
       return;
     }
 
-    axios.get(state.api.getTags).then(response => {
-      commit("setTags", { tags: response.data.tags });
-    });
+    fetch(state.api.getTags)
+      .then(response => response.json())
+      .then(response => {
+        commit("setTags", { tags: response.data.tags });
+      });
   },
 
   showAdminPane({ commit }) {
