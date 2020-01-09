@@ -14,6 +14,7 @@ export default {
   components: { BlogEntry },
 
   computed: {
+    ...mapGetters(["entries"]),
     entry: function() {
       return this.$store.getters.entryById(
         `${this.$route.params.date}/${this.$route.params.title}`
@@ -22,11 +23,21 @@ export default {
   },
 
   mounted() {
-    this.getEntries();
+    this.initialize().then(() => {
+      this.getEntries().then(() => {
+        this.setBreadcrumbs([
+          {
+            href: `/entry/${this.entry.id}`,
+            label: this.entry.title
+          }
+        ]);
+        this.setTitle(this.entry.title);
+      });
+    });
   },
 
   methods: {
-    ...mapActions(["getEntries"])
+    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"])
   }
 };
 </script>

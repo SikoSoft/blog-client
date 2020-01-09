@@ -1,58 +1,31 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import axios from "axios";
-import axisMockAdapter from "axios-mock-adapter";
+import config from "@/data/config.json";
 
 Vue.use(Vuex);
 
-const mock = new axisMockAdapter(axios);
-
-mock.onGet("/entries").reply(200, {
-  entries: [
-    {
-      created: 1564948499,
-      title: "testing 123",
-      body: [
-        { insert: "Fuck off" },
-        { attributes: { header: 1 }, insert: "\n" },
-        { insert: "\n" },
-        { attributes: { italic: true }, insert: "pretentious" },
-        { insert: "\n\n" },
-        { attributes: { underline: true }, insert: "blah" },
-        { insert: "\n" }
-      ]
-    }
-  ].map(entry => {
-    const date = new Date(entry.created * 1000);
-    return {
-      ...entry,
-      id: `${date.getFullYear()}-${date.getMonth() +
-        1}-${date.getDate()}/${entry.title.toLowerCase().replace(/ /g, "-")}`
-    };
-  })
-});
-
-mock.onGet("/user").reply(200, {
-  role: 1
-});
-
-mock.onGet("/roles").reply(200, {
-  roles: [
-    { id: 0, name: "guest", rights: ["r"] },
-    { id: 1, name: "admin", rights: ["c", "r", "u", "d"] }
-  ]
-});
-
 const state = {
+  initialized: false,
+  config: {},
   title: "Title",
+  breadcrumbs: [],
   user: {},
   roles: [],
-  entries: []
+  entries: [],
+  entriesByTag: {},
+  tags: [],
+  adminPaneIsOpen: false,
+  entryFormIsOpen: false,
+  api: {}
 };
 
 const mutations = {
   setEntries: (state, { entries }) => {
     Vue.set(state, "entries", entries);
+  },
+
+  setEntriesByTag: (state, { tag, entries }) => {
+    Vue.set(state.entriesByTag, tag, entries);
   },
 
   setUser: (state, { user }) => {
@@ -63,64 +36,127 @@ const mutations = {
     Vue.set(state, "roles", roles);
   },
 
-  setTitle: (state, { title }) => {
-    state.title = title;
+  setApi: (state, { api }) => {
+    Vue.set(state, "api", api);
+    console.log(state);
   },
 
-  getEntries: () => {
-    console.log("test");
+  setTitle: (state, { title }) => {
+    state.title = title;
+    document.title =
+      title === config.siteName ? title : title + " | " + config.siteName;
+  },
+
+  setBreadcrumbs: (state, { breadcrumbs }) => {
+    state.breadcrumbs = breadcrumbs;
+  },
+
+  setTags: (state, { tags }) => {
+    Vue.set(state, "tags", tags);
+  },
+
+  setAdminPaneVisibility: (state, { visibility }) => {
+    state.adminPaneIsOpen = visibility;
+  },
+
+  setEntryFormVisibility: (state, { visibility }) => {
+    state.entryFormIsOpen = visibility;
   }
 };
 
 const actions = {
-  initialize({ dispatch }) {
-    dispatch("getUser");
-    dispatch("getRoles");
-  },
+  initialize({ state, commit }) {
+    const initUrl = localStorage.getItem("token")
+      ? `${config.init}/${localStorage.getItem("token")}`
+      : config.init;
 
-  getUser({ state, commit }) {
-    if (state.user.role) {
+    if (state.initialized) {
       return;
     }
 
-    axios.get("/user").then(response => {
-      console.log(response.data);
-      commit("setUser", { user: response.data });
-    });
+    return fetch(initUrl)
+      .then(response => response.json())
+      .then(json => {
+        console.log("json", json);
+        commit("setUser", { user: json.user });
+        commit("setRoles", { roles: json.roles });
+        commit("setApi", { api: json.api });
+      });
   },
 
-  getRoles({ state, commit }) {
-    if (state.roles.length > 0) {
-      return;
-    }
-
-    axios.get("/roles").then(response => {
-      console.log(response.data.roles);
-      commit("setRoles", { roles: response.data.roles });
-    });
-  },
-
-  getEntries({ state }) {
+  getEntries({ state, commit }) {
     if (state.entries.length > 0) {
       return;
     }
 
-    axios.get("/entries").then(response => {
-      console.log("fetched entries");
-      Vue.set(state, "entries", response.data.entries);
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntries)
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntries", { entries: json.entries });
+          resolve();
+        })
+        .catch(e => reject(e));
     });
+  },
+
+  getEntriesByTag({ state, commit }, tag) {
+    if (state.entriesByTag[tag]) {
+      return;
+    }
+
+    fetch(state.api.getEntriesByTag.replace("{tag}", tag))
+      .then(response => response.json())
+      .then(json => {
+        commit("setEntriesByTag", { tag, entries: json.entries });
+      });
   },
 
   setTitle({ commit }, title) {
     commit("setTitle", { title });
+  },
+
+  setBreadcrumbs({ commit }, breadcrumbs) {
+    commit("setBreadcrumbs", { breadcrumbs });
+  },
+
+  getTags({ state, commit }) {
+    if (state.tags.length > 0) {
+      return;
+    }
+
+    fetch(state.api.getTags)
+      .then(response => response.json())
+      .then(response => {
+        commit("setTags", { tags: response.data.tags });
+      });
+  },
+
+  showAdminPane({ commit }) {
+    commit("setAdminPaneVisibility", { visibility: true });
+  },
+
+  showEntryForm({ commit }) {
+    commit("setEntryFormVisibility", { visibility: true });
+  },
+
+  hideEntryForm({ commit }) {
+    commit("setEntryFormVisibility", { visibility: false });
   }
 };
 
 const getters = {
+  api: state => state.api,
+  title: state => state.title,
+  user: state => state.user,
   entries: state => state.entries,
+  entriesByTag: state => state.entriesByTag,
   entryById: state => id => {
     return state.entries.filter(entry => entry.id === id)[0];
-  }
+  },
+  breadcrumbs: state => state.breadcrumbs,
+  tags: state => state.tags,
+  entryFormIsOpen: state => state.entryFormIsOpen
 };
 
 export default new Vuex.Store({

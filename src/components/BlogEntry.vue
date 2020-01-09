@@ -1,6 +1,6 @@
 <template>
-  <div class="blog-entry">
-    <h3 class="blog-entry__title" :class="{'blog-entry__title--clickable': !fullMode}">
+  <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
+    <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
       <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
       <template v-else>{{ title }}</template>
     </h3>
@@ -13,7 +13,15 @@
         <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ $strings.readMore }}</router-link>
       </div>
     </div>
-    <div class="blog-entry__foot">{{ foot }}</div>
+    <div class="blog-entry__foot">
+      <div class="blog-entry__tags" v-if="tags">
+        <ul>
+          <li class="blog-entry__tag" v-for="tag in tags" :key="tag">
+            <router-link :to="`/tag/${tag}`">{{ tag }}</router-link>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,7 +32,7 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 export default {
   name: "blog-entry",
 
-  props: ["id", "title", "body", "created", "fullMode"],
+  props: ["id", "title", "body", "tags", "created", "fullMode"],
 
   computed: {
     foot() {
@@ -41,7 +49,6 @@ export default {
     hasAccess() {},
 
     renderedBody() {
-      console.log("body", this.body);
       return new QuillDeltaToHtmlConverter(this.body, {}).convert();
     }
   }
@@ -49,27 +56,36 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/variables.scss";
+
 .blog-entry {
-  margin: 50px 0;
+  margin: 4rem 0 12rem 0;
+
+  &--full &__posted-time {
+    border-top: 1px $color-text-subtle solid;
+  }
 
   &__posted-time {
-    color: #888;
+    color: $color-text-subtle;
+    border-top: 1px $color-link-primary solid;
+    padding-top: 5px;
+    display: inline-block;
   }
 
   &__title {
     margin: 0;
-    border-left: 5px rgb(50, 105, 50) solid;
+    border-left: 5px $color-text-subtle solid;
     padding: 5px 10px;
-    color: rgb(87, 173, 87);
-    font-size: 36px;
+    color: $color-text-headline;
+    font-size: 48px;
 
     &--clickable {
-      border-left: 5px yellow solid;
+      border-left: 5px $color-link-primary solid;
     }
   }
 
   &__body {
-    padding: 20px 10px 20px 15px;
+    padding: 36px 8px 36px 16px;
 
     &-more {
       margin-top: 10px;
@@ -77,6 +93,23 @@ export default {
   }
 
   &__foot {
+  }
+
+  &__tags {
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  &__tag {
+    display: inline-block;
+    text-transform: uppercase;
+
+    &:not(:first-child) {
+      margin-left: $space;
+    }
   }
 }
 </style>

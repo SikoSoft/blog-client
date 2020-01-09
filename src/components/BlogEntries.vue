@@ -1,14 +1,12 @@
 <template>
   <div class="blog-entries">
-    <h2>{{ title }}</h2>
-    <div class="list">
+    <div class="blog-entries__list">
       <blog-entry v-for="entry in entries" :key="entry.id" v-bind="entry" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 import BlogEntry from "@/components/BlogEntry.vue";
 
 export default {
@@ -16,19 +14,7 @@ export default {
 
   props: ["entries"],
 
-  components: { BlogEntry },
-
-  data() {
-    return {
-      title: this.$config.siteName
-    };
-  },
-
-  mounted() {
-    this.setTitle(this.title);
-  },
-
-  methods: mapActions(["setTitle"])
+  components: { BlogEntry }
 };
 </script>
 

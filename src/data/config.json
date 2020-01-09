@@ -1,4 +1,4 @@
 {
   "siteName": "Random Ramblings",
-  "api": ""
+  "init": "http://localhost:7071/api/init"
 }

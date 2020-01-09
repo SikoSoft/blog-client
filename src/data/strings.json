@@ -1,6 +1,11 @@
 {
   "postedFullDate": "posted {date}",
   "readMore": "Read more...",
+  "entriesWithTag": "Entries tagged with {tag}",
+  "tags": "Tags",
+  "newEntry": "New entry",
+  "postEntry": "Post entry",
+  "updateEntry": "Update entry",
   "months": {
     "short": [
       "Jan.",

@@ -5,7 +5,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
 import { mapActions, mapGetters } from "vuex";
 
 import BlogEntries from "@/components/BlogEntries.vue";
@@ -16,11 +15,15 @@ export default {
   components: { BlogEntries },
 
   mounted() {
-    this.getEntries();
+    this.setTitle(this.$config.siteName);
+    this.initialize().then(() => {
+      this.getEntries();
+    });
+    this.setBreadcrumbs([]);
   },
 
   methods: {
-    ...mapActions(["getEntries"])
+    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"])
   },
 
   computed: {

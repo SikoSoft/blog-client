@@ -1,9 +1,12 @@
+@import "variables";
+
 html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
-  background: linear-gradient(to top, #000, rgb(15, 5, 1));
+  height: 100%;
+  background-color: #000;
   font-family: "Pathway Gothic One", sans-serif;
   color: #efefef;
 }
@@ -11,25 +14,30 @@ body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding: 10px;
 }
 
-#nav {
-  display: none;
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &:visited {
-      color: #fff;
-    }
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+header {
+  margin: 0;
+}
+
+main {
+  padding: $space-xlarge;
+}
+
+strong {
+  font-weight: bold;
+  color: $color-emphasis;
 }
 
 a {
-  color: yellow;
+  color: $color-link-primary;
   text-decoration: none;
+}
+
+input, select, button, textarea {
+  font-size: 18px;
+  border-radius: 4px;
+  padding: 8px;
+  outline: none;
+  border: 2px #000 solid;
 }
