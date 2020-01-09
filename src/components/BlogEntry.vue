@@ -49,7 +49,7 @@ export default {
     hasAccess() {},
 
     renderedBody() {
-      return new QuillDeltaToHtmlConverter(this.body, {}).convert();
+      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {}).convert();
     }
   }
 };

@@ -42,7 +42,7 @@ export default {
 
   methods: {
     submitForm(e) {
-      const bodyDelta = this.editor.getContents();
+      const bodyDelta = this.editor.getContents().ops;
       fetch(this.api.saveEntry, {
         method: "POST",
         body: JSON.stringify({

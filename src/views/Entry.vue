@@ -16,9 +16,7 @@ export default {
   computed: {
     ...mapGetters(["entries"]),
     entry: function() {
-      return this.$store.getters.entryById(
-        `${this.$route.params.date}/${this.$route.params.title}`
-      );
+      return this.$store.getters.entryById(`${this.$route.params.id}`);
     }
   },
 

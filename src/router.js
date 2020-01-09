@@ -16,7 +16,7 @@ export default new Router({
       component: Entries
     },
     {
-      path: "/entry/:date/:title",
+      path: "/entry/:id",
       name: "entry",
       component: Entry
     },

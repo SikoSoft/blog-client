@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const state = {
   initialized: false,
   config: {},
-  title: "Title",
+  title: "",
   breadcrumbs: [],
   user: {},
   roles: [],
