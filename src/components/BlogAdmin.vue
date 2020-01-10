@@ -1,16 +1,8 @@
 <template>
   <div class="blog-admin">
-    <button
-      class="blog-admin__entry-button"
-      @click="showEntryForm"
-      v-if="!entryFormIsOpen"
-    >
-      +
-    </button>
-    <button class="blog-admin__entry-button" @click="hideEntryForm" v-else>
-      -
-    </button>
-    <blog-entry-form v-if="entryFormIsOpen" />
+    <button class="blog-admin__entry-button" @click="showEntryForm" v-if="!entryFormIsOpen">+</button>
+    <button class="blog-admin__entry-button" @click="hideEntryForm" v-else>-</button>
+    <blog-entry-form v-if="entryFormIsOpen" :entry="{ api: { save: api.newEntry } }" />
   </div>
 </template>
 
@@ -24,7 +16,7 @@ export default {
   components: { BlogEntryForm },
 
   computed: {
-    ...mapGetters(["entryFormIsOpen"])
+    ...mapGetters(["entryFormIsOpen", "api"])
   },
 
   methods: {

@@ -6,6 +6,9 @@
   "newEntry": "New entry",
   "postEntry": "Post entry",
   "updateEntry": "Update entry",
+  "editEntry": "Edit entry",
+  "deleteEntry": "Delete entry",
+  "cancel": "Cancel",
   "months": {
     "short": [
       "Jan.",

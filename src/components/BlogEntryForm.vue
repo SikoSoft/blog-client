@@ -1,32 +1,36 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm">
-    <h2>{{ $strings.newEntry }}</h2>
+    <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
+    <h2 v-else>{{ $strings.editEntry }}</h2>
     <input type="text" v-model="title" />
     <div class="blog-entry-form__body">
-      <div id="quilljs-editor"></div>
+      <div :id="editorId"></div>
     </div>
     <button>{{ $strings.postEntry }}</button>
+    <button type="button" v-if="entry.id" @click="deleteEntry">{{ $strings.deleteEntry }}</button>
   </form>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 import Quill from "quill";
 
 export default {
   name: "blog-entry-form",
 
+  props: ["entry"],
+
   data() {
     return {
-      title: "",
-      body: "",
+      title: this.entry.title ? this.entry.title : "",
+      body: this.entry.body ? this.entry.body : "",
       editor: false
     };
   },
 
   mounted() {
-    this.editor = new Quill("#quilljs-editor", {
+    this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
         toolbar: [
@@ -36,15 +40,23 @@ export default {
         ]
       }
     });
+    if (this.body) {
+      this.editor.setContents(JSON.parse(this.body));
+    }
   },
 
-  computed: mapGetters(["api"]),
+  computed: {
+    editorId() {
+      return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
+    }
+  },
 
   methods: {
+    ...mapActions(["getEntries"]),
     submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
-      fetch(this.api.saveEntry, {
-        method: "POST",
+      fetch(this.entry.api.save.href, {
+        method: this.entry.api.save.method,
         body: JSON.stringify({
           title: this.title,
           body: bodyDelta
@@ -55,6 +67,16 @@ export default {
           this.$router.push({ path: `/entry/${json.id}` });
         });
       e.preventDefault();
+    },
+
+    deleteEntry() {
+      fetch(this.entry.api.delete.href, {
+        method: this.entry.api.delete.method
+      })
+        .then(response => response.json())
+        .then(json => {
+          this.getEntries();
+        });
     }
   }
 };

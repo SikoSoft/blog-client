@@ -84,13 +84,13 @@ const actions = {
       });
   },
 
-  getEntries({ state, commit }) {
-    if (state.entries.length > 0) {
+  getEntries({ state, commit }, force) {
+    if (state.entries.length > 0 && !force) {
       return;
     }
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getEntries)
+      fetch(state.api.getEntries.href, { method: state.api.getEntries.method })
         .then(response => response.json())
         .then(json => {
           commit("setEntries", { entries: json.entries });
