@@ -1,11 +1,11 @@
 <template>
   <div class="entry">
-    <blog-entry v-bind="entry" :fullMode="true" />
+    <blog-entry v-if="entry" v-bind="entry" :fullMode="true" />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import BlogEntry from "@/components/BlogEntry.vue";
 
 export default {
@@ -14,7 +14,6 @@ export default {
   components: { BlogEntry },
 
   computed: {
-    ...mapGetters(["entries"]),
     entry: function() {
       return this.$store.getters.entryById(`${this.$route.params.id}`);
     }
