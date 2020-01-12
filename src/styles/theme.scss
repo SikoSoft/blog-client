@@ -34,10 +34,19 @@ a {
   text-decoration: none;
 }
 
-input, select, button, textarea {
+input,
+select,
+button,
+textarea {
   font-size: 18px;
   border-radius: 4px;
   padding: 8px;
   outline: none;
   border: 2px #000 solid;
+  font-family: "Pathway Gothic One", sans-serif;
+}
+
+button {
+  cursor: pointer;
+  text-transform: uppercase;
 }

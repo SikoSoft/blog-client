@@ -110,11 +110,24 @@ export default {
     border-top: 1px $color-text-subtle solid;
   }
 
+  &__meta > div {
+    display: inline-block;
+  }
+
   &__posted-time {
     color: $color-text-subtle;
     border-top: 1px $color-link-primary solid;
     padding-top: 5px;
     display: inline-block;
+  }
+
+  &__edit {
+    button {
+      font-size: 14px;
+      padding: 2px;
+      vertical-align: text-bottom;
+      margin-left: 8px;
+    }
   }
 
   &__title {

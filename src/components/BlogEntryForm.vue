@@ -2,7 +2,7 @@
   <form class="blog-entry-form" @submit="submitForm">
     <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
     <h2 v-else>{{ $strings.editEntry }}</h2>
-    <input type="text" v-model="title" />
+    <input type="text" class="blog-entry-form__title" v-model="title" />
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
     </div>
@@ -101,6 +101,15 @@ export default {
     border: 4px #000 solid;
     background-color: #fff;
     color: #000;
+  }
+
+  .blog-entry-form__title {
+    font-size: 2rem;
+    width: 36rem;
+  }
+
+  .ql-blank {
+    min-height: 5rem;
   }
 }
 </style>
