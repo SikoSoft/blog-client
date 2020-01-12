@@ -38,7 +38,6 @@ const mutations = {
 
   setApi: (state, { api }) => {
     Vue.set(state, "api", api);
-    console.log(state);
   },
 
   setTitle: (state, { title }) => {
@@ -77,7 +76,6 @@ const actions = {
     return fetch(initUrl)
       .then(response => response.json())
       .then(json => {
-        console.log("json", json);
         commit("setUser", { user: json.user });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });

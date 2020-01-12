@@ -6,7 +6,8 @@
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
     </div>
-    <button>{{ $strings.postEntry }}</button>
+    <button v-if="entry.id">{{ $strings.updateEntry }}</button>
+    <button v-else>{{ $strings.postEntry }}</button>
     <button type="button" v-if="entry.id" @click="deleteEntry">{{ $strings.deleteEntry }}</button>
   </form>
 </template>
@@ -64,7 +65,9 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this.$router.push({ path: `/entry/${json.id}` });
+          this.getEntries(true).then(() => {
+            this.$router.push({ path: `/entry/${json.id}` });
+          });
         });
       e.preventDefault();
     },
@@ -75,7 +78,7 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this.getEntries();
+          this.getEntries(true);
         });
     }
   }
