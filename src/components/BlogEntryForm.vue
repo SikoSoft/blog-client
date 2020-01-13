@@ -19,6 +19,7 @@
       <div class="blog-entry-form__tags-new">
         <div class="blog-entry-form__tags-input-wrapper">
           <input
+            ref="tagInput"
             type="text"
             v-model="tag"
             :placeholder="$strings.tags"
@@ -107,7 +108,8 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getEntries"]),
+    ...mapActions(["getEntries", "hideEntryForm"]),
+
     submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
       fetch(this.entry.api.save.href, {
@@ -121,6 +123,7 @@ export default {
         .then(response => response.json())
         .then(json => {
           this.getEntries(true).then(() => {
+            this.hideEntryForm();
             this.$router.push({ path: `/entry/${json.id}` });
           });
         });
@@ -284,11 +287,12 @@ export default {
 
     .blog-entry-form__tags-auto-list {
       position: absolute;
-      top: 100%;
+      top: calc(100% - 8px);
       left: 0;
       list-style: none;
       margin: 0;
       padding: 0;
+      width: 100%;
 
       &-item {
         background-color: #ccc;
