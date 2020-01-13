@@ -103,7 +103,9 @@ const actions = {
       return;
     }
 
-    fetch(state.api.getEntriesByTag.replace("{tag}", tag))
+    fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
+      method: state.api.getEntriesByTag.method
+    })
       .then(response => response.json())
       .then(json => {
         commit("setEntriesByTag", { tag, entries: json.entries });
@@ -123,10 +125,10 @@ const actions = {
       return;
     }
 
-    fetch(state.api.getTags)
+    fetch(state.api.getTags.href, { method: state.api.getTags.method })
       .then(response => response.json())
-      .then(response => {
-        commit("setTags", { tags: response.data.tags });
+      .then(json => {
+        commit("setTags", { tags: json.tags });
       });
   },
 

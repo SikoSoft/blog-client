@@ -14,8 +14,11 @@ export default {
   components: { BlogTags },
 
   mounted() {
-    this.getTags();
-    this.setBreadcrumbs([{ href: "/tags", label: this.$strings.tags }]);
+    this.initialize().then(() => {
+      this.getTags();
+      this.setTitle(this.$strings.tags);
+      this.setBreadcrumbs([{ href: "/tags", label: this.$strings.tags }]);
+    });
   },
 
   computed: {
@@ -23,7 +26,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setBreadcrumbs", "getTags"])
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "getTags"])
   }
 };
 </script>
