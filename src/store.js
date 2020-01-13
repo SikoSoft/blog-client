@@ -103,6 +103,12 @@ const actions = {
       return;
     }
 
+    commit("setEntriesByTag", {
+      tag,
+      entries: state.entries.filter(entry => entry.tags.includes(tag))
+    });
+
+    /*
     fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
       method: state.api.getEntriesByTag.method
     })
@@ -110,6 +116,7 @@ const actions = {
       .then(json => {
         commit("setEntriesByTag", { tag, entries: json.entries });
       });
+      */
   },
 
   setTitle({ commit }, title) {
