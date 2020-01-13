@@ -7,7 +7,7 @@
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div class="blog-entry__edit">
+        <div class="blog-entry__edit" v-if="rights.includes('u')">
           <button @click="edit">{{ $strings.editEntry }}</button>
         </div>
       </div>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
@@ -62,6 +63,8 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["rights"]),
+
     entry() {
       return {
         id: this.id,
@@ -84,8 +87,6 @@ export default {
         longDate(this.created * 1000)
       );
     },
-
-    hasAccess() {},
 
     renderedBody() {
       return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {}).convert();

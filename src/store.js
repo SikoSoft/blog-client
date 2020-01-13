@@ -154,7 +154,12 @@ const getters = {
   },
   breadcrumbs: state => state.breadcrumbs,
   tags: state => state.tags,
-  entryFormIsOpen: state => state.entryFormIsOpen
+  entryFormIsOpen: state => state.entryFormIsOpen,
+  rights: state => {
+    return state.roles && state.user.role
+      ? state.roles.filter(role => role.id === state.user.role)[0].rights
+      : [];
+  }
 };
 
 export default new Vuex.Store({

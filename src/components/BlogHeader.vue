@@ -1,7 +1,7 @@
 <template>
   <div class="blog-header">
     <blog-hero />
-    <blog-admin v-if="user.role === 1" />
+    <blog-admin v-if="rights.includes('c')" />
     <blog-breadcrumb />
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
 
   components: { BlogHero, BlogAdmin, BlogBreadcrumb },
 
-  computed: mapGetters(["user"])
+  computed: mapGetters(["rights"])
 };
 </script>
 
