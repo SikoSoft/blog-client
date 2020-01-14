@@ -1,7 +1,7 @@
 <template>
   <div class="blog-hero">
-    <div class="blog-hero__image"></div>
-    <h2 class="blog-hero__heading">{{ title }}</h2>
+    <div class="blog-hero__image" :style="{ 'background-size': `auto ${imgSize}px` }"></div>
+    <h2 class="blog-hero__heading" :style="{ opacity: headingOpacity }">{{ title }}</h2>
     <div class="blog-hero__caption"></div>
   </div>
 </template>
@@ -12,8 +12,27 @@ import { mapGetters } from "vuex";
 export default {
   name: "blog-hero",
 
+  data() {
+    return {
+      imgSize: 1000,
+      headingOpacity: 1
+    };
+  },
+
   computed: {
     ...mapGetters(["title"])
+  },
+
+  mounted() {
+    window.addEventListener("scroll", () => {
+      const height = 400;
+      const dif = window.pageYOffset < height ? height - window.pageYOffset : 0;
+      const difRatio = dif / height;
+      const imgMin = 1000;
+      const imgMax = 1200;
+      this.imgSize = imgMin + (imgMax - imgMin) * ((height - dif) / height);
+      this.headingOpacity = difRatio;
+    });
   }
 };
 </script>
