@@ -42,6 +42,7 @@ export default {
     top: 30%;
     left: 2rem;
     font-size: 8rem;
+    text-shadow: 0 0 10px #000;
   }
 }
 </style>
