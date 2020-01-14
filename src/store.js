@@ -21,6 +21,10 @@ const state = {
 };
 
 const mutations = {
+  setInitialized: state => {
+    state.initialized = true;
+  },
+
   setEntries: (state, { entries }) => {
     Vue.set(state, "entries", entries);
   },
@@ -78,7 +82,7 @@ const actions = {
     }
 
     if (state.initialized) {
-      return;
+      return Promise.resolve();
     }
 
     return fetch(config.init, { headers: getters.headers })
@@ -87,6 +91,7 @@ const actions = {
         commit("setUser", { user: json.user });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
+        commit("setInitialized");
       });
   },
 
