@@ -49,14 +49,20 @@ export default {
 
 .blog-breadcrumb {
   padding-left: $space-xlarge;
-  background-color: $color-bg-secondary;
+  background: linear-gradient(
+    to bottom,
+    $color-bg-secondary,
+    5%,
+    #303030,
+    95%,
+    $color-bg-secondary
+  );
   font-size: 2rem;
 
   .blog-breadcrumb__list {
     list-style: none;
     margin: 0;
     padding: 0;
-    //background-color: #0f0;
     overflow: hidden;
     height: 8rem;
   }

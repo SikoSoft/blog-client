@@ -31,13 +31,27 @@ strong {
 
 a {
   color: $color-link-primary;
+  text-shadow: 0 0 5px rgba(255, 255, 128, 0.3);
   text-decoration: none;
+  transition: all 0.2s;
+  &:hover {
+    color: $color-link-hover;
+  }
 }
 
-input, select, button, textarea {
+input,
+select,
+button,
+textarea {
   font-size: 18px;
   border-radius: 4px;
   padding: 8px;
   outline: none;
   border: 2px #000 solid;
+  font-family: "Pathway Gothic One", sans-serif;
+}
+
+button {
+  cursor: pointer;
+  text-transform: uppercase;
 }

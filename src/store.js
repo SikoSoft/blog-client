@@ -7,7 +7,7 @@ Vue.use(Vuex);
 const state = {
   initialized: false,
   config: {},
-  title: "Title",
+  title: "",
   breadcrumbs: [],
   user: {},
   roles: [],
@@ -16,10 +16,15 @@ const state = {
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
-  api: {}
+  api: {},
+  token: ""
 };
 
 const mutations = {
+  setInitialized: state => {
+    state.initialized = true;
+  },
+
   setEntries: (state, { entries }) => {
     Vue.set(state, "entries", entries);
   },
@@ -38,7 +43,10 @@ const mutations = {
 
   setApi: (state, { api }) => {
     Vue.set(state, "api", api);
-    console.log(state);
+  },
+
+  setToken: (state, { token }) => {
+    state.token = token;
   },
 
   setTitle: (state, { title }) => {
@@ -65,32 +73,38 @@ const mutations = {
 };
 
 const actions = {
-  initialize({ state, commit }) {
-    const initUrl = localStorage.getItem("token")
-      ? `${config.init}/${localStorage.getItem("token")}`
-      : config.init;
-
-    if (state.initialized) {
-      return;
+  initialize({ state, commit, getters }) {
+    const token = localStorage.getItem("token")
+      ? localStorage.getItem("token")
+      : "";
+    if (token) {
+      commit("setToken", { token });
     }
 
-    return fetch(initUrl)
+    if (state.initialized) {
+      return Promise.resolve();
+    }
+
+    return fetch(config.init, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
-        console.log("json", json);
         commit("setUser", { user: json.user });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
+        commit("setInitialized");
       });
   },
 
-  getEntries({ state, commit }) {
-    if (state.entries.length > 0) {
+  getEntries({ state, commit, getters }, force) {
+    if (state.entries.length > 0 && !force) {
       return;
     }
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getEntries)
+      fetch(state.api.getEntries.href, {
+        method: state.api.getEntries.method,
+        headers: getters.headers
+      })
         .then(response => response.json())
         .then(json => {
           commit("setEntries", { entries: json.entries });
@@ -105,11 +119,20 @@ const actions = {
       return;
     }
 
-    fetch(state.api.getEntriesByTag.replace("{tag}", tag))
+    commit("setEntriesByTag", {
+      tag,
+      entries: state.entries.filter(entry => entry.tags.includes(tag))
+    });
+
+    /*
+    fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
+      method: state.api.getEntriesByTag.method
+    })
       .then(response => response.json())
       .then(json => {
         commit("setEntriesByTag", { tag, entries: json.entries });
       });
+      */
   },
 
   setTitle({ commit }, title) {
@@ -120,15 +143,18 @@ const actions = {
     commit("setBreadcrumbs", { breadcrumbs });
   },
 
-  getTags({ state, commit }) {
+  getTags({ state, commit, getters }) {
     if (state.tags.length > 0) {
       return;
     }
 
-    fetch(state.api.getTags)
+    fetch(state.api.getTags.href, {
+      method: state.api.getTags.method,
+      headers: getters.headers
+    })
       .then(response => response.json())
-      .then(response => {
-        commit("setTags", { tags: response.data.tags });
+      .then(json => {
+        commit("setTags", { tags: json.tags });
       });
   },
 
@@ -146,6 +172,7 @@ const actions = {
 };
 
 const getters = {
+  headers: state => ({ "x-functions-key": state.token }),
   api: state => state.api,
   title: state => state.title,
   user: state => state.user,
@@ -156,7 +183,12 @@ const getters = {
   },
   breadcrumbs: state => state.breadcrumbs,
   tags: state => state.tags,
-  entryFormIsOpen: state => state.entryFormIsOpen
+  entryFormIsOpen: state => state.entryFormIsOpen,
+  rights: state => {
+    return state.roles && state.user.role
+      ? state.roles.filter(role => role.id === state.user.role)[0].rights
+      : [];
+  }
 };
 
 export default new Vuex.Store({

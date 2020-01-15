@@ -22,12 +22,20 @@ export default {
   },
 
   mounted() {
-    this.getEntriesByTag(this.tag);
-    this.setBreadcrumbs([
-      { href: "/tags", label: this.$strings.tags },
-      { href: `/tag/${this.tag}`, label: this.tag }
-    ]);
-    this.setTitle(this.$strings.entriesWithTag.replace("{tag}", this.tag));
+    this.initialize().then(() => {
+      this.getEntries().then(() => {
+        this.getEntriesByTag(this.tag);
+        this.setBreadcrumbs([
+          { href: "/tags", label: this.$strings.tags },
+          { href: `/tag/${this.tag}`, label: this.tag }
+        ]);
+        this.setTitle(this.$strings.entriesWithTag.replace("{tag}", this.tag));
+      });
+    });
+  },
+
+  updated() {
+    console.log("updated");
   },
 
   computed: {
@@ -35,7 +43,13 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getEntriesByTag", "setBreadcrumbs", "setTitle"])
+    ...mapActions([
+      "initialize",
+      "getEntries",
+      "getEntriesByTag",
+      "setBreadcrumbs",
+      "setTitle"
+    ])
   }
 };
 </script>
