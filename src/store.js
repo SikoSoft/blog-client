@@ -88,7 +88,7 @@ const actions = {
     return fetch(config.init, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
-        commit("setUser", { user: json.user });
+        commit("setUser", { user: { ...json.user, role: token ? 2 : 1 } });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
         commit("setInitialized");
