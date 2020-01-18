@@ -3,7 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import strings from "./data/strings.json";
-import config from "./data/config.json";
+import config from "./config.js";
 
 Vue.config.productionTip = false;
 

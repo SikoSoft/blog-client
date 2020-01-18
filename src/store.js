@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import config from "@/data/config.json";
+import config from "@/config.js";
 
 Vue.use(Vuex);
 
