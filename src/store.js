@@ -6,6 +6,7 @@ Vue.use(Vuex);
 
 const state = {
   initialized: false,
+  isLoading: true,
   config: {},
   title: "",
   breadcrumbs: [],
@@ -23,6 +24,10 @@ const state = {
 const mutations = {
   setInitialized: state => {
     state.initialized = true;
+  },
+
+  setLoading: (state, { loading }) => {
+    state.isLoading = loading;
   },
 
   setEntries: (state, { entries }) => {
@@ -85,6 +90,8 @@ const actions = {
       return Promise.resolve();
     }
 
+    commit("setLoading", { loading: true });
+
     return fetch(config.init, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
@@ -92,6 +99,7 @@ const actions = {
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
         commit("setInitialized");
+        commit("setLoading", { loading: false });
       });
   },
 
@@ -173,6 +181,7 @@ const actions = {
 
 const getters = {
   headers: state => ({ "x-functions-key": state.token }),
+  isLoading: state => state.isLoading,
   api: state => state.api,
   title: state => state.title,
   user: state => state.user,

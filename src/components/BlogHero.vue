@@ -57,6 +57,7 @@ export default {
 
   &__heading {
     position: absolute;
+    max-width: 90vw;
     margin: 0;
     top: 20%;
     left: 2rem;
