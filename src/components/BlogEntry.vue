@@ -146,6 +146,10 @@ export default {
   &__body {
     padding: 36px 8px 36px 16px;
 
+    img {
+      max-width: 100%;
+    }
+
     &-more {
       margin-top: 10px;
     }
