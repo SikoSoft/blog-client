@@ -108,6 +108,8 @@ const actions = {
       return;
     }
 
+    commit("setLoading", { loading: true });
+
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntries.href, {
         method: state.api.getEntries.method,
@@ -116,6 +118,7 @@ const actions = {
         .then(response => response.json())
         .then(json => {
           commit("setEntries", { entries: json.entries });
+          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
