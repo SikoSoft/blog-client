@@ -15,7 +15,19 @@ import { mapActions } from "vuex";
 import BlogHeader from "./components/BlogHeader.vue";
 
 export default {
-  components: { BlogHeader }
+  components: { BlogHeader },
+
+  mounted() {
+    this.$router.afterEach(() => {
+      window.scroll({
+        top:
+          document.getElementById("blog-breadcrumb").getBoundingClientRect()
+            .top + window.scrollY,
+        left: 0,
+        behavior: "smooth"
+      });
+    });
+  }
 };
 </script>
 
