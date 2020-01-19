@@ -184,5 +184,10 @@ export default {
       margin-left: $space;
     }
   }
+
+  .ql-video {
+    width: 100%;
+    height: calc(100vw * 0.5);
+  }
 }
 </style>
