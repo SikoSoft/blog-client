@@ -1,11 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import config from "@/data/config.json";
+import config from "@/config.js";
 
 Vue.use(Vuex);
 
 const state = {
   initialized: false,
+  isLoading: true,
   config: {},
   title: "",
   breadcrumbs: [],
@@ -23,6 +24,10 @@ const state = {
 const mutations = {
   setInitialized: state => {
     state.initialized = true;
+  },
+
+  setLoading: (state, { loading }) => {
+    state.isLoading = loading;
   },
 
   setEntries: (state, { entries }) => {
@@ -85,13 +90,16 @@ const actions = {
       return Promise.resolve();
     }
 
+    commit("setLoading", { loading: true });
+
     return fetch(config.init, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
-        commit("setUser", { user: json.user });
+        commit("setUser", { user: { ...json.user, role: token ? 2 : 1 } });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
         commit("setInitialized");
+        commit("setLoading", { loading: false });
       });
   },
 
@@ -99,6 +107,8 @@ const actions = {
     if (state.entries.length > 0 && !force) {
       return;
     }
+
+    commit("setLoading", { loading: true });
 
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntries.href, {
@@ -108,6 +118,7 @@ const actions = {
         .then(response => response.json())
         .then(json => {
           commit("setEntries", { entries: json.entries });
+          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
@@ -173,6 +184,7 @@ const actions = {
 
 const getters = {
   headers: state => ({ "x-functions-key": state.token }),
+  isLoading: state => state.isLoading,
   api: state => state.api,
   title: state => state.title,
   user: state => state.user,

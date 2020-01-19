@@ -91,7 +91,13 @@ export default {
         toolbar: [
           [{ header: [1, 2, false] }],
           ["bold", "italic", "underline"],
-          ["image", "code-block"]
+          [
+            { list: "ordered" },
+            { list: "bullet" },
+            { indent: "-1" },
+            { indent: "+1" }
+          ],
+          ["link", "image", "video", "code-block"]
         ]
       }
     });
@@ -101,7 +107,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api"]),
+    ...mapGetters(["api", "headers"]),
     editorId() {
       return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
     }
@@ -114,6 +120,7 @@ export default {
       const bodyDelta = this.editor.getContents().ops;
       fetch(this.entry.api.save.href, {
         method: this.entry.api.save.method,
+        headers: this.headers,
         body: JSON.stringify({
           title: this.title,
           body: bodyDelta,
@@ -132,7 +139,8 @@ export default {
 
     deleteEntry() {
       fetch(this.entry.api.delete.href, {
-        method: this.entry.api.delete.method
+        method: this.entry.api.delete.method,
+        headers: this.headers
       })
         .then(response => response.json())
         .then(json => {
@@ -226,7 +234,8 @@ export default {
 
     getTags() {
       fetch(`${this.api.getTags.href}?tag=${encodeURIComponent(this.tag)}`, {
-        method: this.api.getTags.method
+        method: this.api.getTags.method,
+        headers: this.headers
       })
         .then(response => response.json())
         .then(json => {

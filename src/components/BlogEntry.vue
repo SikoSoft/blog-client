@@ -2,7 +2,11 @@
   <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
     <template v-if="!editMode">
       <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
-        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
+        <router-link :to="`/entry/${id}`" v-if="!fullMode">
+          {{
+          title
+          }}
+        </router-link>
         <template v-else>{{ title }}</template>
       </h3>
       <div class="blog-entry__meta">
@@ -14,7 +18,11 @@
       <div class="blog-entry__body">
         <div class="body-entry__body-content" v-html="renderedBody"></div>
         <div class="blog-entry__body-more">
-          <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ $strings.readMore }}</router-link>
+          <router-link :to="`/entry/${id}`" v-if="!fullMode">
+            {{
+            $strings.readMore
+            }}
+          </router-link>
         </div>
       </div>
       <div class="blog-entry__foot">
@@ -120,6 +128,7 @@ export default {
     border-top: 1px $color-link-primary solid;
     padding-top: 5px;
     display: inline-block;
+    font-size: 1rem;
   }
 
   &__edit {
@@ -145,6 +154,11 @@ export default {
 
   &__body {
     padding: 36px 8px 36px 16px;
+    font-size: 1.5rem;
+
+    img {
+      max-width: 100%;
+    }
 
     &-more {
       margin-top: 10px;

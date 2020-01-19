@@ -3,7 +3,7 @@ import { pad } from "@/util/number";
 
 export function longDate(time) {
   const date = new Date(time);
-  return `${date.getHours()}:${date.getMinutes()}, ${
+  return `${date.getHours()}:${pad(date.getMinutes())}, ${
     strings.months.long[date.getMonth()]
   } ${date.getDate()}, ${date.getFullYear()}`;
 }

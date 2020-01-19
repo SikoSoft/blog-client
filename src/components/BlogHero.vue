@@ -49,7 +49,7 @@ export default {
     opacity: 0.2;
     height: 100%;
     width: 100%;
-    background-image: url("http://www.sikosoft.com/img/pepperSpray.png");
+    background-image: url("http://sikosoft.com/img/pepperSpray.png");
     background-position: right top;
     background-size: auto 1000px;
     background-repeat: no-repeat;
@@ -57,10 +57,16 @@ export default {
 
   &__heading {
     position: absolute;
+    max-width: 90vw;
     margin: 0;
-    top: 30%;
+    top: 20%;
     left: 2rem;
-    font-size: 8rem;
+    font-size: 6rem;
+    line-height: 7rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     text-shadow: 0 0 10px #000;
   }
 }

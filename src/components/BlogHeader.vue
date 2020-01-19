@@ -2,7 +2,7 @@
   <div class="blog-header">
     <blog-hero />
     <blog-admin v-if="rights.includes('c')" />
-    <blog-breadcrumb />
+    <blog-breadcrumb id="blog-breadcrumb" />
   </div>
 </template>
 
