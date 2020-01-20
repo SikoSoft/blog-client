@@ -61,6 +61,8 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
+import imageHandler from "@/util/imageHandler";
+
 import Quill from "quill";
 
 export default {
@@ -104,6 +106,13 @@ export default {
     if (this.body) {
       this.editor.setContents(JSON.parse(this.body));
     }
+    imageHandler.setup({
+      editor: this.editor,
+      uploadImage: this.api.uploadImage
+    });
+    this.editor.getModule("toolbar").addHandler("image", () => {
+      imageHandler.selectLocalImage();
+    });
   },
 
   computed: {
