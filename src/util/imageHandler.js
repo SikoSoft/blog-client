@@ -1,10 +1,12 @@
-module.exports = {
+export default {
   saveToServer(file) {
     const fd = new FormData();
     fd.append("image", file);
     const xhr = new XMLHttpRequest();
-    console.log("uploadImage", this.uploadImage);
     xhr.open(this.uploadImage.method, this.uploadImage.href, true);
+    Object.keys(this.headers).forEach(header => {
+      xhr.setRequestHeader(header, this.headers[header]);
+    });
     xhr.onload = () => {
       if (xhr.status === 200) {
         const url = JSON.parse(xhr.responseText).url;
@@ -31,8 +33,9 @@ module.exports = {
     };
   },
 
-  setup({ editor, uploadImage }) {
+  setup({ editor, uploadImage, headers }) {
     this.editor = editor;
     this.uploadImage = uploadImage;
+    this.headers = headers;
   }
 };

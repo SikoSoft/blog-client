@@ -27,8 +27,13 @@
             @focus="tagsFocus"
             @blur="tagsBlur"
           />
-          <button type="button" v-if="tagIsValid(tag)" @click="addTag">+</button>
-          <ul class="blog-entry-form__tags-auto-list" v-if="tagsFocused && autoTags.length">
+          <button type="button" v-if="tagIsValid(tag)" @click="addTag">
+            +
+          </button>
+          <ul
+            class="blog-entry-form__tags-auto-list"
+            v-if="tagsFocused && autoTags.length"
+          >
             <li
               class="blog-entry-form__tags-auto-list-item"
               :class="{
@@ -39,21 +44,27 @@
               :key="`autoTag-${autoTag}`"
               @mousedown="tag = autoTag"
               @mouseover="autoTagSelected = autoTag"
-            >{{ autoTag }}</li>
+            >
+              {{ autoTag }}
+            </li>
           </ul>
         </div>
       </div>
       <ul class="blog-entry-form__tags-list">
         <li v-for="tag in tags" :key="`tags-${tag}`">
           {{ tag }}
-          <span class="blog-entry-form__tags-remove" @click="deleteTag(tag)">X</span>
+          <span class="blog-entry-form__tags-remove" @click="deleteTag(tag)"
+            >X</span
+          >
         </li>
       </ul>
     </div>
     <div class="blog-entry-form__buttons">
       <button v-if="entry.id">{{ $strings.updateEntry }}</button>
       <button v-else>{{ $strings.postEntry }}</button>
-      <button type="button" v-if="entry.id" @click="deleteEntry">{{ $strings.deleteEntry }}</button>
+      <button type="button" v-if="entry.id" @click="deleteEntry">
+        {{ $strings.deleteEntry }}
+      </button>
     </div>
   </form>
 </template>
@@ -108,7 +119,8 @@ export default {
     }
     imageHandler.setup({
       editor: this.editor,
-      uploadImage: this.api.uploadImage
+      uploadImage: this.api.uploadImage,
+      headers: this.headers
     });
     this.editor.getModule("toolbar").addHandler("image", () => {
       imageHandler.selectLocalImage();
