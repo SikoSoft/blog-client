@@ -18,7 +18,8 @@ const state = {
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
   api: {},
-  token: ""
+  token: "",
+  editMode: {}
 };
 
 const mutations = {
@@ -74,6 +75,20 @@ const mutations = {
 
   setEntryFormVisibility: (state, { visibility }) => {
     state.entryFormIsOpen = visibility;
+  },
+
+  setEditMode: (state, { id, mode }) => {
+    Vue.set(state.editMode, id, mode);
+  },
+
+  setEntryById: (state, { id, entry }) => {
+    Vue.set(
+      state,
+      "entries",
+      [...state.entries].map(e => {
+        return id !== entry.id ? e : { ...entry, id };
+      })
+    );
   }
 };
 
@@ -179,6 +194,14 @@ const actions = {
 
   hideEntryForm({ commit }) {
     commit("setEntryFormVisibility", { visibility: false });
+  },
+
+  setEditMode({ commit }, { id, mode }) {
+    commit("setEditMode", { id, mode });
+  },
+
+  setEntryById({ commit }, { id, entry }) {
+    commit("setEntryById", { id, entry });
   }
 };
 
@@ -200,6 +223,9 @@ const getters = {
     return state.roles && state.user.role
       ? state.roles.filter(role => role.id === state.user.role)[0].rights
       : [];
+  },
+  editMode: state => id => {
+    return state.editMode[id] ? state.editMode[id] : false;
   }
 };
 

@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
@@ -64,14 +64,16 @@ export default {
 
   components: { BlogEntryForm },
 
-  data() {
-    return {
-      editMode: false
-    };
-  },
-
   computed: {
     ...mapGetters(["rights"]),
+
+    editMode() {
+      console.log(
+        "generated > editMode",
+        this.$store.getters.editMode(this.id)
+      );
+      return this.$store.getters.editMode(this.id);
+    },
 
     entry() {
       return {
@@ -102,8 +104,11 @@ export default {
   },
 
   methods: {
+    ...mapActions(["setEditMode"]),
+
     edit() {
-      this.editMode = !this.editMode;
+      console.log("editMode", this.editMode ? false : true);
+      this.setEditMode({ id: this.id, mode: this.editMode ? false : true });
     }
   }
 };

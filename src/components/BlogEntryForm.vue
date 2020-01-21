@@ -27,13 +27,8 @@
             @focus="tagsFocus"
             @blur="tagsBlur"
           />
-          <button type="button" v-if="tagIsValid(tag)" @click="addTag">
-            +
-          </button>
-          <ul
-            class="blog-entry-form__tags-auto-list"
-            v-if="tagsFocused && autoTags.length"
-          >
+          <button type="button" v-if="tagIsValid(tag)" @click="addTag">+</button>
+          <ul class="blog-entry-form__tags-auto-list" v-if="tagsFocused && autoTags.length">
             <li
               class="blog-entry-form__tags-auto-list-item"
               :class="{
@@ -44,27 +39,21 @@
               :key="`autoTag-${autoTag}`"
               @mousedown="tag = autoTag"
               @mouseover="autoTagSelected = autoTag"
-            >
-              {{ autoTag }}
-            </li>
+            >{{ autoTag }}</li>
           </ul>
         </div>
       </div>
       <ul class="blog-entry-form__tags-list">
         <li v-for="tag in tags" :key="`tags-${tag}`">
           {{ tag }}
-          <span class="blog-entry-form__tags-remove" @click="deleteTag(tag)"
-            >X</span
-          >
+          <span class="blog-entry-form__tags-remove" @click="deleteTag(tag)">X</span>
         </li>
       </ul>
     </div>
     <div class="blog-entry-form__buttons">
       <button v-if="entry.id">{{ $strings.updateEntry }}</button>
       <button v-else>{{ $strings.postEntry }}</button>
-      <button type="button" v-if="entry.id" @click="deleteEntry">
-        {{ $strings.deleteEntry }}
-      </button>
+      <button type="button" v-if="entry.id" @click="deleteEntry">{{ $strings.deleteEntry }}</button>
     </div>
   </form>
 </template>
@@ -135,24 +124,34 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getEntries", "hideEntryForm"]),
+    ...mapActions([
+      "getEntries",
+      "hideEntryForm",
+      "setEditMode",
+      "setEntryById"
+    ]),
 
     submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
+      const entry = {
+        title: this.title,
+        body: bodyDelta,
+        tags: this.tags
+      };
       fetch(this.entry.api.save.href, {
         method: this.entry.api.save.method,
         headers: this.headers,
-        body: JSON.stringify({
-          title: this.title,
-          body: bodyDelta,
-          tags: this.tags
-        })
+        body: JSON.stringify(entry)
       })
         .then(response => response.json())
         .then(json => {
           this.getEntries(true).then(() => {
             this.hideEntryForm();
-            this.$router.push({ path: `/entry/${json.id}` });
+            this.setEntryById({ id: json.id, entry });
+            this.setEditMode({ id: json.id, mode: false });
+            if (window.location.pathname !== `/entry/${json.id}`) {
+              this.$router.push({ path: `/entry/${json.id}` });
+            }
           });
         });
       e.preventDefault();
