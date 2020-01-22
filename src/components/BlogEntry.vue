@@ -2,11 +2,7 @@
   <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
     <template v-if="!editMode">
       <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
-        <router-link :to="`/entry/${id}`" v-if="!fullMode">
-          {{
-          title
-          }}
-        </router-link>
+        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
         <template v-else>{{ title }}</template>
       </h3>
       <div class="blog-entry__meta">
@@ -18,11 +14,7 @@
       <div class="blog-entry__body">
         <div class="body-entry__body-content" v-html="renderedBody"></div>
         <div class="blog-entry__body-more">
-          <router-link :to="`/entry/${id}`" v-if="!fullMode">
-            {{
-            $strings.readMore
-            }}
-          </router-link>
+          <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ $strings.readMore }}</router-link>
         </div>
       </div>
       <div class="blog-entry__foot">
@@ -68,10 +60,6 @@ export default {
     ...mapGetters(["rights"]),
 
     editMode() {
-      console.log(
-        "generated > editMode",
-        this.$store.getters.editMode(this.id)
-      );
       return this.$store.getters.editMode(this.id);
     },
 
@@ -107,7 +95,6 @@ export default {
     ...mapActions(["setEditMode"]),
 
     edit() {
-      console.log("editMode", this.editMode ? false : true);
       this.setEditMode({ id: this.id, mode: this.editMode ? false : true });
     }
   }
