@@ -160,6 +160,7 @@ export default {
   &__body {
     padding: 36px 8px 36px 16px;
     font-size: 1.5rem;
+    overflow-x: auto;
 
     img {
       max-width: 100%;
@@ -188,6 +189,10 @@ export default {
     &:not(:first-child) {
       margin-left: $space;
     }
+  }
+
+  pre {
+    overflow-x: auto;
   }
 
   .ql-video {
