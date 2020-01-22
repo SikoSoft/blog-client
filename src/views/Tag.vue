@@ -17,29 +17,23 @@ export default {
 
   data() {
     return {
-      tag: this.$route.params.tag
+      //tag: this.$route.params.tag
     };
   },
 
   mounted() {
-    this.initialize().then(() => {
-      this.getEntries().then(() => {
-        this.getEntriesByTag(this.tag);
-        this.setBreadcrumbs([
-          { href: "/tags", label: this.$strings.tags },
-          { href: `/tag/${this.tag}`, label: this.tag }
-        ]);
-        this.setTitle(this.$strings.entriesWithTag.replace("{tag}", this.tag));
-      });
-    });
+    this.update();
   },
 
   updated() {
-    console.log("updated");
+    this.update();
   },
 
   computed: {
-    ...mapGetters(["entriesByTag"])
+    ...mapGetters(["entriesByTag"]),
+    tag() {
+      return this.$route.params.tag;
+    }
   },
 
   methods: {
@@ -49,7 +43,22 @@ export default {
       "getEntriesByTag",
       "setBreadcrumbs",
       "setTitle"
-    ])
+    ]),
+
+    update() {
+      this.initialize().then(() => {
+        this.getEntries().then(() => {
+          this.getEntriesByTag(this.tag);
+          this.setBreadcrumbs([
+            { href: "/tags", label: this.$strings.tags },
+            { href: `/tag/${this.tag}`, label: this.tag }
+          ]);
+          this.setTitle(
+            this.$strings.entriesWithTag.replace("{tag}", this.tag)
+          );
+        });
+      });
+    }
   }
 };
 </script>
