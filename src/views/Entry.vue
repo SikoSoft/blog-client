@@ -13,28 +13,48 @@ export default {
 
   components: { BlogEntry },
 
+  data() {
+    return {
+      id: this.$route.params.id
+    };
+  },
+
   computed: {
     entry: function() {
-      return this.$store.getters.entryById(`${this.$route.params.id}`);
+      return this.$store.getters.entryById(this.id);
     }
   },
 
+  created() {
+    this.update();
+  },
+
   mounted() {
-    this.initialize().then(() => {
-      this.getEntries().then(() => {
-        this.setBreadcrumbs([
-          {
-            href: `/entry/${this.entry.id}`,
-            label: this.entry.title
-          }
-        ]);
-        this.setTitle(this.entry.title);
-      });
-    });
+    this.update();
+  },
+
+  beforeRouteUpdate(to, from, next) {
+    this.id = to.params.id;
+    this.update();
+    next();
   },
 
   methods: {
-    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"])
+    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"]),
+
+    update() {
+      this.initialize().then(() => {
+        this.getEntries().then(() => {
+          this.setBreadcrumbs([
+            {
+              href: `/entry/${this.entry.id}`,
+              label: this.entry.title
+            }
+          ]);
+          this.setTitle(this.entry.title);
+        });
+      });
+    }
   }
 };
 </script>
