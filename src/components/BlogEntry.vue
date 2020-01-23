@@ -87,7 +87,12 @@ export default {
     },
 
     renderedBody() {
-      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {}).convert();
+      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
+        .convert()
+        .replace(
+          /#([a-zA-Z0-9]*)\b/g,
+          "<a href='/tag/$1' class='vue-route'>#$1</a>"
+        );
     }
   },
 
