@@ -13,8 +13,8 @@
       </div>
       <div class="blog-entry__body">
         <div class="body-entry__body-content" v-html="renderedBody"></div>
-        <div class="blog-entry__body-more">
-          <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ $strings.readMore }}</router-link>
+        <div class="blog-entry__body-more" v-if="!fullMode">
+          <router-link :to="`/entry/${id}`">{{ $strings.readMore }}</router-link>
         </div>
       </div>
       <div class="blog-entry__foot">
@@ -111,6 +111,10 @@ export default {
     border-top: 1px $color-text-subtle solid;
   }
 
+  &--full &__body {
+    max-height: none;
+  }
+
   &__meta > div {
     display: inline-block;
   }
@@ -145,20 +149,28 @@ export default {
   }
 
   &__body {
-    padding: 36px 8px 36px 16px;
+    padding: 2rem 1rem 2rem 1rem;
     font-size: 1.5rem;
     overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    max-height: 15rem;
 
     img {
       max-width: 100%;
     }
 
     &-more {
-      margin-top: 10px;
+      position: absolute;
+      width: calc(100% - 2rem);
+      padding-top: 4rem;
+      top: 13.5rem;
+      background: linear-gradient(to top, #000, 80%, #0000);
     }
   }
 
   &__foot {
+    margin-top: 2rem;
   }
 
   &__tags {
