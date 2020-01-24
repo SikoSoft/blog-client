@@ -87,10 +87,9 @@ export default {
     },
 
     renderedBody() {
-      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
-        .convert()
+      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {}).convert()
         .replace(
-          /#([a-zA-Z0-9]*)\b/g,
+          /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
           "<a href='/tag/$1' class='vue-route'>#$1</a>"
         );
     }
@@ -159,18 +158,20 @@ export default {
     overflow-x: auto;
     overflow-y: hidden;
     position: relative;
-    max-height: 15rem;
+    max-height: 25rem;
 
     img {
       max-width: 100%;
     }
 
     &-more {
+      text-transform: uppercase;
       position: absolute;
       width: calc(100% - 2rem);
-      padding-top: 4rem;
-      top: 13.5rem;
-      background: linear-gradient(to top, #000, 80%, #0000);
+      padding-top: 4.5rem;
+      padding-bottom: 0.5rem;
+      top: 23.5rem;
+      background: linear-gradient(0deg, #000, 80%, transparent);
     }
   }
 
