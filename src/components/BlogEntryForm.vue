@@ -1,5 +1,5 @@
 <template>
-  <form class="blog-entry-form" @submit="submitForm">
+  <form class="blog-entry-form" @submit="submitForm" :id="formId">
     <div class="blog-entry-form__head">
       <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
       <h2 v-else>{{ $strings.editEntry }}</h2>
@@ -9,6 +9,7 @@
         type="text"
         class="blog-entry-form__title"
         v-model="title"
+        @keyup="saveFormState"
         :placeholder="$strings.title"
       />
     </div>
@@ -45,7 +46,8 @@ export default {
       title: this.entry.title ? this.entry.title : "",
       body: this.entry.body ? this.entry.body : "",
       tags: this.entry.tags ? this.entry.tags : [],
-      editor: false
+      editor: false,
+      initialized: false
     };
   },
 
@@ -77,12 +79,24 @@ export default {
     this.editor.getModule("toolbar").addHandler("image", () => {
       imageHandler.selectLocalImage();
     });
+    this.editor.on("text-change", () => {
+      this.saveFormState();
+    });
+    if (localStorage.getItem(this.formId)) {
+      this.loadFormState();
+    }
+    this.initialized = true;
   },
 
   computed: {
     ...mapGetters(["api", "headers"]),
+
     editorId() {
       return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
+    },
+
+    formId() {
+      return `entry-form${this.entry.id ? "-" + this.entry.id : ""}`;
     }
   },
 
@@ -126,9 +140,39 @@ export default {
         headers: this.headers
       })
         .then(response => response.json())
-        .then(json => {
+        .then(() => {
           this.getEntries(true);
         });
+    },
+
+    setTags(tags) {
+      this.tags = tags;
+      this.saveFormState();
+    },
+
+    saveFormState() {
+      if (!this.initialized) {
+        return;
+      }
+      localStorage.setItem(
+        this.formId,
+        JSON.stringify({
+          title: this.title,
+          body: this.editor.getContents().ops,
+          tags: this.tags
+        })
+      );
+    },
+
+    loadFormState() {
+      try {
+        const state = JSON.parse(localStorage.getItem(this.formId));
+        this.title = state.title;
+        this.editor.setContents(state.body);
+        this.tags = state.tags;
+      } catch (e) {
+        console.log("corrupt form data", e);
+      }
     }
   }
 };
@@ -160,8 +204,6 @@ export default {
   }
 
   .blog-entry-form__tags {
-    display: flex;
-    align-items: center;
   }
 
   .ql-blank {
