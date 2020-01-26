@@ -87,7 +87,8 @@ export default {
     },
 
     renderedBody() {
-      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {}).convert()
+      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
+        .convert()
         .replace(
           /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
           "<a href='/tag/$1' class='vue-route'>#$1</a>"
@@ -170,7 +171,7 @@ export default {
       width: calc(100% - 2rem);
       padding-top: 4.5rem;
       padding-bottom: 0.5rem;
-      top: 23.5rem;
+      top: 22.5rem;
       background: linear-gradient(0deg, #000, 80%, transparent);
     }
   }
