@@ -15,12 +15,6 @@ export default {
 
   components: { BlogTag, BlogEntries },
 
-  data() {
-    return {
-      //tag: this.$route.params.tag
-    };
-  },
-
   mounted() {
     this.update();
   },
@@ -31,6 +25,7 @@ export default {
 
   computed: {
     ...mapGetters(["entriesByTag"]),
+
     tag() {
       return this.$route.params.tag;
     }
