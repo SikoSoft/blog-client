@@ -10,15 +10,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
 import BlogHeader from "./components/BlogHeader.vue";
 
 export default {
   components: { BlogHeader },
 
   mounted() {
-    this.$router.afterEach(() => {
+    this.$router.afterEach(to => {
       window.scroll({
         top:
           document.getElementById("blog-breadcrumb").getBoundingClientRect()
@@ -26,6 +24,14 @@ export default {
         left: 0,
         behavior: "smooth"
       });
+      if (
+        process.env.NODE_ENV === "production" &&
+        process.env.VUE_APP_TRACKING_CODE
+      ) {
+        window.gtag("config", process.env.VUE_APP_TRACKING_CODE, {
+          page_path: to.path
+        });
+      }
     });
 
     window.addEventListener("click", event => {

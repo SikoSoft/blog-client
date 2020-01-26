@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import config from "@/config.js";
 
 Vue.use(Vuex);
 
@@ -58,7 +57,9 @@ const mutations = {
   setTitle: (state, { title }) => {
     state.title = title;
     document.title =
-      title === config.siteName ? title : title + " | " + config.siteName;
+      title === process.env.VUE_APP_SITE_NAME
+        ? title
+        : title + " | " + process.env.VUE_APP_SITE_NAME;
   },
 
   setBreadcrumbs: (state, { breadcrumbs }) => {
@@ -107,7 +108,7 @@ const actions = {
 
     commit("setLoading", { loading: true });
 
-    return fetch(config.init, { headers: getters.headers })
+    return fetch(process.env.VUE_APP_INIT, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
         commit("setUser", { user: { ...json.user, role: token ? 2 : 1 } });

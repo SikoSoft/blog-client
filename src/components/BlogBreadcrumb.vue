@@ -3,19 +3,14 @@
     <ul class="blog-breadcrumb__list">
       <template v-for="(link, index) in links">
         <li class="blog-breadcrumb__list-item" :key="`${link.label}-item`">
-          <div
-            v-if="index > 0"
-            class="blog-breadcrumb__list-arrow"
-            :key="`${link.label}-arrow`"
-          ></div>
+          <div v-if="index > 0" class="blog-breadcrumb__list-arrow" :key="`${link.label}-arrow`"></div>
           <router-link
             class="blog-breadcrumb__list-item-link"
             :class="{
               'blog-breadcrumb__list-item-link--disabled': !!!link.href
             }"
             :to="link.href"
-            >{{ link.label }}</router-link
-          >
+          >{{ link.label }}</router-link>
         </li>
       </template>
     </ul>
@@ -33,7 +28,7 @@ export default {
 
     links() {
       return [
-        { href: "/", label: this.$config.siteName },
+        { href: "/", label: process.env.VUE_APP_SITE_NAME },
         ...this.breadcrumbs
       ].map(crumb => ({
         ...crumb,

@@ -17,7 +17,7 @@ export default {
   components: { BlogLoader, BlogEntries },
 
   mounted() {
-    this.setTitle(this.$config.siteName);
+    this.setTitle(process.env.VUE_APP_SITE_NAME);
     this.initialize().then(() => {
       this.getEntries();
     });
