@@ -2,11 +2,7 @@
   <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
     <template v-if="!editMode">
       <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
-        <router-link :to="`/entry/${id}`" v-if="!fullMode">
-          {{
-          title
-          }}
-        </router-link>
+        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
         <template v-else>{{ title }}</template>
       </h3>
       <div class="blog-entry__meta">
@@ -17,12 +13,8 @@
       </div>
       <div class="blog-entry__body">
         <div class="body-entry__body-content" v-html="renderedBody"></div>
-        <div class="blog-entry__body-more">
-          <router-link :to="`/entry/${id}`" v-if="!fullMode">
-            {{
-            $strings.readMore
-            }}
-          </router-link>
+        <div class="blog-entry__body-more" v-if="!fullMode">
+          <router-link :to="`/entry/${id}`">{{ $strings.readMore }}</router-link>
         </div>
       </div>
       <div class="blog-entry__foot">
@@ -43,7 +35,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
@@ -64,14 +56,12 @@ export default {
 
   components: { BlogEntryForm },
 
-  data() {
-    return {
-      editMode: false
-    };
-  },
-
   computed: {
     ...mapGetters(["rights"]),
+
+    editMode() {
+      return this.$store.getters.editMode(this.id);
+    },
 
     entry() {
       return {
@@ -97,13 +87,20 @@ export default {
     },
 
     renderedBody() {
-      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {}).convert();
+      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
+        .convert()
+        .replace(
+          /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
+          "<a href='/tag/$1' class='vue-route'>#$1</a>"
+        );
     }
   },
 
   methods: {
+    ...mapActions(["setEditMode"]),
+
     edit() {
-      this.editMode = !this.editMode;
+      this.setEditMode({ id: this.id, mode: this.editMode ? false : true });
     }
   }
 };
@@ -117,6 +114,10 @@ export default {
 
   &--full &__posted-time {
     border-top: 1px $color-text-subtle solid;
+  }
+
+  &--full &__body {
+    max-height: none;
   }
 
   &__meta > div {
@@ -153,19 +154,30 @@ export default {
   }
 
   &__body {
-    padding: 36px 8px 36px 16px;
+    padding: 2rem 1rem 2rem 1rem;
     font-size: 1.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    max-height: 25rem;
 
     img {
       max-width: 100%;
     }
 
     &-more {
-      margin-top: 10px;
+      text-transform: uppercase;
+      position: absolute;
+      width: calc(100% - 2rem);
+      padding-top: 4.5rem;
+      padding-bottom: 0.5rem;
+      top: 22.5rem;
+      background: linear-gradient(0deg, #000, 80%, transparent);
     }
   }
 
   &__foot {
+    margin-top: 2rem;
   }
 
   &__tags {
@@ -183,6 +195,15 @@ export default {
     &:not(:first-child) {
       margin-left: $space;
     }
+  }
+
+  pre {
+    overflow-x: auto;
+  }
+
+  .ql-video {
+    width: 100%;
+    height: calc(100vw * 0.5);
   }
 }
 </style>

@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import config from "@/config.js";
 
 Vue.use(Vuex);
 
@@ -18,7 +17,8 @@ const state = {
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
   api: {},
-  token: ""
+  token: "",
+  editMode: {}
 };
 
 const mutations = {
@@ -57,7 +57,9 @@ const mutations = {
   setTitle: (state, { title }) => {
     state.title = title;
     document.title =
-      title === config.siteName ? title : title + " | " + config.siteName;
+      title === process.env.VUE_APP_SITE_NAME
+        ? title
+        : title + " | " + process.env.VUE_APP_SITE_NAME;
   },
 
   setBreadcrumbs: (state, { breadcrumbs }) => {
@@ -74,6 +76,20 @@ const mutations = {
 
   setEntryFormVisibility: (state, { visibility }) => {
     state.entryFormIsOpen = visibility;
+  },
+
+  setEditMode: (state, { id, mode }) => {
+    Vue.set(state.editMode, id, mode);
+  },
+
+  setEntryById: (state, { id, entry }) => {
+    Vue.set(
+      state,
+      "entries",
+      [...state.entries].map(e => {
+        return id !== entry.id ? e : { ...entry, id };
+      })
+    );
   }
 };
 
@@ -92,7 +108,7 @@ const actions = {
 
     commit("setLoading", { loading: true });
 
-    return fetch(config.init, { headers: getters.headers })
+    return fetch(process.env.VUE_APP_INIT, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
         commit("setUser", { user: { ...json.user, role: token ? 2 : 1 } });
@@ -179,6 +195,14 @@ const actions = {
 
   hideEntryForm({ commit }) {
     commit("setEntryFormVisibility", { visibility: false });
+  },
+
+  setEditMode({ commit }, { id, mode }) {
+    commit("setEditMode", { id, mode });
+  },
+
+  setEntryById({ commit }, { id, entry }) {
+    commit("setEntryById", { id, entry });
   }
 };
 
@@ -200,6 +224,9 @@ const getters = {
     return state.roles && state.user.role
       ? state.roles.filter(role => role.id === state.user.role)[0].rights
       : [];
+  },
+  editMode: state => id => {
+    return state.editMode[id] ? state.editMode[id] : false;
   }
 };
 

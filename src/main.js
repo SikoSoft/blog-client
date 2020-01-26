@@ -3,14 +3,12 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import strings from "./data/strings.json";
-import config from "./config.js";
 
 Vue.config.productionTip = false;
 
 Vue.mixin({
   beforeCreate() {
     this.$strings = strings;
-    this.$config = config;
   }
 });
 
