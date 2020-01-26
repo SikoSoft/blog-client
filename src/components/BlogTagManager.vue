@@ -82,7 +82,6 @@ export default {
     },
 
     autoTagUp() {
-      console.log("autoTagUp");
       if (!this.autoTags) {
         return;
       }
@@ -129,14 +128,14 @@ export default {
     },
 
     addTag() {
-      this.$parent.tags.push(this.tag.toLowerCase());
+      this.$parent.setTags([...this.$parent.tags, this.tag.toLowerCase()]);
       this.tag = "";
       this.autoTags = this.autoTags.filter(tag => !this.tags.includes(tag));
       this.autoTagSelected = "";
     },
 
     deleteTag(tag) {
-      this.tags = this.tags.filter(t => t != tag);
+      this.$parent.setTags(this.$parent.tags.filter(t => t != tag));
     },
 
     getTags() {
