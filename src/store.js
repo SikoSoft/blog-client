@@ -94,16 +94,16 @@ const mutations = {
 };
 
 const actions = {
-  initialize({ state, commit, getters }) {
+  initialize({ state, commit, getters }, force) {
+    if (state.initialized && !force) {
+      return Promise.resolve();
+    }
+
     const token = localStorage.getItem("token")
       ? localStorage.getItem("token")
       : "";
     if (token) {
       commit("setToken", { token });
-    }
-
-    if (state.initialized) {
-      return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });

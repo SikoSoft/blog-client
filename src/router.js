@@ -4,6 +4,7 @@ import Entries from "./views/Entries.vue";
 import Entry from "./views/Entry.vue";
 import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
+import Token from "./views/Token.vue";
 
 Vue.use(Router);
 
@@ -29,6 +30,11 @@ export default new Router({
       path: "/tag/:tag",
       name: "tag",
       component: Tag
+    },
+    {
+      path: "/token/:token?",
+      name: "token",
+      component: Token
     },
     {
       path: "/admin",

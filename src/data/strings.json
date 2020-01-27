@@ -11,6 +11,9 @@
   "editEntry": "Edit entry",
   "deleteEntry": "Delete entry",
   "cancel": "Cancel",
+  "token": "Token",
+  "activate": "Activate",
+  "authenticator": "Authenticator",
   "months": {
     "short": [
       "Jan.",
