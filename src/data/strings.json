@@ -14,6 +14,12 @@
   "token": "Token",
   "activate": "Activate",
   "authenticator": "Authenticator",
+  "errors": {
+    "CODE_1": "The token you provided is invalid",
+    "CODE_2": "The token you provided has already been used",
+    "CODE_3": "You have been banned from this action",
+    "CODE_4": "Service flooding has been detected"
+  },
   "months": {
     "short": [
       "Jan.",

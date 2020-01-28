@@ -27,7 +27,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize"]),
+    ...mapActions(["initialize", "addToast"]),
 
     useToken(event) {
       fetch(this.api.useToken.href, {
@@ -42,6 +42,8 @@ export default {
             this.initialize(true).then(() => {
               this.$router.push({ path: `/` });
             });
+          } else {
+            this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
           }
         });
       event.preventDefault();
