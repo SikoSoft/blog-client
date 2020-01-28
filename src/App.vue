@@ -6,14 +6,16 @@
     <main>
       <router-view />
     </main>
+    <blog-toasts />
   </div>
 </template>
 
 <script>
 import BlogHeader from "./components/BlogHeader.vue";
+import BlogToasts from "./components/BlogToasts.vue";
 
 export default {
-  components: { BlogHeader },
+  components: { BlogHeader, BlogToasts },
 
   mounted() {
     this.$router.afterEach(to => {

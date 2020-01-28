@@ -1,5 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { uuid } from "@/util/uuid";
+
+const toastLife = 3000;
 
 Vue.use(Vuex);
 
@@ -18,7 +21,8 @@ const state = {
   entryFormIsOpen: false,
   api: {},
   token: "",
-  editMode: {}
+  editMode: {},
+  toasts: []
 };
 
 const mutations = {
@@ -90,6 +94,10 @@ const mutations = {
         return id !== entry.id ? e : { ...entry, id };
       })
     );
+  },
+
+  setToasts: (state, { toasts }) => {
+    Vue.set(state, "toasts", toasts);
   }
 };
 
@@ -203,6 +211,22 @@ const actions = {
 
   setEntryById({ commit }, { id, entry }) {
     commit("setEntryById", { id, entry });
+  },
+
+  addToast({ state, commit, dispatch }, message) {
+    const id = uuid();
+    commit("setToasts", {
+      toasts: [...state.toasts, { message, id }]
+    });
+    setTimeout(() => {
+      dispatch("removeToast", id);
+    }, toastLife);
+  },
+
+  removeToast({ state, commit }, id) {
+    commit("setToasts", {
+      toasts: state.toasts.filter(toast => toast.id !== id)
+    });
   }
 };
 
@@ -227,7 +251,8 @@ const getters = {
   },
   editMode: state => id => {
     return state.editMode[id] ? state.editMode[id] : false;
-  }
+  },
+  toasts: state => state.toasts
 };
 
 export default new Vuex.Store({
