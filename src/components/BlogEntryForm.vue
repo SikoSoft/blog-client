@@ -181,10 +181,6 @@ export default {
 <style lang="scss">
 @import "@/styles/variables.scss";
 
-#quilljs-editor {
-  background-color: #fff;
-}
-
 .blog-entry-form {
   margin: 16px 0;
 

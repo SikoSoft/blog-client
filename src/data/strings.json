@@ -14,6 +14,10 @@
   "token": "Token",
   "activate": "Activate",
   "authenticator": "Authenticator",
+  "leaveAComment": "Leave a comment",
+  "name": "Name",
+  "message": "Message",
+  "postComment": "Post comment",
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",

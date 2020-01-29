@@ -26,6 +26,10 @@
           </ul>
         </div>
       </div>
+      <div class="blog-entry__comments" v-if="fullMode">
+        <blog-comment-form :entry="entry" />
+        <blog-comments :entry="entry" />
+      </div>
     </template>
     <template v-else>
       <button @click="edit">{{ $strings.cancel }}</button>
@@ -37,6 +41,8 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
+import BlogComments from "@/components/BlogComments.vue";
+import BlogCommentForm from "@/components/BlogCommentForm.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 
@@ -54,7 +60,7 @@ export default {
     "fullMode"
   ],
 
-  components: { BlogEntryForm },
+  components: { BlogEntryForm, BlogComments, BlogCommentForm },
 
   computed: {
     ...mapGetters(["rights"]),
