@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { uuid } from "@/util/uuid";
+import { _ } from "core-js";
 
 const toastLife = 3000;
 
@@ -22,7 +23,8 @@ const state = {
   api: {},
   token: "",
   editMode: {},
-  toasts: []
+  toasts: [],
+  comments: {}
 };
 
 const mutations = {
@@ -98,6 +100,10 @@ const mutations = {
 
   setToasts: (state, { toasts }) => {
     Vue.set(state, "toasts", toasts);
+  },
+
+  setComments: (state, { id, comments }) => {
+    Vue.set(state.comments, id, comments);
   }
 };
 
@@ -226,6 +232,28 @@ const actions = {
   removeToast({ state, commit }, id) {
     commit("setToasts", {
       toasts: state.toasts.filter(toast => toast.id !== id)
+    });
+  },
+
+  getComments({ commit, getters }, { id, force }) {
+    if (state.comments[id] && !force) {
+      return Promise.resolve();
+    }
+
+    const api = getters.entryById(id).api;
+    console.log(id, api);
+
+    return new Promise((resolve, reject) => {
+      fetch(api.getComments.href, {
+        method: api.getComments.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setComments", { id, comments: json.comments });
+          resolve();
+        })
+        .catch(e => reject(e));
     });
   }
 };

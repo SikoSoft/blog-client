@@ -18,6 +18,7 @@
   "name": "Name",
   "message": "Message",
   "postComment": "Post comment",
+  "comments": "Comments",
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",

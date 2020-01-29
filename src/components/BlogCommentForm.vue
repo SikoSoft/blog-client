@@ -1,7 +1,7 @@
 <template>
   <form class="blog-comment-form" @submit="submitForm" :id="formId">
     <div class="blog-comment-form__head">
-      <h2>{{ $strings.leaveAComment }}</h2>
+      <h3>{{ $strings.leaveAComment }}</h3>
     </div>
     <div class="blog-comment-form_name">
       <input
