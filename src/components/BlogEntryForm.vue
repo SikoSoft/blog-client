@@ -126,6 +126,7 @@ export default {
             this.hideEntryForm();
             this.setEntryById({ id: json.id, entry });
             this.setEditMode({ id: json.id, mode: false });
+            localStorage.removeItem(this.formId);
             if (window.location.pathname !== `/entry/${json.id}`) {
               this.$router.push({ path: `/entry/${json.id}` });
             }
