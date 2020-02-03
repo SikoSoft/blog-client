@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import Quill from "quill";
 
@@ -73,21 +73,45 @@ export default {
   },
 
   methods: {
-    submitForm(e) {
-      const messageDelta = this.editor.getContents().ops;
-      const entry = {
-        name: this.name,
-        message: messageDelta
-      };
-      fetch(this.entry.api.postComment.href, {
-        method: this.entry.api.postComment.method,
-        headers: this.headers,
-        body: JSON.stringify(entry)
-      })
-        .then(response => response.json())
-        .then(json => {
-          console.log("json", json);
+    ...mapActions(["addToast"]),
+
+    async getCaptchaToken() {
+      if (!process.env.VUE_APP_RECAPTCHA_CODE) {
+        return Promise.resolve();
+      }
+      return new Promise(resolve => {
+        window.grecaptcha.ready(function() {
+          window.grecaptcha
+            .execute(process.env.VUE_APP_RECAPTCHA_CODE, {
+              action: "postComment"
+            })
+            .then(token => {
+              resolve(token);
+            });
         });
+      });
+    },
+
+    async submitForm(e) {
+      this.getCaptchaToken().then(captchaToken => {
+        fetch(this.entry.api.postComment.href, {
+          method: this.entry.api.postComment.method,
+          headers: this.headers,
+          body: JSON.stringify({
+            name: this.name,
+            message: this.editor.getContents().ops,
+            captchaToken
+          })
+        })
+          .then(response => response.json())
+          .then(json => {
+            if (!json.errorCode) {
+            } else {
+              this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
+            }
+            console.log("json", json);
+          });
+      });
       e.preventDefault();
     },
 

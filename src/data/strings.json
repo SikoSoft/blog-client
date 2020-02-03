@@ -23,7 +23,8 @@
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",
     "CODE_3": "You have been banned from this action",
-    "CODE_4": "Service flooding has been detected"
+    "CODE_4": "Service flooding has been detected",
+    "CODE_5": "Go away, robot!"
   },
   "months": {
     "short": [

@@ -12,6 +12,9 @@
       gtag('config', '<%= VUE_APP_TRACKING_CODE %>');
     </script>
     <% } %>
+    <% if (VUE_APP_RECAPTCHA_CODE) { %>
+    <script src="https://www.google.com/recaptcha/api.js?render=<%= VUE_APP_RECAPTCHA_CODE %>"></script>
+    <% } %>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
