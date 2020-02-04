@@ -53,6 +53,7 @@ export default {
     $color-bg-secondary
   );
   font-size: 2rem;
+  white-space: nowrap;
 
   .blog-breadcrumb__list {
     list-style: none;
