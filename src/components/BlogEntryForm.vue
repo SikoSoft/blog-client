@@ -198,13 +198,15 @@ export default {
   .blog-entry-form__title {
     font-size: 2rem;
     width: 36rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .blog-entry-form__tags {
   }
 
-  .ql-blank {
-    min-height: 5rem;
+  .ql-editor {
+    min-height: 10rem;
   }
 }
 </style>

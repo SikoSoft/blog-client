@@ -18,6 +18,19 @@
     <div class="blog-comment-form__buttons">
       <button>{{ $strings.postComment }}</button>
     </div>
+    <div class="blog-comment-form__captcha">
+      {{ $strings.captchaNotice }}
+      <div class="blog-comment-form__captcha-links">
+        <a
+          class="blog-comment-form__captcha-link"
+          href="https://policies.google.com/privacy"
+        >{{ $strings.privacyPolicy }}</a>
+        <a
+          class="blog-comment-form__captcha-link"
+          href="https://policies.google.com/terms"
+        >{{ $strings.termsOfService }}</a>
+      </div>
+    </div>
   </form>
 </template>
 
@@ -106,6 +119,7 @@ export default {
           .then(response => response.json())
           .then(json => {
             if (!json.errorCode) {
+              localStorage.removeItem(this.formId);
             } else {
               this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
             }
@@ -141,7 +155,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import "@/styles/variables.scss";
+
 .blog-comment-form {
   &__message {
     margin: 8px 0;
@@ -151,7 +167,29 @@ export default {
     color: #000;
   }
 
-  .ql-blank {
+  &__captcha {
+    border-top: 1px #444 dotted;
+    border-bottom: 1px #444 dotted;
+    text-align: center;
+    padding: $space-small;
+    margin: $space 0;
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05)
+    );
+
+    &-links {
+      margin-top: $space-small;
+    }
+
+    &-link {
+      margin: 0 $space-small;
+    }
+  }
+
+  .ql-editor {
     min-height: 5rem;
   }
 }

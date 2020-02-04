@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { uuid } from "@/util/uuid";
-import { _ } from "core-js";
 
 const toastLife = 3000;
 

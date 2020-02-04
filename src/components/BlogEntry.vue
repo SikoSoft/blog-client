@@ -183,7 +183,7 @@ export default {
   }
 
   &__foot {
-    margin-top: 2rem;
+    margin: 2rem 0;
   }
 
   &__tags {
@@ -201,6 +201,14 @@ export default {
     &:not(:first-child) {
       margin-left: $space;
     }
+  }
+
+  &__comments {
+    margin: 0 -2rem;
+    padding: 5rem 2rem;
+    background-color: #111;
+    border-top: 1rem #333 solid;
+    border-bottom: 1rem #333 solid;
   }
 
   pre {
