@@ -1,21 +1,20 @@
 <template>
   <div class="blog-comments">
     <h3 class="blog-comments__head">{{ $strings.comments }}</h3>
-    <ul class="blog-comments__list">
-      <li class="blog-comments__comment" v-for="comment in comments" :key="comment.id">
-        <div class="blog-comments__comment-message" v-html="renderedMessage(comment.message)"></div>
-      </li>
-    </ul>
+    <div class="blog-comments__list">
+      <blog-comment v-bind="comment" v-for="comment in comments" :key="comment.id" />
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
-
-import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import BlogComment from "@/components/BlogComment.vue";
 
 export default {
   name: "blog-comments",
+
+  components: { BlogComment },
 
   props: ["entry"],
 
@@ -32,34 +31,24 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getComments"]),
-
-    renderedMessage(message) {
-      return new QuillDeltaToHtmlConverter(JSON.parse(message), {}).convert();
-    }
+    ...mapActions(["getComments"])
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/variables.scss";
+
 .blog-comments {
   &__head {
+    margin-top: $space-xlarge;
+    padding-top: $space-xlarge;
   }
 
   &__list {
     list-style: none;
     padding: 0;
     margin: 0;
-  }
-
-  &__comment {
-    margin: 1rem 0;
-
-    &-message {
-    }
-
-    &-meta {
-    }
   }
 }
 </style>
