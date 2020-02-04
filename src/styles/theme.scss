@@ -55,3 +55,9 @@ button {
   cursor: pointer;
   text-transform: uppercase;
 }
+
+.grecaptcha-badge {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
