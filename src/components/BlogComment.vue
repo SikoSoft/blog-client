@@ -1,10 +1,18 @@
 <template>
-  <div class="blog-comment">
+  <div class="blog-comment" :class="classes">
     <div class="blog-comment__avatar">
       <div class="blog-comment__avatar-image"></div>
     </div>
     <div class="blog-comment__body">
-      <div class="blog-comment__meta">{{ postDate }}</div>
+      <div class="blog-comment__meta">
+        {{ postDate }}
+        <input
+          class="blog-comment__checkbox"
+          type="checkbox"
+          :value="id"
+          @change="select"
+        />
+      </div>
       <div class="blog-comment__message" v-html="renderedMessage"></div>
     </div>
   </div>
@@ -13,11 +21,12 @@
 <script>
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { longDate } from "../util/time.js";
+import { mapActions } from "vuex";
 
 export default {
   name: "blog-comment",
 
-  props: ["entry_id", "id", "message", "name", "time"],
+  props: ["entry_id", "id", "message", "name", "time", "public"],
 
   computed: {
     renderedMessage() {
@@ -32,6 +41,25 @@ export default {
         "{date}",
         longDate(this.time * 1000)
       );
+    },
+
+    isSelected() {
+      return this.$store.getters.commentIsSelected(this.id);
+    },
+
+    classes() {
+      return {
+        "blog-comment--selected": this.isSelected,
+        "blog-comment--needs-approval": this.public === 0
+      };
+    }
+  },
+
+  methods: {
+    ...mapActions(["toggleComment"]),
+
+    select() {
+      this.toggleComment(this.id);
     }
   }
 };
@@ -43,6 +71,13 @@ export default {
 .blog-comment {
   margin: $space-xlarge 0;
   display: flex;
+
+  &--selected {
+  }
+
+  &--needs-approval {
+    opacity: 0.5;
+  }
 
   &__avatar {
     margin-right: $space;
@@ -95,6 +130,13 @@ export default {
     background-color: #222;
     padding: $space-small;
     border-bottom: 1px #333 solid;
+    position: relative;
+  }
+
+  &__checkbox {
+    position: absolute;
+    top: $space-small;
+    right: $space-small;
   }
 }
 </style>

@@ -23,7 +23,8 @@ const state = {
   token: "",
   editMode: {},
   toasts: [],
-  comments: {}
+  comments: {},
+  selectedComments: []
 };
 
 const mutations = {
@@ -103,6 +104,10 @@ const mutations = {
 
   setComments: (state, { id, comments }) => {
     Vue.set(state.comments, id, comments);
+  },
+
+  setSelectedComments: (state, { comments }) => {
+    Vue.set(state, "selectedComments", comments);
   }
 };
 
@@ -240,7 +245,6 @@ const actions = {
     }
 
     const api = getters.entryById(id).api;
-    console.log(id, api);
 
     return new Promise((resolve, reject) => {
       fetch(api.getComments.href, {
@@ -254,6 +258,25 @@ const actions = {
         })
         .catch(e => reject(e));
     });
+  },
+
+  toggleComment({ state, commit }, id) {
+    const comments = [...state.selectedComments];
+    const index = comments.indexOf(id);
+    if (index === -1) {
+      comments.push(id);
+    } else {
+      comments.splice(index, 1);
+    }
+    commit("setSelectedComments", { comments });
+  },
+
+  publishComments({ commit }) {
+    commit("setSelectedComments", { comments: [] });
+  },
+
+  deleteComments({ commit }) {
+    commit("setSelectedComments", { comments: [] });
   }
 };
 
@@ -279,7 +302,9 @@ const getters = {
   editMode: state => id => {
     return state.editMode[id] ? state.editMode[id] : false;
   },
-  toasts: state => state.toasts
+  toasts: state => state.toasts,
+  selectedComments: state => state.selectedComments,
+  commentIsSelected: state => id => state.selectedComments.indexOf(id) > -1
 };
 
 export default new Vuex.Store({

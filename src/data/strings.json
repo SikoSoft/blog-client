@@ -22,6 +22,8 @@
   "captchaNotice": "This form is protected by reCAPTCHA v3.",
   "privacyPolicy": "Privacy Policy",
   "termsOfService": "Terms of Service",
+  "publish": "Publish",
+  "delete": "Delete",
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",
