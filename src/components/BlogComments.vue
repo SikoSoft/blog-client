@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-comments">
+  <div class="blog-comments" v-if="comments.length">
     <h3 class="blog-comments__head">{{ $strings.comments }}</h3>
     <div class="blog-comments__list">
       <blog-comment v-bind="comment" v-for="comment in comments" :key="comment.id" />
