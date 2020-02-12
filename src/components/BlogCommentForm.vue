@@ -1,5 +1,11 @@
 <template>
-  <form class="blog-comment-form" @submit="submitForm" :id="formId">
+  <form
+    class="blog-comment-form"
+    @submit="submitForm"
+    :id="formId"
+    v-if="open"
+    :class="{ 'blog-comment-form--hidden': !open }"
+  >
     <div class="blog-comment-form__head">
       <h3>{{ $strings.leaveAComment }}</h3>
     </div>
@@ -24,11 +30,13 @@
         <a
           class="blog-comment-form__captcha-link"
           href="https://policies.google.com/privacy"
-        >{{ $strings.privacyPolicy }}</a>
+          >{{ $strings.privacyPolicy }}</a
+        >
         <a
           class="blog-comment-form__captcha-link"
           href="https://policies.google.com/terms"
-        >{{ $strings.termsOfService }}</a>
+          >{{ $strings.termsOfService }}</a
+        >
       </div>
     </div>
   </form>
@@ -44,6 +52,7 @@ export default {
 
   data() {
     return {
+      open: true,
       name: "",
       editor: false
     };
@@ -82,6 +91,10 @@ export default {
 
     formId() {
       return `comment-form${this.entry.id}`;
+    },
+
+    comments() {
+      return this.$store.getters.commentsByEntry(this.entry.id);
     }
   },
 
@@ -123,7 +136,11 @@ export default {
             } else {
               this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
             }
-            console.log("json", json);
+            this.$store.commit("setComments", {
+              id: this.entry.id,
+              comments: [{ ...json }, ...this.comments]
+            });
+            this.open = false;
           });
       });
       e.preventDefault();
@@ -159,6 +176,13 @@ export default {
 @import "@/styles/variables.scss";
 
 .blog-comment-form {
+  transition: all 0.2s;
+
+  &--hidden {
+    opacity: 0;
+    height: 0;
+  }
+
   &__message {
     margin: 8px 0;
     border-radius: 4px;

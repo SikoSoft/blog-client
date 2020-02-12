@@ -291,6 +291,10 @@ const getters = {
   entryById: state => id => {
     return state.entries.filter(entry => entry.id === id)[0];
   },
+  comments: state => state.comments,
+  commentsByEntry: state => id => {
+    return state.comments[id] ? state.comments[id] : [];
+  },
   breadcrumbs: state => state.breadcrumbs,
   tags: state => state.tags,
   entryFormIsOpen: state => state.entryFormIsOpen,
