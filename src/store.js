@@ -112,6 +112,19 @@ const mutations = {
     Vue.set(state.entryComments, entryId, comments);
   },
 
+  deleteComment: (state, { id }) => {
+    const newComments = { ...state.comments };
+    Vue.set(
+      state.entryComments,
+      state.comments[id].entry_id,
+      state.entryComments[state.comments[id].entry_id].filter(
+        comment => comment.id !== id
+      )
+    );
+    delete newComments[id];
+    Vue.set(state, "comments", newComments);
+  },
+
   setSelectedComments: (state, { comments }) => {
     Vue.set(state, "selectedComments", comments);
   }
@@ -246,7 +259,6 @@ const actions = {
   },
 
   getComments({ commit, getters }, { entryId, force }) {
-    console.log("entryId", entryId);
     if (state.comments[entryId] && !force) {
       return Promise.resolve();
     }
@@ -299,8 +311,20 @@ const actions = {
       });
   },
 
-  deleteComments({ commit }) {
-    commit("setSelectedComments", { comments: [] });
+  deleteComments({ commit, dispatch }) {
+    fetch(state.api.deleteComments.href, {
+      method: state.api.deleteComments.method,
+      headers: getters.headers,
+      body: JSON.stringify({ ids: state.selectedComments })
+    })
+      .then(response => response.json())
+      .then(() => {
+        state.selectedComments.forEach(commentId => {
+          commit("deleteComment", { id: commentId });
+        });
+        commit("setSelectedComments", { comments: [] });
+        dispatch("addToast", strings.commentsDeleted);
+      });
   }
 };
 
