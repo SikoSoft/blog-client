@@ -26,16 +26,14 @@ export default {
   props: ["entry"],
 
   mounted() {
-    this.getComments({ id: this.entry.id });
+    this.getComments({ entryId: this.entry.id });
   },
 
   computed: {
     ...mapGetters(["selectedComments"]),
 
     comments() {
-      return this.$store.state.comments[this.entry.id]
-        ? this.$store.state.comments[this.entry.id]
-        : [];
+      return this.$store.getters.commentsByEntry(this.entry.id);
     }
   },
 

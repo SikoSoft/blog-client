@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { uuid } from "@/util/uuid";
+import strings from "@/data/strings.json";
 
 const toastLife = 3000;
 
@@ -24,6 +25,7 @@ const state = {
   editMode: {},
   toasts: [],
   comments: {},
+  entryComments: {},
   selectedComments: []
 };
 
@@ -102,8 +104,12 @@ const mutations = {
     Vue.set(state, "toasts", toasts);
   },
 
-  setComments: (state, { id, comments }) => {
-    Vue.set(state.comments, id, comments);
+  setComment: (state, { id, comment }) => {
+    Vue.set(state.comments, id, comment);
+  },
+
+  setEntryComments: (state, { entryId, comments }) => {
+    Vue.set(state.entryComments, entryId, comments);
   },
 
   setSelectedComments: (state, { comments }) => {
@@ -239,12 +245,13 @@ const actions = {
     });
   },
 
-  getComments({ commit, getters }, { id, force }) {
-    if (state.comments[id] && !force) {
+  getComments({ commit, getters }, { entryId, force }) {
+    console.log("entryId", entryId);
+    if (state.comments[entryId] && !force) {
       return Promise.resolve();
     }
 
-    const api = getters.entryById(id).api;
+    const api = getters.entryById(entryId).api;
 
     return new Promise((resolve, reject) => {
       fetch(api.getComments.href, {
@@ -253,7 +260,10 @@ const actions = {
       })
         .then(response => response.json())
         .then(json => {
-          commit("setComments", { id, comments: json.comments });
+          json.comments.forEach(comment => {
+            commit("setComment", { id: comment.id, comment });
+          });
+          commit("setEntryComments", { entryId, comments: json.comments });
           resolve();
         })
         .catch(e => reject(e));
@@ -271,8 +281,22 @@ const actions = {
     commit("setSelectedComments", { comments });
   },
 
-  publishComments({ commit }) {
-    commit("setSelectedComments", { comments: [] });
+  publishComments({ state, commit, getters, dispatch }) {
+    fetch(state.api.publishComments.href, {
+      method: state.api.publishComments.method,
+      headers: getters.headers,
+      body: JSON.stringify({ ids: state.selectedComments })
+    })
+      .then(response => response.json())
+      .then(() => {
+        state.selectedComments.forEach(commentId => {
+          if (state.comments[commentId]) {
+            state.comments[commentId].public = 1;
+          }
+        });
+        commit("setSelectedComments", { comments: [] });
+        dispatch("addToast", strings.commentsPublished);
+      });
   },
 
   deleteComments({ commit }) {
@@ -292,8 +316,15 @@ const getters = {
     return state.entries.filter(entry => entry.id === id)[0];
   },
   comments: state => state.comments,
-  commentsByEntry: state => id => {
-    return state.comments[id] ? state.comments[id] : [];
+  commentById: state => id => {
+    let comment = false;
+    Object.keys.forEach(entryId => {
+      comment = state.comments[entryId].filter(comment => comment.id === id);
+    });
+    return comment;
+  },
+  commentsByEntry: state => entryId => {
+    return state.entryComments[entryId] ? state.entryComments[entryId] : [];
   },
   breadcrumbs: state => state.breadcrumbs,
   tags: state => state.tags,
