@@ -6,15 +6,19 @@
       v-model="token"
       :placeholder="$strings.token"
     />
-    <button class="blog-token-handler__activate">{{ $strings.activate }}</button>
+    <blog-button class="blog-token-handler__activate" :text="$strings.activate" />
   </form>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 
+import BlogButton from "@/components/BlogButton.vue";
+
 export default {
   name: "token-handler",
+
+  components: { BlogButton },
 
   data() {
     return {

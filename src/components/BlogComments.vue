@@ -8,8 +8,8 @@
       class="blog-comments__buttons"
       :class="{ 'blog-comments__buttons--active': selectedComments.length }"
     >
-      <button @click="publishComments" class="blog-comments__publish">{{ $strings.publish }}</button>
-      <button @click="deleteComments" class="blog-comments__delete">{{ $strings.delete }}</button>
+      <blog-button create :action="publishComments" :text="$strings.publish" />
+      <blog-button destroy :action="deleteComments" :text="$strings.delete" />
     </div>
   </div>
 </template>
@@ -17,11 +17,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import BlogComment from "@/components/BlogComment.vue";
+import BlogButton from "@/components/BlogButton.vue";
 
 export default {
   name: "blog-comments",
 
-  components: { BlogComment },
+  components: { BlogComment, BlogButton },
 
   props: ["entry"],
 
@@ -81,16 +82,6 @@ export default {
       height: 3rem;
       line-height: 1.5rem;
     }
-  }
-
-  &__publish {
-    color: $color-action-create-text;
-    background-color: $color-action-create-bg;
-  }
-
-  &__delete {
-    color: $color-action-destroy-text;
-    background-color: $color-action-destroy-bg;
   }
 }
 </style>

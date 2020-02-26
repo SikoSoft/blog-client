@@ -22,7 +22,7 @@
       <div :id="editorId"></div>
     </div>
     <div class="blog-comment-form__buttons">
-      <button>{{ $strings.postComment }}</button>
+      <blog-button :action="submitForm" :text="$strings.postComment" />
     </div>
     <div class="blog-comment-form__captcha">
       {{ $strings.captchaNotice }}
@@ -30,25 +30,27 @@
         <a
           class="blog-comment-form__captcha-link"
           href="https://policies.google.com/privacy"
-          >{{ $strings.privacyPolicy }}</a
-        >
+        >{{ $strings.privacyPolicy }}</a>
         <a
           class="blog-comment-form__captcha-link"
           href="https://policies.google.com/terms"
-          >{{ $strings.termsOfService }}</a
-        >
+        >{{ $strings.termsOfService }}</a>
       </div>
     </div>
   </form>
 </template>
 
 <script>
+import BlogButton from "@/components/BlogButton.vue";
+
 import { mapGetters, mapActions } from "vuex";
 
 import Quill from "quill";
 
 export default {
   name: "blog-comment-form",
+
+  components: { BlogButton },
 
   data() {
     return {

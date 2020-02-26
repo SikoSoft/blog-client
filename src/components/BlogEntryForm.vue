@@ -20,13 +20,15 @@
       <blog-tag-manager :tags="tags" :api="api" />
     </div>
     <div class="blog-entry-form__buttons">
-      <button v-if="entry.id">{{ $strings.updateEntry }}</button>
-      <button v-else>{{ $strings.postEntry }}</button>
-      <button
+      <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
+      <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
+      <blog-button
+        destroy
         type="button"
         v-if="entry.id"
-        @click="showConfirmationDialog"
-      >{{ $strings.deleteEntry }}</button>
+        :action="showConfirmationDialog"
+        :text="$strings.deleteEntry"
+      />
       <blog-confirmation-dialog
         :isOpen="confirmationDialogOpen"
         :title="$strings.deleteEntry"
@@ -234,6 +236,8 @@ export default {
 
   .ql-editor {
     min-height: 10rem;
+    font-family: $font-family;
+    font-size: $font-large;
   }
 }
 </style>

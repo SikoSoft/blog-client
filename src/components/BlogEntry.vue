@@ -8,7 +8,7 @@
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
         <div class="blog-entry__edit" v-if="rights.includes('u')">
-          <button @click="edit">{{ $strings.editEntry }}</button>
+          <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
       <div class="blog-entry__body">
@@ -32,7 +32,7 @@
       </div>
     </template>
     <template v-else>
-      <button @click="edit">{{ $strings.cancel }}</button>
+      <blog-button :action="edit" :text="$strings.cancel" />
       <blog-entry-form :entry="entry" />
     </template>
   </div>
@@ -43,6 +43,7 @@ import { mapGetters, mapActions } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 import BlogComments from "@/components/BlogComments.vue";
 import BlogCommentForm from "@/components/BlogCommentForm.vue";
+import BlogButton from "@/components/BlogButton.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 
@@ -60,7 +61,7 @@ export default {
     "fullMode"
   ],
 
-  components: { BlogEntryForm, BlogComments, BlogCommentForm },
+  components: { BlogEntryForm, BlogComments, BlogCommentForm, BlogButton },
 
   computed: {
     ...mapGetters(["rights"]),

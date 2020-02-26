@@ -1,12 +1,26 @@
 <template>
-  <button class="blog-button" @click.prevent="action">{{ text }}</button>
+  <button class="blog-button" :class="classes" @click.prevent="action">{{ text }}</button>
 </template>
 
 <script>
 export default {
   name: "blog-button",
 
-  props: ["text", "action", "create", "destroy"],
+  props: {
+    text: {
+      type: String
+    },
+    action: {
+      type: Function,
+      default: () => {}
+    },
+    create: {
+      type: Boolean
+    },
+    destroy: {
+      type: Boolean
+    }
+  },
 
   computed: {
     classes() {
