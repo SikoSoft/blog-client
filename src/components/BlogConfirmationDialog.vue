@@ -22,27 +22,38 @@ export default {
 .blog-confirmation-dialog {
   display: none;
   position: fixed;
-  width: 30vw;
+  top: 20vh;
+  left: 20vw;
+  width: 60vw;
   height: 30vh;
   border-radius: 8px;
+  padding: $space-large;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.8);
+  border: 1px $color-border-primary solid;
+  box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.5);
 
   &--open {
     display: block;
   }
 
   .blog-confirmation-dialog__title {
-    font-size: $font-large;
+    font-size: $font-xlarge;
     color: $color-emphasis;
   }
 
   .blog-confirmation-dialog__message {
-    font-size: $font;
+    font-size: $font-large;
     color: $color-text-main;
   }
 
   .blog-confirmation-dialog__buttons {
     padding: $space-large;
     text-align: center;
+
+    button {
+      margin: $space;
+    }
   }
 }
 </style>
