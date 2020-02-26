@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
 
 import BlogTagManager from "@/components/BlogTagManager.vue";
@@ -101,6 +101,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["setLoading"]),
+
     ...mapActions([
       "getEntries",
       "hideEntryForm",
@@ -115,6 +117,7 @@ export default {
         body: bodyDelta,
         tags: this.tags
       };
+      this.setLoading({ loading: true });
       fetch(this.entry.api.save.href, {
         method: this.entry.api.save.method,
         headers: this.headers,
@@ -123,6 +126,7 @@ export default {
         .then(response => response.json())
         .then(json => {
           this.getEntries(true).then(() => {
+            this.setLoading({ loading: false });
             this.hideEntryForm();
             this.setEntryById({ id: json.id, entry });
             this.setEditMode({ id: json.id, mode: false });
