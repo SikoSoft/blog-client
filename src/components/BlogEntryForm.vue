@@ -22,7 +22,19 @@
     <div class="blog-entry-form__buttons">
       <button v-if="entry.id">{{ $strings.updateEntry }}</button>
       <button v-else>{{ $strings.postEntry }}</button>
-      <button type="button" v-if="entry.id" @click="deleteEntry">{{ $strings.deleteEntry }}</button>
+      <button
+        type="button"
+        v-if="entry.id"
+        @click="showConfirmationDialog"
+      >{{ $strings.deleteEntry }}</button>
+      <blog-confirmation-dialog
+        :isOpen="confirmationDialogOpen"
+        :title="$strings.deleteEntry"
+        :message="$strings.confirmDeleteEntry"
+      >
+        <blog-button destroy :text="$strings.yes" :action="deleteEntry" />
+        <blog-button :text="$strings.no" :action="hideConfirmationDialog" />
+      </blog-confirmation-dialog>
     </div>
   </form>
 </template>
@@ -32,6 +44,8 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
 
 import BlogTagManager from "@/components/BlogTagManager.vue";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
+import BlogButton from "@/components/BlogButton.vue";
 import imageHandler from "@/util/imageHandler";
 
 export default {
@@ -39,7 +53,7 @@ export default {
 
   props: ["entry"],
 
-  components: { BlogTagManager },
+  components: { BlogTagManager, BlogConfirmationDialog, BlogButton },
 
   data() {
     return {
@@ -47,7 +61,8 @@ export default {
       body: this.entry.body ? this.entry.body : "",
       tags: this.entry.tags ? this.entry.tags : [],
       editor: false,
-      initialized: false
+      initialized: false,
+      confirmationDialogOpen: false
     };
   },
 
@@ -178,6 +193,14 @@ export default {
       } catch (e) {
         console.log("corrupt form data", e);
       }
+    },
+
+    showConfirmationDialog() {
+      this.confirmationDialogOpen = true;
+    },
+
+    hideConfirmationDialog() {
+      this.confirmationDialogOpen = false;
     }
   }
 };

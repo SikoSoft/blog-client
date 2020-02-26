@@ -10,6 +10,7 @@
   "updateEntry": "Update entry",
   "editEntry": "Edit entry",
   "deleteEntry": "Delete entry",
+  "deleteComments": "Delete comments",
   "cancel": "Cancel",
   "token": "Token",
   "activate": "Activate",
@@ -26,6 +27,10 @@
   "delete": "Delete",
   "commentsPublished": "The selected comments have been published.",
   "commentsDeleted": "The selected comments have been deleted.",
+  "confirmDeleteEntry": "Are you sure you would like to delete this entry?",
+  "confirmDeleteComments": "Are you sure you would like to delete the selected comments?",
+  "yes": "Yes",
+  "no": "No",
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",
