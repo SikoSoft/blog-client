@@ -5,13 +5,9 @@
     </div>
     <div class="blog-comment__body">
       <div class="blog-comment__meta">
-        {{ postDate }}
-        <input
-          class="blog-comment__checkbox"
-          type="checkbox"
-          :value="id"
-          @change="select"
-        />
+        <span class="blog-comment__author">{{ name }}</span>
+        <span class="blog-comment__time">{{ postDate }}</span>
+        <input class="blog-comment__checkbox" type="checkbox" :value="id" @change="select" />
       </div>
       <div class="blog-comment__message" v-html="renderedMessage"></div>
     </div>
@@ -131,6 +127,17 @@ export default {
     padding: $space-small;
     border-bottom: 1px #333 solid;
     position: relative;
+  }
+
+  &__author {
+    font-weight: bold;
+    font-size: $font;
+  }
+
+  &__time {
+    font-size: $font-small;
+    vertical-align: text-bottom;
+    padding-left: $space;
   }
 
   &__checkbox {
