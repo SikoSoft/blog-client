@@ -31,6 +31,8 @@
   "confirmDeleteComments": "Are you sure you would like to delete the selected comments?",
   "yes": "Yes",
   "no": "No",
+  "admin": "Admin",
+  "settings": "Settings",
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",

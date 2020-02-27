@@ -1,0 +1,23 @@
+{
+  "Comments": [
+    {
+      "id": "use_captcha",
+      "label": "Use CAPTCHA",
+      "type": "toggle"
+    },
+    {
+      "id": "min_score_auto_publish",
+      "label": "Minimum score for auto-publish",
+      "type": "number",
+      "maxLength": 10
+    }
+  ],
+  "UI": [
+    {
+      "id": "toast_life",
+      "label": "Toast duration",
+      "type": "number",
+      "maxLength": 5
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import Entry from "./views/Entry.vue";
 import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
 import Token from "./views/Token.vue";
+import Settings from "./views/Settings.vue";
 
 Vue.use(Router);
 
@@ -42,6 +43,11 @@ export default new Router({
         localStorage.setItem("token", "admin");
         return "/";
       }
+    },
+    {
+      path: "/admin/settings",
+      name: "settings",
+      component: Settings
     }
   ]
 });
