@@ -120,31 +120,50 @@ export default {
       });
     },
 
+    getFormErrors() {
+      const errors = [];
+      if (!this.name) {
+        errors.push(this.$strings.pleaseEnterYourName);
+      }
+      console.log(`editor text (${this.editor.getText().trim()})`);
+      if (!this.editor.getText().trim()) {
+        errors.push(this.$strings.pleaseEnterAMessage);
+      }
+      return errors;
+    },
+
     async submitForm(e) {
-      this.getCaptchaToken().then(captchaToken => {
-        fetch(this.entry.api.postComment.href, {
-          method: this.entry.api.postComment.method,
-          headers: this.headers,
-          body: JSON.stringify({
-            name: this.name,
-            message: this.editor.getContents().ops,
-            captchaToken
+      const errors = this.getFormErrors();
+      if (errors.length > 0) {
+        errors.forEach(error => {
+          this.addToast(error);
+        });
+      } else {
+        this.getCaptchaToken().then(captchaToken => {
+          fetch(this.entry.api.postComment.href, {
+            method: this.entry.api.postComment.method,
+            headers: this.headers,
+            body: JSON.stringify({
+              name: this.name,
+              message: this.editor.getContents().ops,
+              captchaToken
+            })
           })
-        })
-          .then(response => response.json())
-          .then(json => {
-            if (!json.errorCode) {
-              localStorage.removeItem(this.formId);
-            } else {
-              this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
-            }
-            this.$store.commit("setComments", {
-              id: this.entry.id,
-              comments: [{ ...json }, ...this.comments]
+            .then(response => response.json())
+            .then(json => {
+              if (!json.errorCode) {
+                localStorage.removeItem(this.formId);
+              } else {
+                this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
+              }
+              this.$store.commit("setComments", {
+                id: this.entry.id,
+                comments: [{ ...json }, ...this.comments]
+              });
+              this.open = false;
             });
-            this.open = false;
-          });
-      });
+        });
+      }
       e.preventDefault();
     },
 
