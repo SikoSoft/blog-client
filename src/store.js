@@ -26,7 +26,8 @@ const state = {
   toasts: [],
   comments: {},
   entryComments: {},
-  selectedComments: []
+  selectedComments: [],
+  settings: {}
 };
 
 const mutations = {
@@ -127,6 +128,14 @@ const mutations = {
 
   setSelectedComments: (state, { comments }) => {
     Vue.set(state, "selectedComments", comments);
+  },
+
+  setSettings: (state, { settings }) => {
+    Vue.set(state, "settings", settings);
+  },
+
+  setSetting: (state, { id, value }) => {
+    state.settings[id] = value;
   }
 };
 
@@ -151,6 +160,7 @@ const actions = {
         commit("setUser", { user: { ...json.user, role: token ? 2 : 1 } });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
+        commit("setSettings", { settings: json.settings });
         commit("setInitialized");
         commit("setLoading", { loading: false });
       });
@@ -325,6 +335,18 @@ const actions = {
         commit("setSelectedComments", { comments: [] });
         dispatch("addToast", strings.commentsDeleted);
       });
+  },
+
+  setSetting({ commit }, { id, value }) {
+    fetch(state.api.saveSetting.href, {
+      method: state.api.saveSetting.method,
+      headers: getters.headers,
+      body: JSON.stringify({ id, value })
+    })
+      .then(response => response.json())
+      .then(() => {
+        commit("setSetting", { id, value });
+      });
   }
 };
 
@@ -363,7 +385,8 @@ const getters = {
   },
   toasts: state => state.toasts,
   selectedComments: state => state.selectedComments,
-  commentIsSelected: state => id => state.selectedComments.indexOf(id) > -1
+  commentIsSelected: state => id => state.selectedComments.indexOf(id) > -1,
+  settings: state => state.settings
 };
 
 export default new Vuex.Store({

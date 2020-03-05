@@ -6,17 +6,18 @@
       :key="groupName"
     >
       <h3>{{ groupName }}</h3>
-      <table class="admin-settings__table">
-        <tr class="admin-settings__table-row" v-for="setting in groupSettings">
-          <td class="admin-settings__table-column">{{ setting.label }}</td>
-          <td class="admin-settings__table-column"></td>
-        </tr>
-      </table>
+      <ul class="admin-settings__list">
+        <div class="admin-settings__setting" v-for="setting in groupSettings" :key="setting.id">
+          <admin-setting :bind="setting" :value="settings[setting.id]" />
+        </div>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import settings from "@/data/settings.json";
 
 export default {
@@ -26,6 +27,10 @@ export default {
     return {
       settings
     };
+  },
+
+  computed: {
+    ...mapGetters(["settings"])
   }
 };
 </script>
@@ -38,13 +43,10 @@ export default {
   &__group-name {
   }
 
-  &__table {
+  &__list {
   }
 
-  &__table-row {
-  }
-
-  &__table-column {
+  &__setting {
   }
 }
 </style>
