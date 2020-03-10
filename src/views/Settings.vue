@@ -1,11 +1,11 @@
 <template>
   <div class="settings">
-    <admin-settings />
+    <admin-settings v-if="initialized" v-bind="settings" />
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import AdminSettings from "@/components/Admin/AdminSettings.vue";
 
 export default {
@@ -21,7 +21,14 @@ export default {
     this.update();
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters(["initialized"]),
+
+    settings() {
+      console.log("computing settings");
+      return this.$store.getters.settings;
+    }
+  },
 
   methods: {
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
@@ -33,6 +40,7 @@ export default {
           { href: "/admin/settings", label: this.$strings.settings }
         ]);
         this.setTitle(this.$strings.settings);
+        console.log("settings", this.settings);
       });
     }
   }

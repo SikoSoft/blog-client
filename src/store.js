@@ -351,6 +351,7 @@ const actions = {
 };
 
 const getters = {
+  initialized: state => state.initialized,
   headers: state => ({ "x-functions-key": state.token }),
   isLoading: state => state.isLoading,
   api: state => state.api,
