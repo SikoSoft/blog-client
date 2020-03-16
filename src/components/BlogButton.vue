@@ -1,5 +1,7 @@
 <template>
-  <button class="blog-button" :class="classes" @click.prevent="action">{{ text }}</button>
+  <button class="blog-button" :class="classes" @click.prevent="action">
+    {{ text }}
+  </button>
 </template>
 
 <script>

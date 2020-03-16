@@ -6,7 +6,11 @@
       v-model="token"
       :placeholder="$strings.token"
     />
-    <blog-button class="blog-token-handler__activate" :text="$strings.activate" />
+    <blog-button
+      class="blog-token-handler__activate"
+      :text="$strings.activate"
+      :action="useToken"
+    />
   </form>
 </template>
 
