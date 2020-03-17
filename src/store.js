@@ -59,8 +59,12 @@ const mutations = {
     Vue.set(state, "api", api);
   },
 
-  setToken: (state, { token }) => {
-    state.token = token;
+  setSessToken: (state, { sessToken }) => {
+    state.sessToken = sessToken;
+  },
+
+  setAuthToken: (state, { authToken }) => {
+    state.authToken = authToken;
   },
 
   setTitle: (state, { title }) => {
@@ -145,11 +149,18 @@ const actions = {
       return Promise.resolve();
     }
 
-    const token = localStorage.getItem("token")
-      ? localStorage.getItem("token")
+    const sessToken = localStorage.getItem("sessToken")
+      ? localStorage.getItem("sessToken")
       : "";
-    if (token) {
-      commit("setToken", { token });
+    if (sessToken) {
+      commit("setSessToken", { sessToken });
+    }
+
+    const authToken = localStorage.getItem("authToken")
+      ? localStorage.getItem("authToken")
+      : "";
+    if (authToken) {
+      commit("setAuthToken", { authToken });
     }
 
     commit("setLoading", { loading: true });
@@ -157,7 +168,7 @@ const actions = {
     return fetch(process.env.VUE_APP_INIT, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
-        commit("setUser", { user: { ...json.user, role: token ? 2 : 1 } });
+        commit("setUser", { user: { ...json.user } });
         commit("setRoles", { roles: json.roles });
         commit("setApi", { api: json.api });
         commit("setSettings", { settings: json.settings });
@@ -352,7 +363,10 @@ const actions = {
 
 const getters = {
   initialized: state => state.initialized,
-  headers: state => ({ "x-functions-key": state.token }),
+  headers: state => ({
+    "x-functions-key": state.authToken,
+    "sess-token": state.sessToken
+  }),
   isLoading: state => state.isLoading,
   api: state => state.api,
   title: state => state.title,

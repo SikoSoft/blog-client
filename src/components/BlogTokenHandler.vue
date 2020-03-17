@@ -46,7 +46,10 @@ export default {
         .then(response => response.json())
         .then(json => {
           if (!json.errorCode) {
-            localStorage.setItem("token", json.token);
+            localStorage.setItem("sessToken", json.sessToken);
+            if (json.authToken) {
+              localStorage.setItem("authToken", json.authToken);
+            }
             this.initialize(true).then(() => {
               this.$router.push({ path: `/` });
             });
