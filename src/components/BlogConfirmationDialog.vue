@@ -26,6 +26,7 @@ export default {
   left: 20vw;
   width: 60vw;
   height: 30vh;
+  min-height: 250px;
   border-radius: 8px;
   padding: $space-large;
   box-sizing: border-box;
@@ -38,6 +39,7 @@ export default {
   }
 
   .blog-confirmation-dialog__title {
+    margin: 2vh 0;
     font-size: $font-xlarge;
     color: $color-emphasis;
   }

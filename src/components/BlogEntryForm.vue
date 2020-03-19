@@ -25,7 +25,7 @@
       <blog-button
         destroy
         type="button"
-        v-if="entry.id"
+        v-if="entry.id && user.rights.includes('delete_entry')"
         :action="showConfirmationDialog"
         :text="$strings.deleteEntry"
       />
@@ -106,7 +106,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers"]),
+    ...mapGetters(["api", "headers", "user"]),
 
     editorId() {
       return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
