@@ -25,7 +25,6 @@ export default {
     ...mapGetters(["initialized"]),
 
     settings() {
-      console.log("computing settings");
       return this.$store.getters.settings;
     }
   },
@@ -40,7 +39,6 @@ export default {
           { href: "/admin/settings", label: this.$strings.settings }
         ]);
         this.setTitle(this.$strings.settings);
-        console.log("settings", this.settings);
       });
     }
   }

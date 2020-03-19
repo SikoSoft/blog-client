@@ -125,7 +125,6 @@ export default {
       if (!this.name) {
         errors.push(this.$strings.pleaseEnterYourName);
       }
-      console.log(`editor text (${this.editor.getText().trim()})`);
       if (!this.editor.getText().trim()) {
         errors.push(this.$strings.pleaseEnterAMessage);
       }
