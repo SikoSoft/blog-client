@@ -7,7 +7,13 @@
       <div class="blog-comment__meta">
         <span class="blog-comment__author">{{ name }}</span>
         <span class="blog-comment__time">{{ postDate }}</span>
-        <input class="blog-comment__checkbox" type="checkbox" :value="id" @change="select" />
+        <input
+          v-if="showCheckBox"
+          class="blog-comment__checkbox"
+          type="checkbox"
+          :value="id"
+          @change="select"
+        />
       </div>
       <div class="blog-comment__message" v-html="renderedMessage"></div>
     </div>
@@ -17,7 +23,7 @@
 <script>
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { longDate } from "../util/time.js";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "blog-comment",
@@ -25,6 +31,8 @@ export default {
   props: ["entry_id", "id", "message", "name", "time", "public"],
 
   computed: {
+    ...mapGetters(["user"]),
+
     renderedMessage() {
       return new QuillDeltaToHtmlConverter(
         JSON.parse(this.message),
@@ -48,6 +56,16 @@ export default {
         "blog-comment--selected": this.isSelected,
         "blog-comment--needs-approval": this.public === 0
       };
+    },
+
+    showCheckBox() {
+      if (
+        (this.user.rights.includes("publish_comments") && this.public === 0) ||
+        this.user.rights.includes("delete_comments")
+      ) {
+        return true;
+      }
+      return false;
     }
   },
 
