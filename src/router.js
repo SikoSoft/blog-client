@@ -38,9 +38,10 @@ export default new Router({
       component: Token
     },
     {
-      path: "/admin",
+      path: "/logout",
       redirect: () => {
-        localStorage.setItem("token", "admin");
+        localStorage.removeItem("sessToken");
+        localStorage.removeItem("authToken");
         return "/";
       }
     },
