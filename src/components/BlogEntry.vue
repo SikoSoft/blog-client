@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="blog-entry__comments" v-if="fullMode">
-        <blog-comment-form :entry="entry" />
+        <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
         <blog-comments :entry="entry" />
       </div>
     </template>
