@@ -1,7 +1,7 @@
 <template>
   <div class="blog-header">
     <blog-hero />
-    <blog-admin v-if="user.rights.includes('create_entry')" />
+    <blog-admin v-if="user.rights && user.rights.includes('create_entry')" />
     <blog-breadcrumb id="blog-breadcrumb" />
   </div>
 </template>
