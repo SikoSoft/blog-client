@@ -7,7 +7,7 @@
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div class="blog-entry__edit" v-if="rights.includes('u')">
+        <div class="blog-entry__edit" v-if="user.rights.includes('update_entry')">
           <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
@@ -64,7 +64,7 @@ export default {
   components: { BlogEntryForm, BlogComments, BlogCommentForm, BlogButton },
 
   computed: {
-    ...mapGetters(["rights"]),
+    ...mapGetters(["user"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);

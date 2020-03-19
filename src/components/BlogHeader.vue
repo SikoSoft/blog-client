@@ -1,7 +1,7 @@
 <template>
   <div class="blog-header">
     <blog-hero />
-    <blog-admin v-if="rights.includes('c')" />
+    <blog-admin v-if="user.rights.includes('create_entry')" />
     <blog-breadcrumb id="blog-breadcrumb" />
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
 
   components: { BlogHero, BlogAdmin, BlogBreadcrumb },
 
-  computed: mapGetters(["rights"])
+  computed: mapGetters(["user"])
 };
 </script>
 
