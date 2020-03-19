@@ -1,6 +1,11 @@
 {
   "Comments": [
     {
+      "id": "enable_comments",
+      "label": "Enable commenting",
+      "type": "toggle"
+    },
+    {
       "id": "use_captcha",
       "label": "Use CAPTCHA",
       "type": "toggle"

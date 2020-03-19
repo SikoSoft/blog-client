@@ -26,7 +26,7 @@
           </ul>
         </div>
       </div>
-      <div class="blog-entry__comments" v-if="fullMode">
+      <div class="blog-entry__comments" v-if="fullMode && settings.enable_comments === 1">
         <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
         <blog-comments :entry="entry" />
       </div>
@@ -64,7 +64,7 @@ export default {
   components: { BlogEntryForm, BlogComments, BlogCommentForm, BlogButton },
 
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "settings"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);
