@@ -3,8 +3,6 @@ import Vuex from "vuex";
 import { uuid } from "@/util/uuid";
 import strings from "@/data/strings.json";
 
-const toastLife = 3000;
-
 Vue.use(Vuex);
 
 const state = {
@@ -270,7 +268,7 @@ const actions = {
     });
     setTimeout(() => {
       dispatch("removeToast", id);
-    }, toastLife);
+    }, state.settings.toast_life);
   },
 
   removeToast({ state, commit }, id) {
