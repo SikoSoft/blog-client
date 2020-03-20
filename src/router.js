@@ -6,6 +6,7 @@ import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
 import Token from "./views/Token.vue";
 import Settings from "./views/Settings.vue";
+import AccessDenied from "./views/AccessDenied.vue";
 
 Vue.use(Router);
 
@@ -49,6 +50,11 @@ export default new Router({
       path: "/admin/settings",
       name: "settings",
       component: Settings
+    },
+    {
+      path: "/accessDenied",
+      name: "access-denied",
+      component: AccessDenied
     }
   ]
 });

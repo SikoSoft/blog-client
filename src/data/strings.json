@@ -35,6 +35,8 @@
   "settings": "Settings",
   "pleaseEnterYourName": "Please enter your name",
   "pleaseEnterAMessage": "Please enter a message",
+  "accessDenied": "Access denied",
+  "accessDeniedLong": "You do not have the necessary privileges to access this.",
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",
