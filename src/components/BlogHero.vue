@@ -1,7 +1,7 @@
 <template>
   <div class="blog-hero">
     <div class="blog-hero__image" :style="{ 'background-size': `auto ${imgSize}px` }"></div>
-    <h2 class="blog-hero__heading" :style="{ opacity: headingOpacity }">{{ title }}</h2>
+    <h1 class="blog-hero__heading" :style="{ opacity: headingOpacity }">{{ title }}</h1>
     <div class="blog-hero__caption"></div>
   </div>
 </template>

@@ -1,11 +1,29 @@
+$font-family: "Pathway Gothic One", sans-serif;
+
 $space: 1rem;
 $space-large: $space * 1.5;
 $space-xlarge: $space * 2;
+$space-xxlarge: $space * 3;
+$space-xxxlarge: $space * 4;
 $space-small: $space / 1.5;
 $space-xsmall: $space / 2;
+$space-xxsmall: $space / 3;
+$space-xxxsmall: $space / 4;
+
+$font: 1rem;
+$font-large: $font * 1.5;
+$font-xlarge: $font * 2;
+$font-xxlarge: $font * 3;
+$font-xxxlarge: $font * 4;
+$font-small: $font / 1.1;
+$font-xsmall: $font / 1.25;
+$font-xxsmall: $font / 1.5;
+$font-xxxsmall: $font / 1.75;
 
 $color-bg-primary: #000;
 $color-bg-secondary: #505050;
+$color-border-primary: #666;
+$color-border-secondary: #444;
 $color-link-primary: yellow;
 $color-link-hover: rgb(255, 255, 200);
 $color-emphasis: orange;

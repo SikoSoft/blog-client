@@ -11,7 +11,7 @@
           @focus="tagsFocus"
           @blur="tagsBlur"
         />
-        <button type="button" v-if="tagIsValid(tag)" @click="addTag">+</button>
+        <blog-button v-if="tagIsValid(tag)" :action="addTag" text="+" />
         <ul class="blog-tag-manager__auto-list" v-if="tagsFocused && autoTags.length">
           <li
             class="blog-tag-manager__auto-list-item"
@@ -37,14 +37,18 @@
 </template>
 
 <script>
+import BlogButton from "@/components/BlogButton.vue";
+
 export default {
   name: "blog-tag-manager",
+
+  components: { BlogButton },
 
   data() {
     return {
       tagsCoolDown: 200,
       tagsTimeout: 0,
-      minTagLength: 3,
+      minTagLength: 2,
       tag: "",
       autoTags: [],
       autoTagSelected: "",

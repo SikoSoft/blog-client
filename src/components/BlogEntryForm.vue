@@ -20,18 +20,34 @@
       <blog-tag-manager :tags="tags" :api="api" />
     </div>
     <div class="blog-entry-form__buttons">
-      <button v-if="entry.id">{{ $strings.updateEntry }}</button>
-      <button v-else>{{ $strings.postEntry }}</button>
-      <button type="button" v-if="entry.id" @click="deleteEntry">{{ $strings.deleteEntry }}</button>
+      <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
+      <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
+      <blog-button
+        destroy
+        type="button"
+        v-if="entry.id && user.rights.includes('delete_entry')"
+        :action="showConfirmationDialog"
+        :text="$strings.deleteEntry"
+      />
+      <blog-confirmation-dialog
+        :isOpen="confirmationDialogOpen"
+        :title="$strings.deleteEntry"
+        :message="$strings.confirmDeleteEntry"
+      >
+        <blog-button destroy :text="$strings.yes" :action="deleteEntry" />
+        <blog-button :text="$strings.no" :action="hideConfirmationDialog" />
+      </blog-confirmation-dialog>
     </div>
   </form>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
 
 import BlogTagManager from "@/components/BlogTagManager.vue";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
+import BlogButton from "@/components/BlogButton.vue";
 import imageHandler from "@/util/imageHandler";
 
 export default {
@@ -39,7 +55,7 @@ export default {
 
   props: ["entry"],
 
-  components: { BlogTagManager },
+  components: { BlogTagManager, BlogConfirmationDialog, BlogButton },
 
   data() {
     return {
@@ -47,7 +63,8 @@ export default {
       body: this.entry.body ? this.entry.body : "",
       tags: this.entry.tags ? this.entry.tags : [],
       editor: false,
-      initialized: false
+      initialized: false,
+      confirmationDialogOpen: false
     };
   },
 
@@ -89,7 +106,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers"]),
+    ...mapGetters(["api", "headers", "user"]),
 
     editorId() {
       return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
@@ -101,6 +118,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["setLoading"]),
+
     ...mapActions([
       "getEntries",
       "hideEntryForm",
@@ -115,6 +134,7 @@ export default {
         body: bodyDelta,
         tags: this.tags
       };
+      this.setLoading({ loading: true });
       fetch(this.entry.api.save.href, {
         method: this.entry.api.save.method,
         headers: this.headers,
@@ -123,9 +143,11 @@ export default {
         .then(response => response.json())
         .then(json => {
           this.getEntries(true).then(() => {
+            this.setLoading({ loading: false });
             this.hideEntryForm();
             this.setEntryById({ id: json.id, entry });
             this.setEditMode({ id: json.id, mode: false });
+            localStorage.removeItem(this.formId);
             if (window.location.pathname !== `/entry/${json.id}`) {
               this.$router.push({ path: `/entry/${json.id}` });
             }
@@ -173,6 +195,14 @@ export default {
       } catch (e) {
         console.log("corrupt form data", e);
       }
+    },
+
+    showConfirmationDialog() {
+      this.confirmationDialogOpen = true;
+    },
+
+    hideConfirmationDialog() {
+      this.confirmationDialogOpen = false;
     }
   }
 };
@@ -180,10 +210,6 @@ export default {
 
 <style lang="scss">
 @import "@/styles/variables.scss";
-
-#quilljs-editor {
-  background-color: #fff;
-}
 
 .blog-entry-form {
   margin: 16px 0;
@@ -201,13 +227,17 @@ export default {
   .blog-entry-form__title {
     font-size: 2rem;
     width: 36rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .blog-entry-form__tags {
   }
 
-  .ql-blank {
-    min-height: 5rem;
+  .ql-editor {
+    min-height: 10rem;
+    font-family: $font-family;
+    font-size: $font-large;
   }
 }
 </style>

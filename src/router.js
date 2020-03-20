@@ -4,6 +4,8 @@ import Entries from "./views/Entries.vue";
 import Entry from "./views/Entry.vue";
 import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
+import Token from "./views/Token.vue";
+import Settings from "./views/Settings.vue";
 
 Vue.use(Router);
 
@@ -31,11 +33,22 @@ export default new Router({
       component: Tag
     },
     {
-      path: "/admin",
+      path: "/token/:token?",
+      name: "token",
+      component: Token
+    },
+    {
+      path: "/logout",
       redirect: () => {
-        localStorage.setItem("token", "admin");
+        localStorage.removeItem("sessToken");
+        localStorage.removeItem("authToken");
         return "/";
       }
+    },
+    {
+      path: "/admin/settings",
+      name: "settings",
+      component: Settings
     }
   ]
 });

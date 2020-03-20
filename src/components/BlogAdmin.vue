@@ -1,19 +1,26 @@
 <template>
   <div class="blog-admin">
-    <button class="blog-admin__entry-button" @click="showEntryForm" v-if="!entryFormIsOpen">+</button>
-    <button class="blog-admin__entry-button" @click="hideEntryForm" v-else>-</button>
+    <blog-button
+      class="blog-admin__entry-button"
+      :action="showEntryForm"
+      v-if="!entryFormIsOpen"
+      text="+"
+    />
+    <blog-button class="blog-admin__entry-button" :action="hideEntryForm" v-else text="-" />
     <blog-entry-form v-if="entryFormIsOpen" :entry="{ api: { save: api.newEntry } }" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+
+import BlogButton from "@/components/BlogButton.vue";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 
 export default {
   name: "blog-admin",
 
-  components: { BlogEntryForm },
+  components: { BlogEntryForm, BlogButton },
 
   computed: {
     ...mapGetters(["entryFormIsOpen", "api"])

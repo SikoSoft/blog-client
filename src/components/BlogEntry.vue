@@ -7,8 +7,8 @@
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div class="blog-entry__edit" v-if="rights.includes('u')">
-          <button @click="edit">{{ $strings.editEntry }}</button>
+        <div class="blog-entry__edit" v-if="user.rights.includes('update_entry')">
+          <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
       <div class="blog-entry__body">
@@ -26,9 +26,13 @@
           </ul>
         </div>
       </div>
+      <div class="blog-entry__comments" v-if="fullMode && settings.enable_comments === 1">
+        <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
+        <blog-comments :entry="entry" />
+      </div>
     </template>
     <template v-else>
-      <button @click="edit">{{ $strings.cancel }}</button>
+      <blog-button :action="edit" :text="$strings.cancel" />
       <blog-entry-form :entry="entry" />
     </template>
   </div>
@@ -37,6 +41,9 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
+import BlogComments from "@/components/BlogComments.vue";
+import BlogCommentForm from "@/components/BlogCommentForm.vue";
+import BlogButton from "@/components/BlogButton.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 
@@ -54,10 +61,10 @@ export default {
     "fullMode"
   ],
 
-  components: { BlogEntryForm },
+  components: { BlogEntryForm, BlogComments, BlogCommentForm, BlogButton },
 
   computed: {
-    ...mapGetters(["rights"]),
+    ...mapGetters(["user", "settings"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);
@@ -177,7 +184,7 @@ export default {
   }
 
   &__foot {
-    margin-top: 2rem;
+    margin: 2rem 0;
   }
 
   &__tags {
@@ -195,6 +202,14 @@ export default {
     &:not(:first-child) {
       margin-left: $space;
     }
+  }
+
+  &__comments {
+    margin: 0 -2rem;
+    padding: 5rem 2rem;
+    background-color: #111;
+    border-top: 1rem #333 solid;
+    border-bottom: 1rem #333 solid;
   }
 
   pre {
