@@ -58,4 +58,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.admin-setting {
+  margin: 1.5rem 0;
+
+  &__label {
+    margin: 0.5rem 0;
+  }
+}
+</style>
