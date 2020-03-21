@@ -7,6 +7,7 @@ import Tag from "./views/Tag.vue";
 import Token from "./views/Token.vue";
 import Settings from "./views/Settings.vue";
 import AccessDenied from "./views/AccessDenied.vue";
+import Admin from "./views/Admin.vue";
 
 Vue.use(Router);
 
@@ -45,6 +46,11 @@ export default new Router({
         localStorage.removeItem("authToken");
         return "/";
       }
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: Admin
     },
     {
       path: "/admin/settings",
