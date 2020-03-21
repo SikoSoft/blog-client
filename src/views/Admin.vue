@@ -1,6 +1,6 @@
 <template>
   <div class="admin">
-    <admin-home />
+    <admin-home v-if="initialized" />
   </div>
 </template>
 
