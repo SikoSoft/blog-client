@@ -20,8 +20,19 @@ header {
   margin: 0;
 }
 
+.main-container {
+  display: flex;
+}
+
 main {
   padding: $space-xlarge;
+  flex: 7;
+}
+
+aside {
+  min-width: 352px;
+  padding: $space-xlarge;
+  flex: 3;
 }
 
 strong {

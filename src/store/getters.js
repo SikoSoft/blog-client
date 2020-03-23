@@ -58,5 +58,7 @@ export default {
 
   commentIsSelected: state => id => state.selectedComments.indexOf(id) > -1,
 
-  settings: state => state.settings
+  settings: state => state.settings,
+
+  tokens: state => state.tokens
 };

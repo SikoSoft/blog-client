@@ -3,19 +3,25 @@
     <header>
       <blog-header />
     </header>
-    <main>
-      <router-view />
-    </main>
+    <div class="main-container">
+      <main>
+        <router-view />
+      </main>
+      <blog-sidebar v-if="initialized" />
+    </div>
     <blog-toasts />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import BlogHeader from "./components/BlogHeader.vue";
 import BlogToasts from "./components/BlogToasts.vue";
+import BlogSidebar from "./components/BlogSidebar.vue";
 
 export default {
-  components: { BlogHeader, BlogToasts },
+  components: { BlogHeader, BlogToasts, BlogSidebar },
 
   mounted() {
     this.$router.afterEach(to => {
@@ -73,6 +79,10 @@ export default {
         }
       }
     });
+  },
+
+  computed: {
+    ...mapGetters(["initialized"])
   }
 };
 </script>

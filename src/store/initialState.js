@@ -18,5 +18,6 @@ export default {
   comments: {},
   entryComments: {},
   selectedComments: [],
-  settings: {}
+  settings: {},
+  tokens: []
 };

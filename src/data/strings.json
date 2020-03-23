@@ -33,10 +33,17 @@
   "no": "No",
   "admin": "Admin",
   "settings": "Settings",
+  "tokens": "Tokens",
   "pleaseEnterYourName": "Please enter your name",
   "pleaseEnterAMessage": "Please enter a message",
   "accessDenied": "Access denied",
   "accessDeniedLong": "You do not have the necessary privileges to access this.",
+  "githubFeed": "Github Feed",
+  "githubEventTypes": {
+    "IssuesEvent": "Created issue {issue} in {repo}",
+    "IssueCommentEvent": "Posted comment to {issue} in {repo}",
+    "PushEvent": "Committed {desc} in {repo}"
+  },
   "errors": {
     "CODE_1": "The token you provided is invalid",
     "CODE_2": "The token you provided has already been used",
