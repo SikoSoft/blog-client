@@ -206,5 +206,16 @@ export default {
       .then(() => {
         commit("setSetting", { id, value });
       });
+  },
+
+  getDrafts({ commit, state, getters }) {
+    fetch(state.api.drafts.href, {
+      method: state.api.drafts.method,
+      headers: getters.headers
+    })
+      .then(response => response.json())
+      .then(({ drafts }) => {
+        commit("setDrafts", { drafts });
+      });
   }
 };

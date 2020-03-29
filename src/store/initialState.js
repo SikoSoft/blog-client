@@ -19,5 +19,6 @@ export default {
   entryComments: {},
   selectedComments: [],
   settings: {},
-  tokens: []
+  tokens: [],
+  drafts: []
 };

@@ -7,6 +7,7 @@
   "tags": "Tags",
   "newEntry": "New entry",
   "postEntry": "Post entry",
+  "saveAsDraft": "Save as draft",
   "updateEntry": "Update entry",
   "editEntry": "Edit entry",
   "deleteEntry": "Delete entry",
@@ -38,7 +39,10 @@
   "pleaseEnterAMessage": "Please enter a message",
   "accessDenied": "Access denied",
   "accessDeniedLong": "You do not have the necessary privileges to access this.",
+  "thisEntryIsUnpublished": "This entry has not been published and is not publicly visible.",
+  "unpublishedDrafts": "Unpublished drafts",
   "githubFeed": "Github Feed",
+  "selectOption": "--- Select ---",
   "githubEventTypes": {
     "IssuesEvent": "Created issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

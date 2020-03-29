@@ -1,5 +1,12 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
+    <div class="blog-entry-form__drafts" v-if="drafts">
+      <h2>{{ $strings.unpublishedDrafts }}</h2>
+      <select @change="loadDraft">
+        <option value>{{ $strings.selectOption }}</option>
+        <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+      </select>
+    </div>
     <div class="blog-entry-form__head">
       <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
       <h2 v-else>{{ $strings.editEntry }}</h2>
@@ -22,6 +29,7 @@
     <div class="blog-entry-form__buttons">
       <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
       <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
+      <blog-button create :text="$strings.saveAsDraft" :action="saveDraft" />
       <blog-button
         destroy
         type="button"
@@ -53,22 +61,22 @@ import imageHandler from "@/util/imageHandler";
 export default {
   name: "blog-entry-form",
 
-  props: ["entry"],
+  props: ["initialEntry"],
 
   components: { BlogTagManager, BlogConfirmationDialog, BlogButton },
 
   data() {
     return {
-      title: this.entry.title ? this.entry.title : "",
-      body: this.entry.body ? this.entry.body : "",
-      tags: this.entry.tags ? this.entry.tags : [],
+      entry: this.initialEntry ? this.initialEntry : false,
       editor: false,
       initialized: false,
-      confirmationDialogOpen: false
+      confirmationDialogOpen: false,
+      public: 1
     };
   },
 
   mounted() {
+    this.getDrafts();
     this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
@@ -106,7 +114,19 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers", "user"]),
+    ...mapGetters(["api", "headers", "user", "drafts"]),
+
+    title() {
+      return this.entry.title ? this.entry.title : "";
+    },
+
+    body() {
+      return this.entry.body ? this.entry.body : "";
+    },
+
+    tags() {
+      return this.entry.tags ? this.entry.tags : [];
+    },
 
     editorId() {
       return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
@@ -122,17 +142,24 @@ export default {
 
     ...mapActions([
       "getEntries",
+      "getDrafts",
       "hideEntryForm",
       "setEditMode",
       "setEntryById"
     ]),
+
+    saveDraft(e) {
+      this.public = 0;
+      this.submitForm(e);
+    },
 
     submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
       const entry = {
         title: this.title,
         body: bodyDelta,
-        tags: this.tags
+        tags: this.tags,
+        public: this.public
       };
       this.setLoading({ loading: true });
       fetch(this.entry.api.save.href, {
@@ -203,6 +230,14 @@ export default {
 
     hideConfirmationDialog() {
       this.confirmationDialogOpen = false;
+    },
+
+    loadDraft(e) {
+      if (e.target.value) {
+        this.entry = this.$store.getters.draftById(e.target.value);
+        console.log("body>>>", this.entry.body);
+        this.editor.setContents(JSON.parse(this.entry.body));
+      }
     }
   }
 };

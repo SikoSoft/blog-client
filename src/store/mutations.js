@@ -110,5 +110,9 @@ export default {
 
   setSetting: (state, { id, value }) => {
     state.settings[id] = value;
+  },
+
+  setDrafts: (state, { drafts }) => {
+    state.drafts = drafts;
   }
 };

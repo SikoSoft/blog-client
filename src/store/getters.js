@@ -60,5 +60,11 @@ export default {
 
   settings: state => state.settings,
 
-  tokens: state => state.tokens
+  tokens: state => state.tokens,
+
+  drafts: state => state.drafts,
+
+  draftById: state => id => {
+    return state.drafts.filter(draft => draft.id === id)[0];
+  }
 };
