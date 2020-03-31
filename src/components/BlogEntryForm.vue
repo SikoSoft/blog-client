@@ -1,10 +1,11 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
     <div class="blog-entry-form__drafts" v-if="drafts">
-      <h2>{{ $strings.unpublishedDrafts }}</h2>
       <select @change="loadDraft">
-        <option value>{{ $strings.selectOption }}</option>
-        <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+        <option value>{{ $strings.newEntry }}</option>
+        <optgroup :label="$strings.unpublishedDrafts">
+          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+        </optgroup>
       </select>
     </div>
     <div class="blog-entry-form__head">
@@ -235,8 +236,10 @@ export default {
     loadDraft(e) {
       if (e.target.value) {
         this.entry = this.$store.getters.draftById(e.target.value);
-        console.log("body>>>", this.entry.body);
         this.editor.setContents(JSON.parse(this.entry.body));
+      } else {
+        this.entry = false;
+        this.editor.setContents([]);
       }
     }
   }
