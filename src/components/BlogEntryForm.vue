@@ -1,6 +1,6 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
-    <div class="blog-entry-form__drafts" v-if="drafts">
+    <div class="blog-entry-form__drafts" v-if="!initialEntry.id && drafts">
       <select @change="loadDraft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
@@ -28,16 +28,29 @@
       <blog-tag-manager :tags="tags" :api="api" />
     </div>
     <div class="blog-entry-form__buttons">
-      <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
-      <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
-      <blog-button create :text="$strings.saveAsDraft" :action="saveDraft" />
-      <blog-button
-        destroy
-        type="button"
-        v-if="entry.id && user.rights.includes('delete_entry')"
-        :action="showConfirmationDialog"
-        :text="$strings.deleteEntry"
-      />
+      <template v-if="!entryId || entry.public === 1">
+        <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
+        <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
+        <blog-button create v-if="!entry.id" :text="$strings.saveAsDraft" :action="saveDraft" />
+        <blog-button
+          destroy
+          type="button"
+          v-if="entry.id && user.rights.includes('delete_entry')"
+          :action="showConfirmationDialog"
+          :text="$strings.deleteEntry"
+        />
+      </template>
+      <template v-else>
+        <blog-button create :text="$strings.publishDraft" :action="saveDraft" />
+        <blog-button create :text="$strings.updateDraft" :action="submitForm" />
+        <blog-button
+          destroy
+          type="button"
+          v-if="entry.id && user.rights.includes('delete_entry')"
+          :action="showConfirmationDialog"
+          :text="$strings.deleteDraft"
+        />
+      </template>
       <blog-confirmation-dialog
         :isOpen="confirmationDialogOpen"
         :title="$strings.deleteEntry"
@@ -68,11 +81,14 @@ export default {
 
   data() {
     return {
+      title: this.initialEntry.title ? this.initialEntry.title : "",
+      body: this.initialEntry.body ? this.initialEntry.body : "",
+      tags: this.initialEntry.tags ? this.initialEntry.tags : [],
       entry: this.initialEntry ? this.initialEntry : false,
       editor: false,
       initialized: false,
       confirmationDialogOpen: false,
-      public: 1
+      public: this.initialEntry.public ? this.initialEntry.public : 1
     };
   },
 
@@ -117,24 +133,16 @@ export default {
   computed: {
     ...mapGetters(["api", "headers", "user", "drafts"]),
 
-    title() {
-      return this.entry.title ? this.entry.title : "";
-    },
-
-    body() {
-      return this.entry.body ? this.entry.body : "";
-    },
-
-    tags() {
-      return this.entry.tags ? this.entry.tags : [];
+    entryId() {
+      return this.entry && this.entry.id ? this.entry.id : false;
     },
 
     editorId() {
-      return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
+      return `quilljs-editor${this.entryId ? "-" + this.entryId : ""}`;
     },
 
     formId() {
-      return `entry-form${this.entry.id ? "-" + this.entry.id : ""}`;
+      return `entry-form${this.entryId ? "-" + this.entryId : ""}`;
     }
   },
 
@@ -148,6 +156,11 @@ export default {
       "setEditMode",
       "setEntryById"
     ]),
+
+    publishDraft(e) {
+      this.public = 1;
+      this.submitForm(e);
+    },
 
     saveDraft(e) {
       this.public = 0;
@@ -236,10 +249,15 @@ export default {
     loadDraft(e) {
       if (e.target.value) {
         this.entry = this.$store.getters.draftById(e.target.value);
+        this.title = this.entry.title;
+        this.body = this.entry.body;
+        this.tags = this.entry.tags;
+        this.public = this.entry.public;
         this.editor.setContents(JSON.parse(this.entry.body));
       } else {
         this.entry = false;
-        this.editor.setContents([]);
+        this.public = 0;
+        this.loadFormState();
       }
     }
   }
