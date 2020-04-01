@@ -33,7 +33,7 @@
     </template>
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
-      <blog-entry-form :entry="entry" />
+      <blog-entry-form :initialEntry="entry" />
     </template>
   </div>
 </template>
@@ -58,6 +58,7 @@ export default {
     "created",
     "last_edited",
     "api",
+    "public",
     "fullMode"
   ],
 
@@ -78,7 +79,8 @@ export default {
         tags: this.tags,
         created: this.created,
         last_edited: this.last_edited,
-        api: this.api
+        api: this.api,
+        public: this.public
       };
     },
 
