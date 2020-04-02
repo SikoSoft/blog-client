@@ -209,6 +209,10 @@ export default {
   },
 
   getDrafts({ commit, state, getters }) {
+    if (state.drafts.length) {
+      return Promise.resolve();
+    }
+
     fetch(state.api.drafts.href, {
       method: state.api.drafts.method,
       headers: getters.headers
