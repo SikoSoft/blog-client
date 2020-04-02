@@ -43,6 +43,9 @@
   "unpublishedDrafts": "Unpublished drafts",
   "githubFeed": "Github Feed",
   "selectOption": "--- Select ---",
+  "updateDraft": "Update draft",
+  "publishDraft": "Publish draft",
+  "deleteDraft": "Delete draft",
   "githubEventTypes": {
     "IssuesEvent": "Created issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
