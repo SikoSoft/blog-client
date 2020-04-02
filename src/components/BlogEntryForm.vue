@@ -41,8 +41,8 @@
         />
       </template>
       <template v-else>
-        <blog-button create :text="$strings.publishDraft" :action="saveDraft" />
-        <blog-button create :text="$strings.updateDraft" :action="submitForm" />
+        <blog-button create :text="$strings.publishDraft" :action="publishDraft" />
+        <blog-button create :text="$strings.updateDraft" :action="saveDraft" />
         <blog-button
           destroy
           type="button"
