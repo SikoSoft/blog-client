@@ -26,7 +26,7 @@
           </ul>
         </div>
       </div>
-      <div class="blog-entry__comments" v-if="fullMode && settings.enable_comments === 1">
+      <div class="blog-entry__comments" v-if="showComments">
         <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
         <blog-comments :entry="entry" />
       </div>
@@ -102,6 +102,14 @@ export default {
           /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
           "<a href='/tag/$1' class='vue-route'>#$1</a>"
         );
+    },
+
+    showComments() {
+      return (
+        this.public === 1 &&
+        this.fullMode &&
+        this.settings.enable_comments === 1
+      );
     }
   },
 
