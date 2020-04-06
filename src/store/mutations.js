@@ -75,6 +75,16 @@ export default {
     );
   },
 
+  setDraftById: (state, { id, draft }) => {
+    Vue.set(
+      state,
+      "drafts",
+      [...state.drafts].map(d => {
+        return id !== draft.id ? d : { ...draft, id };
+      })
+    );
+  },
+
   setToasts: (state, { toasts }) => {
     Vue.set(state, "toasts", toasts);
   },

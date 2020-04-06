@@ -154,7 +154,8 @@ export default {
       "getDrafts",
       "hideEntryForm",
       "setEditMode",
-      "setEntryById"
+      "setEntryById",
+      "setDraftById"
     ]),
 
     publishDraft(e) {
@@ -183,16 +184,22 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this.getEntries(true).then(() => {
-            this.setLoading({ loading: false });
-            this.hideEntryForm();
-            this.setEntryById({ id: json.id, entry });
-            this.setEditMode({ id: json.id, mode: false });
-            localStorage.removeItem(this.formId);
-            if (window.location.pathname !== `/entry/${json.id}`) {
-              this.$router.push({ path: `/entry/${json.id}` });
+          this[this.public === 1 ? "getEntries" : "getDrafts"](true).then(
+            () => {
+              this.setLoading({ loading: false });
+              this.hideEntryForm();
+              this[this.public === 1 ? "setEntryById" : "setDraftById"]({
+                id: json.id,
+                [this.public === 1 ? "entry" : "draft"]: entry
+              });
+              this.setEditMode({ id: json.id, mode: false });
+              localStorage.removeItem(this.formId);
+              const routeType = this.public === 1 ? "entry" : "draft";
+              if (window.location.pathname !== `/${routeType}/${json.id}`) {
+                this.$router.push({ path: `/${routeType}/${json.id}` });
+              }
             }
-          });
+          );
         });
       e.preventDefault();
     },

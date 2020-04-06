@@ -26,6 +26,11 @@ export default new Router({
       component: Entry
     },
     {
+      path: "/draft/:id",
+      name: "draft",
+      component: Entry
+    },
+    {
       path: "/tags",
       name: "tags",
       component: Tags

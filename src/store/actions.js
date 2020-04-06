@@ -111,6 +111,10 @@ export default {
     commit("setEntryById", { id, entry });
   },
 
+  setDraftById({ commit }, { id, draft }) {
+    commit("setDraftById", { id, draft });
+  },
+
   addToast({ state, commit, dispatch }, message) {
     const id = uuid();
     commit("setToasts", {
@@ -208,18 +212,25 @@ export default {
       });
   },
 
-  getDrafts({ commit, state, getters }) {
-    if (state.drafts.length) {
+  getDrafts({ commit, state, getters }, force) {
+    if (state.drafts.length && !force) {
       return Promise.resolve();
     }
 
-    fetch(state.api.drafts.href, {
-      method: state.api.drafts.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(({ drafts }) => {
-        commit("setDrafts", { drafts });
-      });
+    commit("setLoading", { loading: true });
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.drafts.href, {
+        method: state.api.drafts.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(({ drafts }) => {
+          commit("setDrafts", { drafts });
+          commit("setLoading", { loading: false });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
   }
 };
