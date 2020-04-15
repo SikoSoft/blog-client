@@ -2,7 +2,7 @@
   <div class="admin-home">
     <ul class="admin-home__list">
       <li v-for="tool in tools" :key="tool">
-        <router-link :to="`/admin/${tool}`">{{ $strings[tool] }}</router-link>
+        <router-link :to="`/admin/${tool}`">{{ rights.Admin[`manage_${tool}`] }}</router-link>
       </li>
     </ul>
   </div>
@@ -11,11 +11,14 @@
 <script>
 import { mapGetters } from "vuex";
 
+import rights from "@/data/rights.json";
+
 export default {
   name: "admin-home",
 
   data() {
     return {
+      rights,
       available: ["settings"]
     };
   },
