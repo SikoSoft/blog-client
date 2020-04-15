@@ -7,7 +7,7 @@
       <main>
         <router-view />
       </main>
-      <blog-sidebar v-if="initialized" />
+      <blog-sidebar v-if="showSidebar" />
     </div>
     <blog-toasts />
   </div>
@@ -22,6 +22,10 @@ import BlogSidebar from "./components/BlogSidebar.vue";
 
 export default {
   components: { BlogHeader, BlogToasts, BlogSidebar },
+
+  data() {
+    return { viewsWithSidebar: ["entry", "entries", "draft", "tag"] };
+  },
 
   mounted() {
     this.$router.afterEach(to => {
@@ -82,7 +86,15 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized"])
+    ...mapGetters(["initialized", "settings"]),
+
+    showSidebar() {
+      return (
+        this.initialized &&
+        this.settings.show_sidebar &&
+        this.viewsWithSidebar.includes(this.$route.name)
+      );
+    }
   }
 };
 </script>

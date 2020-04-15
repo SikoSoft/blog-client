@@ -23,6 +23,11 @@
       "label": "Toast duration",
       "type": "number",
       "maxLength": 5
+    },
+    {
+      "id": "show_sidebar",
+      "label": "Show sidebar",
+      "type": "toggle"
     }
   ]
 }
