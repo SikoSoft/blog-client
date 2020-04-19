@@ -29,5 +29,13 @@
       "label": "Show sidebar",
       "type": "toggle"
     }
+  ],
+  "Entries": [
+    {
+      "id": "per_load",
+      "label": "Number of entries to load at a time",
+      "type": "number",
+      "maxLength": 3
+    }
   ]
 }
