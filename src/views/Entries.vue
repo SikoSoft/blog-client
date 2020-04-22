@@ -18,7 +18,9 @@ export default {
 
   data() {
     return {
-      gettingEntries: false
+      gettingEntries: false,
+      gettingEntriesCoolingDown: false,
+      gettingEntriesCoolDown: 1500
     };
   },
 
@@ -28,12 +30,17 @@ export default {
         this.$route.name === "entries" &&
         window.scrollY > this.windowYLoadNew &&
         !this.gettingEntries &&
-        !this.endOfEntries
+        !this.endOfEntries &&
+        !this.gettingEntriesCoolingDown
       ) {
         console.log("load new!");
         this.gettingEntries = true;
         this.getMoreEntries().then(() => {
           this.gettingEntries = false;
+          this.gettingEntriesCoolingDown = true;
+          this.gettingEntriesTimeout = setTimeout(() => {
+            this.gettingEntriesCoolingDown = false;
+          }, this.gettingEntriesCoolDown);
         });
       }
     });
