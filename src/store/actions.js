@@ -35,26 +35,40 @@ export default {
       });
   },
 
-  getEntries({ state, commit, getters }, force) {
+  async getEntries({ state, commit, getters }, force) {
     if (state.entries.length > 0 && !force) {
-      return;
+      return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });
 
+    const getUrl =
+      state.getEntriesStart === 0
+        ? state.api.getEntries.href
+        : `${state.api.getEntries.href}/${state.getEntriesStart}`;
+
     return new Promise((resolve, reject) => {
-      fetch(state.api.getEntries.href, {
+      fetch(getUrl, {
         method: state.api.getEntries.method,
         headers: getters.headers
       })
         .then(response => response.json())
         .then(json => {
-          commit("setEntries", { entries: json.entries });
+          commit("setEntries", {
+            start: state.getEntriesStart,
+            entries: json.entries
+          });
+          commit("setEndOfEntries", { end: json.end });
           commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
     });
+  },
+
+  getMoreEntries({ dispatch }) {
+    dispatch("setNextEntriesBatch");
+    dispatch("getEntries", true);
   },
 
   getEntriesByTag({ state, commit }, tag) {
@@ -231,6 +245,12 @@ export default {
           resolve();
         })
         .catch(e => reject(e));
+    });
+  },
+
+  setNextEntriesBatch({ commit, state }) {
+    commit("setGetEntriesStart", {
+      start: state.getEntriesStart + state.settings.per_load
     });
   }
 };

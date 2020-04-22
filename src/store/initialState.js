@@ -20,5 +20,8 @@ export default {
   selectedComments: [],
   settings: {},
   tokens: [],
-  drafts: []
+  drafts: [],
+  windowYLoadNew: 0,
+  getEntriesStart: 0,
+  endOfEntries: false
 };

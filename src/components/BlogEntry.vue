@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
+  <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }" ref="container">
     <template v-if="!editMode">
       <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
         <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>

@@ -66,5 +66,11 @@ export default {
 
   draftById: state => id => {
     return state.drafts.filter(draft => draft.id === id)[0];
-  }
+  },
+
+  windowYLoadNew: state => state.windowYLoadNew,
+
+  getEntriesStart: state => state.getEntriesStart,
+
+  endOfEntries: state => state.endOfEntries
 };

@@ -16,7 +16,28 @@ export default {
 
   components: { BlogLoader, BlogEntries },
 
+  data() {
+    return {
+      gettingEntries: false
+    };
+  },
+
   mounted() {
+    window.addEventListener("scroll", () => {
+      if (
+        this.$route.name === "entries" &&
+        window.scrollY > this.windowYLoadNew &&
+        !this.gettingEntries &&
+        !this.endOfEntries
+      ) {
+        console.log("load new!");
+        this.gettingEntries = true;
+        this.getMoreEntries().then(() => {
+          this.gettingEntries = false;
+        });
+      }
+    });
+
     this.setTitle(process.env.VUE_APP_SITE_NAME);
     this.initialize().then(() => {
       this.getEntries();
@@ -25,11 +46,17 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"])
+    ...mapActions([
+      "initialize",
+      "getEntries",
+      "getMoreEntries",
+      "setBreadcrumbs",
+      "setTitle"
+    ])
   },
 
   computed: {
-    ...mapGetters(["entries", "isLoading"])
+    ...mapGetters(["entries", "isLoading", "windowYLoadNew", "endOfEntries"])
   }
 };
 </script>

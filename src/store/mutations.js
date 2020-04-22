@@ -10,7 +10,7 @@ export default {
   },
 
   setEntries: (state, { entries }) => {
-    Vue.set(state, "entries", entries);
+    Vue.set(state, "entries", [...state.entries, ...entries]);
   },
 
   setEntriesByTag: (state, { tag, entries }) => {
@@ -124,5 +124,17 @@ export default {
 
   setDrafts: (state, { drafts }) => {
     state.drafts = drafts;
+  },
+
+  setWindowYLoadNew: (state, { windowY }) => {
+    state.windowYLoadNew = windowY;
+  },
+
+  setGetEntriesStart: (state, { start }) => {
+    state.getEntriesStart = start;
+  },
+
+  setEndOfEntries: (state, { end }) => {
+    state.endOfEntries = end;
   }
 };
