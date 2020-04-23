@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <blog-loader v-if="isLoading" />
-    <blog-entries :entries="entries" />
+    <blog-entries v-if="initialized" :entries="entries" />
   </div>
 </template>
 
@@ -63,7 +63,13 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["entries", "isLoading", "windowYLoadNew", "endOfEntries"])
+    ...mapGetters([
+      "initialized",
+      "entries",
+      "isLoading",
+      "windowYLoadNew",
+      "endOfEntries"
+    ])
   }
 };
 </script>
