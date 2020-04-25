@@ -136,5 +136,13 @@ export default {
 
   setEndOfEntries: (state, { end }) => {
     state.endOfEntries = end;
+  },
+
+  imageLoaded: (state, { entryId }) => {
+    Vue.set(
+      state.imagesLoaded,
+      entryId,
+      state.imagesLoaded[entryId] ? state.imagesLoaded[entryId] + 1 : 1
+    );
   }
 };

@@ -33,7 +33,6 @@ export default {
         !this.endOfEntries &&
         !this.gettingEntriesCoolingDown
       ) {
-        console.log("load new!");
         this.gettingEntries = true;
         this.getMoreEntries().then(() => {
           this.gettingEntries = false;

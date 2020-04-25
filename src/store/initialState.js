@@ -23,5 +23,6 @@ export default {
   drafts: [],
   windowYLoadNew: 0,
   getEntriesStart: 0,
-  endOfEntries: false
+  endOfEntries: false,
+  imagesLoaded: {}
 };

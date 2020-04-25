@@ -7,6 +7,7 @@
         v-bind="entry"
         :fullMode="settings.teaser_mode === 0"
         :ref="`entry${entry.id}`"
+        @loaded="childLoaded"
       />
     </div>
   </div>
@@ -24,21 +25,38 @@ export default {
 
   components: { BlogEntry },
 
+  data() {
+    return {
+      entriesLoaded: 0
+    };
+  },
+
   computed: {
     ...mapGetters(["initialized", "settings"])
   },
 
   methods: {
-    ...mapMutations(["setWindowYLoadNew"])
+    ...mapMutations(["setWindowYLoadNew"]),
+
+    childLoaded() {
+      this.entriesLoaded++;
+    }
   },
 
-  updated() {
-    if (this.entries.length) {
-      const lastId = this.entries[this.entries.length - 1].id;
-      const trigger = this.$refs[`entry${lastId}`][0].$refs.container;
-      this.setWindowYLoadNew({
-        windowY: trigger.getBoundingClientRect().top - window.innerHeight
-      });
+  watch: {
+    entriesLoaded() {
+      if (this.entries.length && this.entries.length === this.entriesLoaded) {
+        const lastEntry = this.entries[this.entries.length - 1];
+        const lastId = lastEntry.id;
+        const trigger = this.$refs[`entry${lastId}`][0].$refs.container;
+        const windowY =
+          trigger.getBoundingClientRect().top +
+          window.pageYOffset -
+          window.innerHeight;
+        this.setWindowYLoadNew({
+          windowY
+        });
+      }
     }
   }
 };

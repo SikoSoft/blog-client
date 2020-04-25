@@ -72,5 +72,8 @@ export default {
 
   getEntriesStart: state => state.getEntriesStart,
 
-  endOfEntries: state => state.endOfEntries
+  endOfEntries: state => state.endOfEntries,
+
+  imagesLoaded: state => entryId =>
+    state.imagesLoaded[entryId] ? state.imagesLoaded[entryId] : 0
 };
