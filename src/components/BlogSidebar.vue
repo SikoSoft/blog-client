@@ -21,7 +21,6 @@ export default {
   },
 
   mounted() {
-    console.log(JSON.stringify(this.settings));
     fetch(this.settings.github_feed)
       .then(response => response.json())
       .then(json => {

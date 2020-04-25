@@ -24,7 +24,9 @@ export default {
   components: { BlogHeader, BlogToasts, BlogSidebar },
 
   data() {
-    return { viewsWithSidebar: ["entry", "entries", "draft", "tag"] };
+    return {
+      viewsWithSidebar: ["entry", "entries", "draft", "tag"]
+    };
   },
 
   mounted() {
