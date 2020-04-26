@@ -52,7 +52,6 @@ export default {
     ]),
 
     update() {
-      console.log("getEntry", this.routeType);
       this.initialize().then(() => {
         this[this.routeType === "entry" ? "getEntry" : "getDraft"](
           this.id

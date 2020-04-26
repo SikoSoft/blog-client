@@ -90,7 +90,6 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          console.log("jhere");
           commit("setEntryById", { entryId, entry: json });
           resolve();
         })
