@@ -1,6 +1,6 @@
 <template>
-  <aside class="blog-sidebar">
-    <blog-github-feed :feed="feed" />
+  <aside class="blog-sidebar" v-if="show">
+    <blog-github-feed v-if="feed.length" :feed="feed" />
   </aside>
 </template>
 
@@ -21,15 +21,24 @@ export default {
   },
 
   mounted() {
-    fetch(this.settings.github_feed)
-      .then(response => response.json())
-      .then(json => {
-        this.feed = json;
-      });
+    if (this.settings.github_feed) {
+      fetch(this.settings.github_feed)
+        .then(response => response.json())
+        .then(json => {
+          this.feed = json;
+        });
+    }
   },
 
   computed: {
-    ...mapGetters(["settings"])
+    ...mapGetters(["settings"]),
+
+    show() {
+      if (this.feed.length) {
+        return true;
+      }
+      return false;
+    }
   }
 };
 </script>

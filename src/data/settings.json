@@ -23,11 +23,6 @@
       "label": "Toast duration",
       "type": "number",
       "maxLength": 5
-    },
-    {
-      "id": "show_sidebar",
-      "label": "Show sidebar",
-      "type": "toggle"
     }
   ],
   "Entries": [
@@ -36,6 +31,23 @@
       "label": "Number of entries to load at a time",
       "type": "number",
       "maxLength": 3
+    },
+    {
+      "id": "teaser_mode",
+      "label": "Show only a small part of each entry in the list",
+      "type": "toggle"
+    }
+  ],
+  "Sidebar": [
+    {
+      "id": "show_sidebar",
+      "label": "Show sidebar",
+      "type": "toggle"
+    },
+    {
+      "id": "github_feed",
+      "label": "Github feed URL",
+      "type": "text"
     }
   ]
 }
