@@ -19,7 +19,9 @@ export default {
   entriesByTag: state => state.entriesByTag,
 
   entryById: state => id => {
-    return state.entries.filter(entry => entry.id === id)[0];
+    return state.entriesById[id]
+      ? state.entriesById[id]
+      : state.entries.filter(entry => entry.id === id)[0];
   },
 
   comments: state => state.comments,

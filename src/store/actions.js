@@ -82,6 +82,22 @@ export default {
     });
   },
 
+  async getEntry({ state, commit, getters }, entryId) {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntry.href.replace("{id}", entryId), {
+        method: state.api.getEntry.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          console.log("jhere");
+          commit("setEntryById", { entryId, entry: json });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
   setTitle({ commit }, title) {
     commit("setTitle", { title });
   },
@@ -234,8 +250,8 @@ export default {
     commit("setLoading", { loading: true });
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.drafts.href, {
-        method: state.api.drafts.method,
+      fetch(state.api.getDrafts.href, {
+        method: state.api.getDrafts.method,
         headers: getters.headers
       })
         .then(response => response.json())

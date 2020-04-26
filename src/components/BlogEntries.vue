@@ -46,8 +46,7 @@ export default {
   watch: {
     entriesLoaded() {
       if (this.entries.length && this.entries.length === this.entriesLoaded) {
-        const lastEntry = this.entries[this.entries.length - 1];
-        const lastId = lastEntry.id;
+        const lastId = this.entries[this.entries.length - 1].id;
         const trigger = this.$refs[`entry${lastId}`][0].$refs.container;
         const windowY =
           trigger.getBoundingClientRect().top +

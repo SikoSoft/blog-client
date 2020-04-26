@@ -8,6 +8,7 @@ export default {
   roles: [],
   entries: [],
   entriesByTag: {},
+  entriesById: {},
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,

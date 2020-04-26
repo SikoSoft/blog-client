@@ -45,25 +45,26 @@ export default {
   methods: {
     ...mapActions([
       "initialize",
-      "getEntries",
-      "getDrafts",
+      "getEntry",
+      "getDraft",
       "setBreadcrumbs",
       "setTitle"
     ]),
 
     update() {
+      console.log("getEntry", this.routeType);
       this.initialize().then(() => {
-        this[this.routeType === "entry" ? "getEntries" : "getDrafts"]().then(
-          () => {
-            this.setBreadcrumbs([
-              {
-                href: `/${this.routeType}/${this.entry.id}`,
-                label: this.entry.title
-              }
-            ]);
-            this.setTitle(this.entry.title);
-          }
-        );
+        this[this.routeType === "entry" ? "getEntry" : "getDraft"](
+          this.id
+        ).then(() => {
+          this.setBreadcrumbs([
+            {
+              href: `/${this.routeType}/${this.entry.id}`,
+              label: this.entry.title
+            }
+          ]);
+          this.setTitle(this.entry.title);
+        });
       });
     }
   }
