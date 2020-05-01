@@ -267,5 +267,34 @@ export default {
     commit("setGetEntriesStart", {
       start: state.getEntriesStart + state.settings.per_load
     });
+  },
+
+  async getFilters({ commit, state }) {
+    if (state.filters.length) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getFilters.href, { method: state.api.getFilters.method })
+        .then(response => response.json())
+        .then(json => {
+          commit("setFilters", { filters: json });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  async getEntriesByFilter({ commit, state }, { filterId }) {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
+        method: state.api.getEntriesByFilter.method
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntriesByFilter", { filterId, entries: json.entries });
+          resolve();
+        });
+    });
   }
 };

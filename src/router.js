@@ -9,6 +9,7 @@ import Settings from "./views/Settings.vue";
 import Tokens from "./views/Tokens.vue";
 import AccessDenied from "./views/AccessDenied.vue";
 import Admin from "./views/Admin.vue";
+import Filter from "./views/Filter.vue";
 
 Vue.use(Router);
 
@@ -72,6 +73,11 @@ export default new Router({
       path: "/accessDenied",
       name: "access-denied",
       component: AccessDenied
+    },
+    {
+      path: "/filter/:filter",
+      name: "entries-filter",
+      component: Filter
     }
   ]
 });

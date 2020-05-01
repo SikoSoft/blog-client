@@ -17,6 +17,10 @@ export default {
     Vue.set(state.entriesByTag, tag, entries);
   },
 
+  setEntriesByFilter: (state, { filterId, entries }) => {
+    Vue.set(state.entriesByFilter, filterId, entries);
+  },
+
   setUser: (state, { user }) => {
     Vue.set(state, "user", user);
   },
@@ -145,5 +149,9 @@ export default {
       entryId,
       state.imagesLoaded[entryId] ? state.imagesLoaded[entryId] + 1 : 1
     );
+  },
+
+  setFilters: (state, { filters }) => {
+    state.filters = filters;
   }
 };

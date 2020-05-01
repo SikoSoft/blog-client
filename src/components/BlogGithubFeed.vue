@@ -21,18 +21,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/variables.scss";
+@import "@/styles/mixins.scss";
 @import "@/styles/theme.scss";
 
 .blog-github-feed {
-  &__head {
-    font-size: 1.5rem;
-  }
-
-  &__list {
-    list-style: none;
-    font-size: 1.2rem;
-    margin: 0;
-    padding: 0;
-  }
+  @include sidebar-block;
 }
 </style>

@@ -1,18 +1,20 @@
 <template>
   <aside class="blog-sidebar" v-if="show">
+    <blog-at-a-glance v-if="filters.length" :filters="filters" />
     <blog-github-feed v-if="feed.length" :feed="feed" />
   </aside>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
+import BlogAtAGlance from "@/components/BlogAtAGlance.vue";
 import BlogGithubFeed from "@/components/BlogGithubFeed.vue";
 
 export default {
   name: "blog-sidebar",
 
-  components: { BlogGithubFeed },
+  components: { BlogAtAGlance, BlogGithubFeed },
 
   data() {
     return {
@@ -21,6 +23,7 @@ export default {
   },
 
   mounted() {
+    this.getFilters();
     if (this.settings.github_feed) {
       fetch(this.settings.github_feed)
         .then(response => response.json())
@@ -30,8 +33,12 @@ export default {
     }
   },
 
+  methods: {
+    ...mapActions(["getFilters"])
+  },
+
   computed: {
-    ...mapGetters(["settings"]),
+    ...mapGetters(["settings", "api", "filters"]),
 
     show() {
       if (this.feed.length) {

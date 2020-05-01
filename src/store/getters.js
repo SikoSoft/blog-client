@@ -77,5 +77,10 @@ export default {
   endOfEntries: state => state.endOfEntries,
 
   imagesLoaded: state => entryId =>
-    state.imagesLoaded[entryId] ? state.imagesLoaded[entryId] : 0
+    state.imagesLoaded[entryId] ? state.imagesLoaded[entryId] : 0,
+
+  filters: state => state.filters,
+
+  entriesByFilter: state => filter =>
+    state.entriesByFilter[filter] ? state.entriesByFilter[filter] : []
 };

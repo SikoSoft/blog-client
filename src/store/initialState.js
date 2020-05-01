@@ -9,6 +9,7 @@ export default {
   entries: [],
   entriesByTag: {},
   entriesById: {},
+  entriesByFilter: {},
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
@@ -25,5 +26,6 @@ export default {
   windowYLoadNew: 0,
   getEntriesStart: 0,
   endOfEntries: false,
-  imagesLoaded: {}
+  imagesLoaded: {},
+  filters: []
 };
