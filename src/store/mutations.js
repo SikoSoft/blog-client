@@ -75,7 +75,7 @@ export default {
       state,
       "entries",
       [...state.entries].map(e => {
-        return entryId !== entry.id ? e : { ...entry, entryId };
+        return entryId !== e.id ? e : { ...entry, entryId };
       })
     );
   },
@@ -86,7 +86,7 @@ export default {
       state,
       "drafts",
       [...state.drafts].map(d => {
-        return id !== draft.id ? d : { ...draft, id };
+        return id !== d.id ? d : { ...draft, id };
       })
     );
   },
