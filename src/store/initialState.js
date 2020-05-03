@@ -23,6 +23,7 @@ export default {
   settings: {},
   tokens: [],
   drafts: [],
+  draftsById: {},
   windowYLoadNew: 0,
   getEntriesStart: 0,
   endOfEntries: false,

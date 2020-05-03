@@ -81,6 +81,7 @@ export default {
   },
 
   setDraftById: (state, { id, draft }) => {
+    Vue.set(state.draftsById, id, draft);
     Vue.set(
       state,
       "drafts",

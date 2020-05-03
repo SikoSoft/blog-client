@@ -263,6 +263,21 @@ export default {
     });
   },
 
+  async getDraft({ state, commit, getters }, draftId) {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getDraft.href.replace("{id}", draftId), {
+        method: state.api.getDraft.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setDraftById", { draftId, entry: json });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
   setNextEntriesBatch({ commit, state }) {
     commit("setGetEntriesStart", {
       start: state.getEntriesStart + state.settings.per_load
