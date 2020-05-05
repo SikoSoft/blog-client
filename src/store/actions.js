@@ -82,15 +82,19 @@ export default {
     });
   },
 
-  async getEntry({ state, commit, getters }, entryId) {
+  async getEntry({ state, commit, getters }, { id, force }) {
+    if (getters.entryById(id) && !force) {
+      return Promise.resolve();
+    }
+
     return new Promise((resolve, reject) => {
-      fetch(state.api.getEntry.href.replace("{id}", entryId), {
+      fetch(state.api.getEntry.href.replace("{id}", id), {
         method: state.api.getEntry.method,
         headers: getters.headers
       })
         .then(response => response.json())
         .then(json => {
-          commit("setEntryById", { entryId, entry: json });
+          commit("setEntryById", { entryId: id, entry: json });
           resolve();
         })
         .catch(e => reject(e));
@@ -263,15 +267,19 @@ export default {
     });
   },
 
-  async getDraft({ state, commit, getters }, draftId) {
+  async getDraft({ state, commit, getters }, { id, force }) {
+    if (getters.draftById(id) && !force) {
+      return Promise.resolve();
+    }
+
     return new Promise((resolve, reject) => {
-      fetch(state.api.getDraft.href.replace("{id}", draftId), {
+      fetch(state.api.getDraft.href.replace("{id}", id), {
         method: state.api.getDraft.method,
         headers: getters.headers
       })
         .then(response => response.json())
         .then(json => {
-          commit("setDraftById", { draftId, entry: json });
+          commit("setDraftById", { draftId: id, entry: json });
           resolve();
         })
         .catch(e => reject(e));

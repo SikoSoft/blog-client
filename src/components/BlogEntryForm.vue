@@ -150,7 +150,8 @@ export default {
     ...mapMutations(["setLoading"]),
 
     ...mapActions([
-      "getEntries",
+      "getEntry",
+      "getDraft",
       "getDrafts",
       "hideEntryForm",
       "setEditMode",
@@ -184,22 +185,26 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this[this.public === 1 ? "getEntries" : "getDrafts"](true).then(
-            () => {
-              this.setLoading({ loading: false });
-              this.hideEntryForm();
-              this[this.public === 1 ? "setEntryById" : "setDraftById"]({
-                id: json.id,
-                [this.public === 1 ? "entry" : "draft"]: entry
-              });
-              this.setEditMode({ id: json.id, mode: false });
-              localStorage.removeItem(this.formId);
-              const routeType = this.public === 1 ? "entry" : "draft";
-              if (window.location.pathname !== `/${routeType}/${json.id}`) {
-                this.$router.push({ path: `/${routeType}/${json.id}` });
-              }
+          this[this.public === 1 ? "getEntry" : "getDraft"]({
+            id: json.id,
+            force: true
+          }).then(() => {
+            this.setLoading({ loading: false });
+            this.hideEntryForm();
+            this[this.public === 1 ? "setEntryById" : "setDraftById"]({
+              id: json.id,
+              [this.public === 1 ? "entry" : "draft"]: entry
+            });
+            this.setEditMode({ id: json.id, mode: false });
+            localStorage.removeItem(this.formId);
+            const routeType = this.public === 1 ? "entry" : "draft";
+            if (
+              !this.entryId &&
+              window.location.pathname !== `/${routeType}/${json.id}`
+            ) {
+              this.$router.push({ path: `/${routeType}/${json.id}` });
             }
-          );
+          });
         });
       e.preventDefault();
     },

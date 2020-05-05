@@ -49,9 +49,9 @@ export default {
 
     update() {
       this.initialize().then(() => {
-        this[this.routeType === "entry" ? "getEntry" : "getDraft"](
-          this.id
-        ).then(() => {
+        this[this.routeType === "entry" ? "getEntry" : "getDraft"]({
+          id: this.id
+        }).then(() => {
           this.setBreadcrumbs([
             {
               href: `/${this.routeType}/${this.entry.id}`,
