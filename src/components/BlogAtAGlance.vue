@@ -2,11 +2,10 @@
   <div class="blog-at-a-glance">
     <h3 class="blog-at-a-glance__head">{{ $strings.atAGlance }}</h3>
     <ul class="blog-at-a-glance__list">
-      <li v-for="filter in filters" :key="filter.id">
+      <li v-for="filter in filters" :key="filter.id" class="blog-at-a-glance__filter">
         <router-link :to="`/filter/${filter.id}`">
-          {{
-          filter.label
-          }}
+          <img v-if="filter.image" :src="filter.image" class="blog-at-a-glance__filter-image" />
+          {{ filter.label }}
         </router-link>
       </li>
     </ul>
@@ -26,5 +25,16 @@ export default {
 
 .blog-at-a-glance {
   @include sidebar-block;
+
+  &__filter {
+    margin: 4px 0;
+  }
+
+  &__filter-image {
+    width: 96px;
+    height: 54px;
+    vertical-align: top;
+    margin-right: 1rem;
+  }
 }
 </style>

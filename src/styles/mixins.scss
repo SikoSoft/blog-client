@@ -1,6 +1,8 @@
 @mixin sidebar-block {
   h3 {
     font-size: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1rem #111 solid;
   }
 
   ul {
@@ -9,4 +11,6 @@
     margin: 0;
     padding: 0;
   }
+
+  margin-bottom: 2rem;
 }
