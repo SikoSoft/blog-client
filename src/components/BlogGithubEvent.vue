@@ -2,8 +2,8 @@
   <li class="blog-github-event">
     <a class="blog-github-event__link" :href="url">
       <span class="blog-github-event__icon" v-html="octiconSvg"></span>
-      {{ message }}</a
-    >
+      {{ message }}
+    </a>
   </li>
 </template>
 
@@ -100,7 +100,7 @@ export default {
   }
 
   &__link {
-    color: $color-link-secondary;
+    color: $color-link-primary;
   }
 }
 </style>
