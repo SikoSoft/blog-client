@@ -13,7 +13,17 @@ export default {
 
   components: { BlogEntries },
 
+  data() {
+    return {
+      isUpdating: false
+    };
+  },
+
   mounted() {
+    this.update();
+  },
+
+  updated() {
     this.update();
   },
 
@@ -45,6 +55,10 @@ export default {
     ]),
 
     update() {
+      if (this.isUpdating) {
+        return;
+      }
+      this.isUpdating = true;
       this.initialize().then(() => {
         this.getFilters().then(() => {
           this.getEntriesByFilter({ filterId: this.filter }).then(() => {
@@ -52,6 +66,7 @@ export default {
               { href: `/filter/${this.filter}`, label: this.label }
             ]);
             this.setTitle(this.label);
+            this.isUpdating = false;
           });
         });
       });
