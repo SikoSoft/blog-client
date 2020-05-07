@@ -309,6 +309,10 @@ export default {
   },
 
   async getEntriesByFilter({ commit, state }, { filterId }) {
+    if (state.entriesByFilter[filterId]) {
+      return Promise.resolve();
+    }
+
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
         method: state.api.getEntriesByFilter.method
