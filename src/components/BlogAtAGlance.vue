@@ -26,14 +26,10 @@ export default {
 .blog-at-a-glance {
   @include sidebar-block;
 
-  &__filter {
-    margin: 4px 0;
-  }
-
   &__filter-image {
     width: 96px;
     height: 54px;
-    vertical-align: top;
+    vertical-align: middle;
     margin-right: 1rem;
   }
 }
