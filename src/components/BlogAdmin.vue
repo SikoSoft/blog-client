@@ -7,7 +7,7 @@
       text="+"
     />
     <blog-button class="blog-admin__entry-button" :action="hideEntryForm" v-else text="-" />
-    <blog-entry-form v-if="entryFormIsOpen" :entry="{ api: { save: api.newEntry } }" />
+    <blog-entry-form v-if="entryFormIsOpen" :initialEntry="{ api: { save: api.newEntry } }" />
   </div>
 </template>
 

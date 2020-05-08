@@ -3,19 +3,31 @@
     <header>
       <blog-header />
     </header>
-    <main>
-      <router-view />
-    </main>
+    <div class="main-container">
+      <main>
+        <router-view />
+      </main>
+      <blog-sidebar v-if="showSidebar" />
+    </div>
     <blog-toasts />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 import BlogHeader from "./components/BlogHeader.vue";
 import BlogToasts from "./components/BlogToasts.vue";
+import BlogSidebar from "./components/BlogSidebar.vue";
 
 export default {
-  components: { BlogHeader, BlogToasts },
+  components: { BlogHeader, BlogToasts, BlogSidebar },
+
+  data() {
+    return {
+      viewsWithSidebar: ["entry", "entries", "draft", "tag", "entries-filter"]
+    };
+  },
 
   mounted() {
     this.$router.afterEach(to => {
@@ -73,6 +85,18 @@ export default {
         }
       }
     });
+  },
+
+  computed: {
+    ...mapGetters(["initialized", "settings"]),
+
+    showSidebar() {
+      return (
+        this.initialized &&
+        this.settings.show_sidebar &&
+        this.viewsWithSidebar.includes(this.$route.name)
+      );
+    }
   }
 };
 </script>

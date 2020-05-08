@@ -3,7 +3,11 @@
     <div class="admin-setting__label">{{ label }}</div>
     <div class="admin-setting__input">
       <template v-if="type === 'number'">
-        <input type="text" class="admin-setting__input-number" v-model="value" />
+        <input
+          type="text"
+          class="admin-setting__input-number"
+          v-model="value"
+        />
       </template>
       <template v-if="type === 'text'">
         <input type="text" class="admin-setting__input-text" v-model="value" />
@@ -64,6 +68,12 @@ export default {
 
   &__label {
     margin: 0.5rem 0;
+  }
+
+  &__input {
+    &-text {
+      width: 80vw;
+    }
   }
 }
 </style>

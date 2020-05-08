@@ -22,7 +22,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized"]),
+    ...mapGetters(["initialized", "user"]),
 
     settings() {
       return this.$store.getters.settings;
@@ -40,6 +40,14 @@ export default {
         ]);
         this.setTitle(this.$strings.settings);
       });
+    }
+  },
+
+  watch: {
+    initialized() {
+      if (!this.user.rights.includes("manage_settings")) {
+        this.$router.push({ path: "/accessDenied" });
+      }
     }
   }
 };

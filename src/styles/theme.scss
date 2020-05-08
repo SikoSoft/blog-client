@@ -1,4 +1,5 @@
 @import "variables";
+@import "media";
 
 html,
 body {
@@ -20,8 +21,22 @@ header {
   margin: 0;
 }
 
+.main-container {
+  display: flex;
+  max-width: 1920px;
+  margin: auto;
+}
+
 main {
   padding: $space-xlarge;
+  flex: 7;
+}
+
+aside {
+  min-width: 352px;
+  padding: $space-xlarge;
+  flex: 3;
+  border-left: 1px #444 solid;
 }
 
 strong {

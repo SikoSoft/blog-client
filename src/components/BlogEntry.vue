@@ -1,20 +1,36 @@
 <template>
-  <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }">
+  <div
+    class="blog-entry"
+    :class="{ 'blog-entry--full': fullMode }"
+    ref="container"
+  >
     <template v-if="!editMode">
-      <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
-        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
+      <h3
+        class="blog-entry__title"
+        :class="{ 'blog-entry__title--clickable': !fullMode }"
+      >
+        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{
+          title
+        }}</router-link>
         <template v-else>{{ title }}</template>
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div class="blog-entry__edit" v-if="user.rights.includes('update_entry')">
+        <div
+          class="blog-entry__edit"
+          v-if="user.rights.includes('update_entry')"
+        >
           <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
       <div class="blog-entry__body">
-        <div class="body-entry__body-content" v-html="renderedBody"></div>
+        <div class="body-entry__body-content">
+          <runtime-template-compiler :template="renderedBody" />
+        </div>
         <div class="blog-entry__body-more" v-if="!fullMode">
-          <router-link :to="`/entry/${id}`">{{ $strings.readMore }}</router-link>
+          <router-link :to="`/entry/${id}`">{{
+            $strings.readMore
+          }}</router-link>
         </div>
       </div>
       <div class="blog-entry__foot">
@@ -26,26 +42,31 @@
           </ul>
         </div>
       </div>
-      <div class="blog-entry__comments" v-if="fullMode && settings.enable_comments === 1">
-        <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
+      <div class="blog-entry__comments" v-if="showComments">
+        <blog-comment-form
+          :entry="entry"
+          v-if="user.rights.includes('post_comments')"
+        />
         <blog-comments :entry="entry" />
       </div>
     </template>
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
-      <blog-entry-form :entry="entry" />
+      <blog-entry-form :initialEntry="entry" />
     </template>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 import BlogComments from "@/components/BlogComments.vue";
 import BlogCommentForm from "@/components/BlogCommentForm.vue";
 import BlogButton from "@/components/BlogButton.vue";
 import { longDate } from "../util/time.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+
+const imgRegExp = new RegExp("<img ", "g");
 
 export default {
   name: "blog-entry",
@@ -58,10 +79,22 @@ export default {
     "created",
     "last_edited",
     "api",
+    "public",
     "fullMode"
   ],
 
-  components: { BlogEntryForm, BlogComments, BlogCommentForm, BlogButton },
+  components: {
+    BlogEntryForm,
+    BlogComments,
+    BlogCommentForm,
+    BlogButton
+  },
+
+  data() {
+    return {
+      numImages: 0
+    };
+  },
 
   computed: {
     ...mapGetters(["user", "settings"]),
@@ -78,7 +111,8 @@ export default {
         tags: this.tags,
         created: this.created,
         last_edited: this.last_edited,
-        api: this.api
+        api: this.api,
+        public: this.public
       };
     },
 
@@ -94,20 +128,60 @@ export default {
     },
 
     renderedBody() {
-      return new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
-        .convert()
-        .replace(
-          /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
-          "<a href='/tag/$1' class='vue-route'>#$1</a>"
-        );
+      return (
+        "<div>" +
+        new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
+          .convert()
+          .replace(
+            /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
+            "<a href='/tag/$1' class='vue-route'>#$1</a>"
+          )
+          .replace(
+            "<img ",
+            `<img @load="() => {imageLoaded({entryId: id})}" `
+          ) +
+        "</div>"
+      );
+    },
+
+    showComments() {
+      return (
+        this.public === 1 &&
+        this.fullMode &&
+        this.settings.enable_comments === 1
+      );
+    },
+
+    imagesLoaded() {
+      return this.$store.getters.imagesLoaded(this.id);
     }
   },
 
   methods: {
     ...mapActions(["setEditMode"]),
 
+    ...mapMutations(["imageLoaded"]),
+
     edit() {
       this.setEditMode({ id: this.id, mode: this.editMode ? false : true });
+    }
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      if (this.numImages === 0) {
+        this.$emit("loaded");
+      }
+    });
+
+    this.numImages = (this.renderedBody.match(imgRegExp) || []).length;
+  },
+
+  watch: {
+    imagesLoaded(newValue) {
+      if (this.numImages === newValue) {
+        this.$emit("loaded");
+      }
     }
   }
 };
@@ -118,6 +192,10 @@ export default {
 
 .blog-entry {
   margin: 4rem 0 12rem 0;
+
+  pre {
+    white-space: pre-wrap;
+  }
 
   &--full &__posted-time {
     border-top: 1px $color-text-subtle solid;
@@ -208,7 +286,7 @@ export default {
     margin: 0 -2rem;
     padding: 5rem 2rem;
     background-color: #111;
-    border-top: 1rem #333 solid;
+    border-top: 1rem #1f1f1f solid;
     border-bottom: 1rem #333 solid;
   }
 

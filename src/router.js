@@ -6,6 +6,10 @@ import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
 import Token from "./views/Token.vue";
 import Settings from "./views/Settings.vue";
+import Tokens from "./views/Tokens.vue";
+import AccessDenied from "./views/AccessDenied.vue";
+import Admin from "./views/Admin.vue";
+import Filter from "./views/Filter.vue";
 
 Vue.use(Router);
 
@@ -20,6 +24,11 @@ export default new Router({
     {
       path: "/entry/:id",
       name: "entry",
+      component: Entry
+    },
+    {
+      path: "/draft/:id",
+      name: "draft",
       component: Entry
     },
     {
@@ -46,9 +55,29 @@ export default new Router({
       }
     },
     {
+      path: "/admin",
+      name: "admin",
+      component: Admin
+    },
+    {
       path: "/admin/settings",
       name: "settings",
       component: Settings
+    },
+    {
+      path: "/admin/tokens",
+      name: "tokens",
+      component: Tokens
+    },
+    {
+      path: "/accessDenied",
+      name: "access-denied",
+      component: AccessDenied
+    },
+    {
+      path: "/filter/:filter",
+      name: "entries-filter",
+      component: Filter
     }
   ]
 });

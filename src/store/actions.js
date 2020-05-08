@@ -1,149 +1,7 @@
-import Vue from "vue";
-import Vuex from "vuex";
 import { uuid } from "@/util/uuid";
 import strings from "@/data/strings.json";
 
-const toastLife = 3000;
-
-Vue.use(Vuex);
-
-const state = {
-  initialized: false,
-  isLoading: true,
-  config: {},
-  title: "",
-  breadcrumbs: [],
-  user: {},
-  roles: [],
-  entries: [],
-  entriesByTag: {},
-  tags: [],
-  adminPaneIsOpen: false,
-  entryFormIsOpen: false,
-  api: {},
-  token: "",
-  editMode: {},
-  toasts: [],
-  comments: {},
-  entryComments: {},
-  selectedComments: [],
-  settings: {}
-};
-
-const mutations = {
-  setInitialized: state => {
-    state.initialized = true;
-  },
-
-  setLoading: (state, { loading }) => {
-    state.isLoading = loading;
-  },
-
-  setEntries: (state, { entries }) => {
-    Vue.set(state, "entries", entries);
-  },
-
-  setEntriesByTag: (state, { tag, entries }) => {
-    Vue.set(state.entriesByTag, tag, entries);
-  },
-
-  setUser: (state, { user }) => {
-    Vue.set(state, "user", user);
-  },
-
-  setRoles: (state, { roles }) => {
-    Vue.set(state, "roles", roles);
-  },
-
-  setApi: (state, { api }) => {
-    Vue.set(state, "api", api);
-  },
-
-  setSessToken: (state, { sessToken }) => {
-    state.sessToken = sessToken;
-  },
-
-  setAuthToken: (state, { authToken }) => {
-    state.authToken = authToken;
-  },
-
-  setTitle: (state, { title }) => {
-    state.title = title;
-    document.title =
-      title === process.env.VUE_APP_SITE_NAME
-        ? title
-        : title + " | " + process.env.VUE_APP_SITE_NAME;
-  },
-
-  setBreadcrumbs: (state, { breadcrumbs }) => {
-    state.breadcrumbs = breadcrumbs;
-  },
-
-  setTags: (state, { tags }) => {
-    Vue.set(state, "tags", tags);
-  },
-
-  setAdminPaneVisibility: (state, { visibility }) => {
-    state.adminPaneIsOpen = visibility;
-  },
-
-  setEntryFormVisibility: (state, { visibility }) => {
-    state.entryFormIsOpen = visibility;
-  },
-
-  setEditMode: (state, { id, mode }) => {
-    Vue.set(state.editMode, id, mode);
-  },
-
-  setEntryById: (state, { id, entry }) => {
-    Vue.set(
-      state,
-      "entries",
-      [...state.entries].map(e => {
-        return id !== entry.id ? e : { ...entry, id };
-      })
-    );
-  },
-
-  setToasts: (state, { toasts }) => {
-    Vue.set(state, "toasts", toasts);
-  },
-
-  setComment: (state, { id, comment }) => {
-    Vue.set(state.comments, id, comment);
-  },
-
-  setEntryComments: (state, { entryId, comments }) => {
-    Vue.set(state.entryComments, entryId, comments);
-  },
-
-  deleteComment: (state, { id }) => {
-    const newComments = { ...state.comments };
-    Vue.set(
-      state.entryComments,
-      state.comments[id].entry_id,
-      state.entryComments[state.comments[id].entry_id].filter(
-        comment => comment.id !== id
-      )
-    );
-    delete newComments[id];
-    Vue.set(state, "comments", newComments);
-  },
-
-  setSelectedComments: (state, { comments }) => {
-    Vue.set(state, "selectedComments", comments);
-  },
-
-  setSettings: (state, { settings }) => {
-    Vue.set(state, "settings", settings);
-  },
-
-  setSetting: (state, { id, value }) => {
-    state.settings[id] = value;
-  }
-};
-
-const actions = {
+export default {
   initialize({ state, commit, getters }, force) {
     if (state.initialized && !force) {
       return Promise.resolve();
@@ -177,26 +35,40 @@ const actions = {
       });
   },
 
-  getEntries({ state, commit, getters }, force) {
+  async getEntries({ state, commit, getters }, force) {
     if (state.entries.length > 0 && !force) {
-      return;
+      return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });
 
+    const getUrl =
+      state.getEntriesStart === 0
+        ? state.api.getEntries.href
+        : `${state.api.getEntries.href}/${state.getEntriesStart}`;
+
     return new Promise((resolve, reject) => {
-      fetch(state.api.getEntries.href, {
+      fetch(getUrl, {
         method: state.api.getEntries.method,
         headers: getters.headers
       })
         .then(response => response.json())
         .then(json => {
-          commit("setEntries", { entries: json.entries });
+          commit("setEntries", {
+            start: state.getEntriesStart,
+            entries: json.entries
+          });
+          commit("setEndOfEntries", { end: json.end });
           commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
     });
+  },
+
+  getMoreEntries({ dispatch }) {
+    dispatch("setNextEntriesBatch");
+    dispatch("getEntries", true);
   },
 
   getEntriesByTag({ state, commit }, tag) {
@@ -208,16 +80,25 @@ const actions = {
       tag,
       entries: state.entries.filter(entry => entry.tags.includes(tag))
     });
+  },
 
-    /*
-    fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
-      method: state.api.getEntriesByTag.method
-    })
-      .then(response => response.json())
-      .then(json => {
-        commit("setEntriesByTag", { tag, entries: json.entries });
-      });
-      */
+  async getEntry({ state, commit, getters }, { id, force }) {
+    if (getters.entryById(id) && !force) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntry.href.replace("{id}", id), {
+        method: state.api.getEntry.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntryById", { entryId: id, entry: json });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
   },
 
   setTitle({ commit }, title) {
@@ -263,6 +144,10 @@ const actions = {
     commit("setEntryById", { id, entry });
   },
 
+  setDraftById({ commit }, { id, draft }) {
+    commit("setDraftById", { id, draft });
+  },
+
   addToast({ state, commit, dispatch }, message) {
     const id = uuid();
     commit("setToasts", {
@@ -270,7 +155,7 @@ const actions = {
     });
     setTimeout(() => {
       dispatch("removeToast", id);
-    }, toastLife);
+    }, state.settings.toast_life);
   },
 
   removeToast({ state, commit }, id) {
@@ -279,7 +164,7 @@ const actions = {
     });
   },
 
-  getComments({ commit, getters }, { entryId, force }) {
+  getComments({ state, commit, getters }, { entryId, force }) {
     if (state.comments[entryId] && !force) {
       return Promise.resolve();
     }
@@ -332,7 +217,7 @@ const actions = {
       });
   },
 
-  deleteComments({ commit, dispatch }) {
+  deleteComments({ state, commit, dispatch, getters }) {
     fetch(state.api.deleteComments.href, {
       method: state.api.deleteComments.method,
       headers: getters.headers,
@@ -348,7 +233,7 @@ const actions = {
       });
   },
 
-  setSetting({ commit }, { id, value }) {
+  setSetting({ commit, state, getters }, { id, value }) {
     fetch(state.api.saveSetting.href, {
       method: state.api.saveSetting.method,
       headers: getters.headers,
@@ -358,55 +243,85 @@ const actions = {
       .then(() => {
         commit("setSetting", { id, value });
       });
+  },
+
+  getDrafts({ commit, state, getters }, force) {
+    if (state.drafts.length && !force) {
+      return Promise.resolve();
+    }
+
+    commit("setLoading", { loading: true });
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getDrafts.href, {
+        method: state.api.getDrafts.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(({ drafts }) => {
+          commit("setDrafts", { drafts });
+          commit("setLoading", { loading: false });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  async getDraft({ state, commit, getters }, { id, force }) {
+    if (getters.draftById(id) && !force) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getDraft.href.replace("{id}", id), {
+        method: state.api.getDraft.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setDraftById", { draftId: id, entry: json });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  setNextEntriesBatch({ commit, state }) {
+    commit("setGetEntriesStart", {
+      start: state.getEntriesStart + state.settings.per_load
+    });
+  },
+
+  async getFilters({ commit, state }) {
+    if (state.filters.length) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getFilters.href, { method: state.api.getFilters.method })
+        .then(response => response.json())
+        .then(json => {
+          commit("setFilters", { filters: json });
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  async getEntriesByFilter({ commit, state }, { filterId }) {
+    if (state.entriesByFilter[filterId]) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
+        method: state.api.getEntriesByFilter.method
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntriesByFilter", { filterId, entries: json.entries });
+          resolve();
+        });
+    });
   }
 };
-
-const getters = {
-  initialized: state => state.initialized,
-  headers: state => ({
-    "x-functions-key": state.authToken,
-    "sess-token": state.sessToken
-  }),
-  isLoading: state => state.isLoading,
-  api: state => state.api,
-  title: state => state.title,
-  user: state => state.user,
-  entries: state => state.entries,
-  entriesByTag: state => state.entriesByTag,
-  entryById: state => id => {
-    return state.entries.filter(entry => entry.id === id)[0];
-  },
-  comments: state => state.comments,
-  commentById: state => id => {
-    let comment = false;
-    Object.keys.forEach(entryId => {
-      comment = state.comments[entryId].filter(comment => comment.id === id);
-    });
-    return comment;
-  },
-  commentsByEntry: state => entryId => {
-    return state.entryComments[entryId] ? state.entryComments[entryId] : [];
-  },
-  breadcrumbs: state => state.breadcrumbs,
-  tags: state => state.tags,
-  entryFormIsOpen: state => state.entryFormIsOpen,
-  rights: state => {
-    return state.roles && state.user.role
-      ? state.roles.filter(role => role.id === state.user.role)[0].rights
-      : [];
-  },
-  editMode: state => id => {
-    return state.editMode[id] ? state.editMode[id] : false;
-  },
-  toasts: state => state.toasts,
-  selectedComments: state => state.selectedComments,
-  commentIsSelected: state => id => state.selectedComments.indexOf(id) > -1,
-  settings: state => state.settings
-};
-
-export default new Vuex.Store({
-  state,
-  getters,
-  mutations,
-  actions
-});

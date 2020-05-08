@@ -1,0 +1,19 @@
+{
+  "Entries": {
+    "create_entry": "Create entry",
+    "update_entry": "Update entry",
+    "delete_entry": "Delete entry"
+  },
+  "Comments": {
+    "view_unpublished_comment": "View unpublished comments",
+    "publish_comment": "Publish comments",
+    "delete_comment": "Delete comments",
+    "post_comment": "Post comments"
+  },
+  "Admin": {
+    "manage_settings": "Manage settings",
+    "manage_roles": "Manage roles",
+    "manage_rights": "Manage rights",
+    "manage_tokens": "Manage tokens"
+  }
+}

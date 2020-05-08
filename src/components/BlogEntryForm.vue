@@ -1,5 +1,13 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
+    <div class="blog-entry-form__drafts" v-if="!initialEntry.id && drafts">
+      <select @change="loadDraft">
+        <option value>{{ $strings.newEntry }}</option>
+        <optgroup :label="$strings.unpublishedDrafts">
+          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+        </optgroup>
+      </select>
+    </div>
     <div class="blog-entry-form__head">
       <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
       <h2 v-else>{{ $strings.editEntry }}</h2>
@@ -20,15 +28,29 @@
       <blog-tag-manager :tags="tags" :api="api" />
     </div>
     <div class="blog-entry-form__buttons">
-      <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
-      <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
-      <blog-button
-        destroy
-        type="button"
-        v-if="entry.id && user.rights.includes('delete_entry')"
-        :action="showConfirmationDialog"
-        :text="$strings.deleteEntry"
-      />
+      <template v-if="!entryId || entry.public === 1">
+        <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
+        <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
+        <blog-button create v-if="!entry.id" :text="$strings.saveAsDraft" :action="saveDraft" />
+        <blog-button
+          destroy
+          type="button"
+          v-if="entry.id && user.rights.includes('delete_entry')"
+          :action="showConfirmationDialog"
+          :text="$strings.deleteEntry"
+        />
+      </template>
+      <template v-else>
+        <blog-button create :text="$strings.publishDraft" :action="publishDraft" />
+        <blog-button create :text="$strings.updateDraft" :action="saveDraft" />
+        <blog-button
+          destroy
+          type="button"
+          v-if="entry.id && user.rights.includes('delete_entry')"
+          :action="showConfirmationDialog"
+          :text="$strings.deleteDraft"
+        />
+      </template>
       <blog-confirmation-dialog
         :isOpen="confirmationDialogOpen"
         :title="$strings.deleteEntry"
@@ -53,22 +75,25 @@ import imageHandler from "@/util/imageHandler";
 export default {
   name: "blog-entry-form",
 
-  props: ["entry"],
+  props: ["initialEntry"],
 
   components: { BlogTagManager, BlogConfirmationDialog, BlogButton },
 
   data() {
     return {
-      title: this.entry.title ? this.entry.title : "",
-      body: this.entry.body ? this.entry.body : "",
-      tags: this.entry.tags ? this.entry.tags : [],
+      title: this.initialEntry.title ? this.initialEntry.title : "",
+      body: this.initialEntry.body ? this.initialEntry.body : "",
+      tags: this.initialEntry.tags ? this.initialEntry.tags : [],
+      entry: this.initialEntry ? this.initialEntry : false,
       editor: false,
       initialized: false,
-      confirmationDialogOpen: false
+      confirmationDialogOpen: false,
+      public: this.initialEntry.public ? this.initialEntry.public : 1
     };
   },
 
   mounted() {
+    this.getDrafts();
     this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
@@ -106,14 +131,18 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers", "user"]),
+    ...mapGetters(["api", "headers", "user", "drafts"]),
+
+    entryId() {
+      return this.entry && this.entry.id ? this.entry.id : false;
+    },
 
     editorId() {
-      return `quilljs-editor${this.entry.id ? "-" + this.entry.id : ""}`;
+      return `quilljs-editor${this.entryId ? "-" + this.entryId : ""}`;
     },
 
     formId() {
-      return `entry-form${this.entry.id ? "-" + this.entry.id : ""}`;
+      return `entry-form${this.entryId ? "-" + this.entryId : ""}`;
     }
   },
 
@@ -121,18 +150,32 @@ export default {
     ...mapMutations(["setLoading"]),
 
     ...mapActions([
-      "getEntries",
+      "getEntry",
+      "getDraft",
+      "getDrafts",
       "hideEntryForm",
       "setEditMode",
-      "setEntryById"
+      "setEntryById",
+      "setDraftById"
     ]),
+
+    publishDraft(e) {
+      this.public = 1;
+      this.submitForm(e);
+    },
+
+    saveDraft(e) {
+      this.public = 0;
+      this.submitForm(e);
+    },
 
     submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
       const entry = {
         title: this.title,
         body: bodyDelta,
-        tags: this.tags
+        tags: this.tags,
+        public: this.public
       };
       this.setLoading({ loading: true });
       fetch(this.entry.api.save.href, {
@@ -142,14 +185,24 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this.getEntries(true).then(() => {
+          this[this.public === 1 ? "getEntry" : "getDraft"]({
+            id: json.id,
+            force: true
+          }).then(() => {
             this.setLoading({ loading: false });
             this.hideEntryForm();
-            this.setEntryById({ id: json.id, entry });
+            this[this.public === 1 ? "setEntryById" : "setDraftById"]({
+              id: json.id,
+              [this.public === 1 ? "entry" : "draft"]: entry
+            });
             this.setEditMode({ id: json.id, mode: false });
             localStorage.removeItem(this.formId);
-            if (window.location.pathname !== `/entry/${json.id}`) {
-              this.$router.push({ path: `/entry/${json.id}` });
+            const routeType = this.public === 1 ? "entry" : "draft";
+            if (
+              !this.entryId &&
+              window.location.pathname !== `/${routeType}/${json.id}`
+            ) {
+              this.$router.push({ path: `/${routeType}/${json.id}` });
             }
           });
         });
@@ -203,6 +256,21 @@ export default {
 
     hideConfirmationDialog() {
       this.confirmationDialogOpen = false;
+    },
+
+    loadDraft(e) {
+      if (e.target.value) {
+        this.entry = this.$store.getters.draftById(e.target.value);
+        this.title = this.entry.title;
+        this.body = this.entry.body;
+        this.tags = this.entry.tags;
+        this.public = this.entry.public;
+        this.editor.setContents(JSON.parse(this.entry.body));
+      } else {
+        this.entry = false;
+        this.public = 0;
+        this.loadFormState();
+      }
     }
   }
 };

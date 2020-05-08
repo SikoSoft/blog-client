@@ -15,18 +15,17 @@ export default {
 
   data() {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id,
+      routeType: this.$route.path.match(/\/draft\//) ? "draft" : "entry"
     };
   },
 
   computed: {
     entry: function() {
-      return this.$store.getters.entryById(this.id);
+      return this.$store.getters[
+        this.routeType === "entry" ? "entryById" : "draftById"
+      ](this.id);
     }
-  },
-
-  created() {
-    this.update();
   },
 
   mounted() {
@@ -40,14 +39,22 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize", "getEntries", "setBreadcrumbs", "setTitle"]),
+    ...mapActions([
+      "initialize",
+      "getEntry",
+      "getDraft",
+      "setBreadcrumbs",
+      "setTitle"
+    ]),
 
     update() {
       this.initialize().then(() => {
-        this.getEntries().then(() => {
+        this[this.routeType === "entry" ? "getEntry" : "getDraft"]({
+          id: this.id
+        }).then(() => {
           this.setBreadcrumbs([
             {
-              href: `/entry/${this.entry.id}`,
+              href: `/${this.routeType}/${this.entry.id}`,
               label: this.entry.title
             }
           ]);
