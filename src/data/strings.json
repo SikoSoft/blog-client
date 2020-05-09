@@ -47,10 +47,17 @@
   "updateDraft": "Update draft",
   "publishDraft": "Publish draft",
   "deleteDraft": "Delete draft",
+  "opened": "Opened",
+  "closed": "Closed",
+  "branch": "branch",
+  "tag": "tag",
   "githubEventTypes": {
     "IssuesEvent": "Created issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
-    "PushEvent": "Committed {desc} in {repo}"
+    "PushEvent": "Committed {desc} in {repo}",
+    "CreateEvent": "Created {refName} {refType} in {repo}",
+    "DeleteEvent": "Deleted {refName} {refType} in {repo}",
+    "PullRequestEvent": "{action} pull request {title} in {repo}"
   },
   "errors": {
     "CODE_1": "The token you provided is invalid",
