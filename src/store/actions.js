@@ -321,7 +321,8 @@ export default {
         .then(json => {
           commit("setEntriesByFilter", { filterId, entries: json.entries });
           resolve();
-        });
+        })
+        .catch(e => reject(e));
     });
   }
 };

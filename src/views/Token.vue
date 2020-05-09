@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 import BlogTokenHandler from "@/components/BlogTokenHandler.vue";
 
