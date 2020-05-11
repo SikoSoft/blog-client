@@ -3,6 +3,7 @@
   "readMore": "Read more...",
   "entriesWithTag": "Entries tagged with {tag}",
   "title": "Title",
+  "id": "ID",
   "body": "Body",
   "tags": "Tags",
   "newEntry": "New entry",

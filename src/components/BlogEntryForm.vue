@@ -1,6 +1,6 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
-    <div class="blog-entry-form__drafts" v-if="!initialEntry.id && drafts">
+    <div v-if="!initialEntry.id && drafts">
       <select @change="loadDraft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
@@ -8,11 +8,11 @@
         </optgroup>
       </select>
     </div>
-    <div class="blog-entry-form__head">
+    <div>
       <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
       <h2 v-else>{{ $strings.editEntry }}</h2>
     </div>
-    <div class="blog-entry-form_title">
+    <div>
       <input
         type="text"
         class="blog-entry-form__title"
@@ -21,13 +21,22 @@
         :placeholder="$strings.title"
       />
     </div>
+    <div v-if="showNewId">
+      <input
+        type="text"
+        class="blog-entry-form__title"
+        v-model="newId"
+        @keyup="saveFormState"
+        :placeholder="$strings.id"
+      />
+    </div>
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
     </div>
-    <div class="blog-entry-form__tags">
+    <div>
       <blog-tag-manager :tags="tags" :api="api" />
     </div>
-    <div class="blog-entry-form__buttons">
+    <div>
       <template v-if="!entryId || entry.public === 1">
         <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
         <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
@@ -82,6 +91,7 @@ export default {
   data() {
     return {
       title: this.initialEntry.title ? this.initialEntry.title : "",
+      newId: this.initialEntry.id ? this.initialEntry.id : "",
       body: this.initialEntry.body ? this.initialEntry.body : "",
       tags: this.initialEntry.tags ? this.initialEntry.tags : [],
       entry: this.initialEntry ? this.initialEntry : false,
@@ -143,6 +153,10 @@ export default {
 
     formId() {
       return `entry-form${this.entryId ? "-" + this.entryId : ""}`;
+    },
+
+    showNewId() {
+      return this.entryId;
     }
   },
 
@@ -173,6 +187,7 @@ export default {
       const bodyDelta = this.editor.getContents().ops;
       const entry = {
         title: this.title,
+        newId: this.newId,
         body: bodyDelta,
         tags: this.tags,
         public: this.public
@@ -233,6 +248,7 @@ export default {
         this.formId,
         JSON.stringify({
           title: this.title,
+          newId: this.newId,
           body: this.editor.getContents().ops,
           tags: this.tags
         })
@@ -243,6 +259,7 @@ export default {
       try {
         const state = JSON.parse(localStorage.getItem(this.formId));
         this.title = state.title;
+        this.newId = state.newId ? state.newId : "";
         this.editor.setContents(state.body);
         this.tags = state.tags;
       } catch (e) {
@@ -262,6 +279,7 @@ export default {
       if (e.target.value) {
         this.entry = this.$store.getters.draftById(e.target.value);
         this.title = this.entry.title;
+        this.newId = this.entry.id;
         this.body = this.entry.body;
         this.tags = this.entry.tags;
         this.public = this.entry.public;
@@ -297,9 +315,6 @@ export default {
     width: 36rem;
     max-width: 100%;
     box-sizing: border-box;
-  }
-
-  .blog-entry-form__tags {
   }
 
   .ql-editor {
