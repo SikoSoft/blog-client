@@ -35,7 +35,7 @@
     </template>
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
-      <blog-entry-form :initialEntry="entry" />
+      <blog-entry-form :initialEntry="entry" @idChanged="idChanged" />
     </template>
   </div>
 </template>
@@ -151,6 +151,10 @@ export default {
 
     edit() {
       this.setEditMode({ id: this.id, mode: this.editMode ? false : true });
+    },
+
+    idChanged(newId) {
+      console.log("idChanged", newId);
     }
   },
 

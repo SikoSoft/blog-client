@@ -4,7 +4,11 @@
       <select @change="loadDraft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
-          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
+            {{
+            draft.title
+            }}
+          </option>
         </optgroup>
       </select>
     </div>
@@ -207,12 +211,15 @@ export default {
             this.setLoading({ loading: false });
             this.hideEntryForm();
             this[this.public === 1 ? "setEntryById" : "setDraftById"]({
-              id: json.id,
-              [this.public === 1 ? "entry" : "draft"]: entry
+              id: this.entryId ? this.entryId : json.id,
+              [this.public === 1 ? "entry" : "draft"]: { ...entry, id: json.id }
             });
             this.setEditMode({ id: json.id, mode: false });
             localStorage.removeItem(this.formId);
             const routeType = this.public === 1 ? "entry" : "draft";
+            if (this.entryId !== json.id) {
+              this.$emit("idChanged", json.id);
+            }
             if (
               !this.entryId &&
               window.location.pathname !== `/${routeType}/${json.id}`

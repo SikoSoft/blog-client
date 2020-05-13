@@ -69,13 +69,14 @@ export default {
     Vue.set(state.editMode, id, mode);
   },
 
-  setEntryById: (state, { entryId, entry }) => {
-    Vue.set(state.entriesById, entryId, entry);
+  setEntryById: (state, { id, entry }) => {
+    console.log("setEntryById", id, entry);
+    Vue.set(state.entriesById, entry.id, entry);
     Vue.set(
       state,
       "entries",
       [...state.entries].map(e => {
-        return entryId !== e.id ? e : { ...entry, entryId };
+        return id !== e.id ? e : { ...entry, id: entry.id };
       })
     );
   },
