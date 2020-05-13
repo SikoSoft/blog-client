@@ -112,8 +112,9 @@ export default {
       theme: "snow",
       modules: {
         toolbar: [
-          [{ header: [1, 2, false] }],
-          ["bold", "italic", "underline"],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          ["bold", "italic", "underline", "strike"],
+          [{ script: "sub" }, { script: "super" }],
           [
             { list: "ordered" },
             { list: "bullet" },
