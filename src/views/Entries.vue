@@ -33,27 +33,13 @@ export default {
         !this.endOfEntries &&
         !this.gettingEntriesCoolingDown
       ) {
-        this.gettingEntries = true;
-        this.getMoreEntries().then(() => {
-          this.gettingEntries = false;
-          this.gettingEntriesCoolingDown = true;
-          this.gettingEntriesTimeout = setTimeout(() => {
-            this.gettingEntriesCoolingDown = false;
-          }, this.gettingEntriesCoolDown);
-        });
+        this.loadEntries();
       }
     });
 
     this.setTitle(process.env.VUE_APP_SITE_NAME);
     this.initialize().then(() => {
-      this.gettingEntries = true;
-      this.getEntries().then(() => {
-        this.gettingEntries = false;
-        this.gettingEntriesCoolingDown = true;
-        this.gettingEntriesTimeout = setTimeout(() => {
-          this.gettingEntriesCoolingDown = false;
-        }, this.gettingEntriesCoolDown);
-      });
+      this.loadEntries();
     });
     this.setBreadcrumbs([]);
   },
@@ -65,7 +51,18 @@ export default {
       "getMoreEntries",
       "setBreadcrumbs",
       "setTitle"
-    ])
+    ]),
+
+    loadEntries() {
+      this.gettingEntries = true;
+      this[this.entries.length ? "getMoreEntries" : "getEntries"]().then(() => {
+        this.gettingEntries = false;
+        this.gettingEntriesCoolingDown = true;
+        this.gettingEntriesTimeout = setTimeout(() => {
+          this.gettingEntriesCoolingDown = false;
+        }, this.gettingEntriesCoolDown);
+      });
+    }
   },
 
   computed: {
