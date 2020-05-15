@@ -94,7 +94,7 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          commit("setEntryById", { entryId: id, entry: json });
+          commit("setEntryById", { id, entry: json });
           resolve();
         })
         .catch(e => reject(e));

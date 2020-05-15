@@ -211,10 +211,6 @@ export default {
           }).then(() => {
             this.setLoading({ loading: false });
             this.hideEntryForm();
-            this[this.public === 1 ? "setEntryById" : "setDraftById"]({
-              id: this.entryId ? this.entryId : json.id,
-              [this.public === 1 ? "entry" : "draft"]: { ...entry, id: json.id }
-            });
             this.setEditMode({ id: json.id, mode: false });
             localStorage.removeItem(this.formId);
             const routeType = this.public === 1 ? "entry" : "draft";
