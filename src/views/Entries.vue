@@ -46,7 +46,14 @@ export default {
 
     this.setTitle(process.env.VUE_APP_SITE_NAME);
     this.initialize().then(() => {
-      this.getEntries();
+      this.gettingEntries = true;
+      this.getEntries().then(() => {
+        this.gettingEntries = false;
+        this.gettingEntriesCoolingDown = true;
+        this.gettingEntriesTimeout = setTimeout(() => {
+          this.gettingEntriesCoolingDown = false;
+        }, this.gettingEntriesCoolDown);
+      });
     });
     this.setBreadcrumbs([]);
   },
