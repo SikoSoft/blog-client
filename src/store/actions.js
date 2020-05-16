@@ -324,5 +324,19 @@ export default {
         })
         .catch(e => reject(e));
     });
+  },
+
+  updateEntryId: ({ commit, getters }, { id, newId }) => {
+    commit("setEntryById", {
+      id,
+      entry: { ...getters.entryById(id), id: newId }
+    });
+  },
+
+  updateDraftId: ({ commit, getters }, { id, newId }) => {
+    commit("setDraftById", {
+      id,
+      draft: { ...getters.draftById(id), id: newId }
+    });
   }
 };

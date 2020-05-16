@@ -175,7 +175,9 @@ export default {
       "hideEntryForm",
       "setEditMode",
       "setEntryById",
-      "setDraftById"
+      "setDraftById",
+      "updateEntryId",
+      "updateDraftId"
     ]),
 
     publishDraft(e) {
@@ -216,6 +218,10 @@ export default {
             const routeType = this.public === 1 ? "entry" : "draft";
             if (this.entryId !== json.id) {
               this.$emit("idChanged", json.id);
+              this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
+                id: this.entryId,
+                newId: json.id
+              });
             }
             if (
               !this.entryId &&

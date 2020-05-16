@@ -70,6 +70,7 @@ export default {
   },
 
   setEntryById: (state, { id, entry }) => {
+    console.log("setEntryById", id, entry);
     Vue.set(state.entriesById, entry.id, entry);
     Vue.set(
       state,
@@ -90,6 +91,12 @@ export default {
       })
     );
   },
+
+  updateEntryId: () => {
+    console.log("updateEntryId");
+  },
+
+  updateDraftId: () => {},
 
   setToasts: (state, { toasts }) => {
     Vue.set(state, "toasts", toasts);
