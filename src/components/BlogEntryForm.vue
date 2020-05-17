@@ -219,11 +219,12 @@ export default {
                 newId: json.id
               });
             }
-            if (
-              !this.entryId &&
-              window.location.pathname !== `/${routeType}/${json.id}`
-            ) {
-              this.$router.push({ path: `/${routeType}/${json.id}` });
+            if (window.location.pathname !== `/${routeType}/${json.id}`) {
+              if (!this.entryId) {
+                this.$router.push({ path: `/${routeType}/${json.id}` });
+              } else {
+                this.$emit("edited", json.id);
+              }
             }
           });
         });
