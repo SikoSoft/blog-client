@@ -9,8 +9,12 @@ export default {
     state.isLoading = loading;
   },
 
-  setEntries: (state, { entries }) => {
-    Vue.set(state, "entries", [...state.entries, ...entries]);
+  setEntries: (state, { entries, append }) => {
+    if (append) {
+      Vue.set(state, "entries", [...state.entries, ...entries]);
+    } else {
+      Vue.set(state, "entries", [...entries]);
+    }
   },
 
   setEntriesByTag: (state, { tag, entries }) => {
@@ -91,12 +95,6 @@ export default {
       })
     );
   },
-
-  updateEntryId: () => {
-    console.log("updateEntryId");
-  },
-
-  updateDraftId: () => {},
 
   setToasts: (state, { toasts }) => {
     Vue.set(state, "toasts", toasts);

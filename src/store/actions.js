@@ -55,8 +55,8 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntries", {
-            start: state.getEntriesStart,
-            entries: json.entries
+            entries: json.entries,
+            append: true
           });
           commit("setEndOfEntries", { end: json.end });
           commit("setLoading", { loading: false });
@@ -82,7 +82,7 @@ export default {
     });
   },
 
-  async getEntry({ state, commit, getters }, { id, force }) {
+  async getEntry({ state, commit, getters }, { id, force, addToList }) {
     if (getters.entryById(id) && !force) {
       return Promise.resolve();
     }
@@ -95,6 +95,10 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntryById", { id, entry: json });
+          if (addToList) {
+            commit("setEntries", { entries: [json, ...state.entries] });
+            commit("setGetEntriesStart", { start: state.getEntriesStart + 1 });
+          }
           resolve();
         })
         .catch(e => reject(e));
