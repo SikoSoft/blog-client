@@ -120,7 +120,7 @@ export default {
             "<a href='/tag/$1' class='vue-route'>#$1</a>"
           )
           .replace(
-            "<img ",
+            imgRegExp,
             `<img @load="() => {imageLoaded({entryId: id})}" @error="() => {imageError({entryId: id})}" `
           ) +
         "</div>"
