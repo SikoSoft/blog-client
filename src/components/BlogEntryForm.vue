@@ -65,7 +65,15 @@
         :title="$strings.deleteEntry"
         :message="$strings.confirmDeleteEntry"
       >
-        <blog-button destroy :text="$strings.yes" :action="deleteEntry" />
+        <blog-button
+          destroy
+          :text="$strings.yes"
+          :action="
+            () => {
+              deleteEntry({ id: entry.id });
+            }
+          "
+        />
         <blog-button :text="$strings.no" :action="hideConfirmationDialog" />
       </blog-confirmation-dialog>
     </div>
@@ -173,7 +181,8 @@ export default {
       "setEntryById",
       "setDraftById",
       "updateEntryId",
-      "updateDraftId"
+      "updateDraftId",
+      "deleteEntry"
     ]),
 
     publishDraft(e) {
@@ -230,17 +239,6 @@ export default {
           });
         });
       e.preventDefault();
-    },
-
-    deleteEntry() {
-      fetch(this.entry.api.delete.href, {
-        method: this.entry.api.delete.method,
-        headers: this.headers
-      })
-        .then(response => response.json())
-        .then(() => {
-          this.getEntries(true);
-        });
     },
 
     setTags(tags) {

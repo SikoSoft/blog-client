@@ -342,5 +342,18 @@ export default {
       id,
       draft: { ...getters.draftById(id), id: newId }
     });
+  },
+
+  deleteEntry: ({ state, commit, getters }, { id }) => {
+    const entry = getters.entryById(id);
+    fetch(entry.api.delete.href, {
+      method: entry.api.delete.method,
+      headers: getters.headers
+    })
+      .then(response => response.json())
+      .then(() => {
+        commit("deleteEntry", { id });
+        commit("setGetEntriesStart", { start: state.getEntriesStart - 1 });
+      });
   }
 };
