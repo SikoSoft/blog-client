@@ -74,7 +74,6 @@ export default {
   },
 
   setEntryById: (state, { id, entry }) => {
-    console.log("setEntryById", id, entry);
     Vue.set(state.entriesById, entry.id, entry);
     Vue.set(
       state,
