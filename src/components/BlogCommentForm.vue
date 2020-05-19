@@ -155,8 +155,8 @@ export default {
               } else {
                 this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
               }
-              this.$store.commit("setComments", {
-                id: this.entry.id,
+              this.$store.commit("setEntryComments", {
+                entryId: this.entry.id,
                 comments: [{ ...json }, ...this.comments]
               });
               this.open = false;
