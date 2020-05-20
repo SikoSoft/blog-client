@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <blog-loader v-if="isLoading" />
     <blog-entries v-if="initialized" :entries="entries" />
   </div>
 </template>
@@ -8,13 +7,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import BlogLoader from "@/components/BlogLoader.vue";
 import BlogEntries from "@/components/BlogEntries.vue";
 
 export default {
   name: "home",
 
-  components: { BlogLoader, BlogEntries },
+  components: { BlogEntries },
 
   data() {
     return {
@@ -66,13 +64,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      "initialized",
-      "entries",
-      "isLoading",
-      "windowYLoadNew",
-      "endOfEntries"
-    ])
+    ...mapGetters(["initialized", "entries", "windowYLoadNew", "endOfEntries"])
   }
 };
 </script>

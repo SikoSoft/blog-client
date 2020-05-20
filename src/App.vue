@@ -5,6 +5,7 @@
     </header>
     <div class="main-container">
       <main>
+        <blog-loader v-if="isLoading" />
         <router-view />
       </main>
       <blog-sidebar v-if="showSidebar" />
@@ -16,12 +17,13 @@
 <script>
 import { mapGetters } from "vuex";
 
+import BlogLoader from "@/components/BlogLoader.vue";
 import BlogHeader from "./components/BlogHeader.vue";
 import BlogToasts from "./components/BlogToasts.vue";
 import BlogSidebar from "./components/BlogSidebar.vue";
 
 export default {
-  components: { BlogHeader, BlogToasts, BlogSidebar },
+  components: { BlogLoader, BlogHeader, BlogToasts, BlogSidebar },
 
   data() {
     return {
@@ -88,7 +90,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "settings"]),
+    ...mapGetters(["initialized", "isLoading", "settings"]),
 
     showSidebar() {
       return (
