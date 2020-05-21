@@ -55,13 +55,22 @@ export default {
       return this.payload.ref_type;
     },
 
+    action() {
+      if (this.payload.action === "closed") {
+        return this.$strings.closed;
+      } else {
+        return this.$strings.opened;
+      }
+    },
+
     message() {
       return this.$strings.githubEventTypes[this.type]
         .replace("{repo}", this.repoName)
         .replace("{issue}", this.issueName)
         .replace("{desc}", this.commitDesc)
         .replace("{refName}", this.refName)
-        .replace("{refType}", this.refType);
+        .replace("{refType}", this.refType)
+        .replace("{action}", this.action);
     },
 
     issueName() {

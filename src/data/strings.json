@@ -53,7 +53,7 @@
   "branch": "branch",
   "tag": "tag",
   "githubEventTypes": {
-    "IssuesEvent": "Created issue {issue} in {repo}",
+    "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
     "PushEvent": "Committed {desc} in {repo}",
     "CreateEvent": "Created {refName} {refType} in {repo}",
