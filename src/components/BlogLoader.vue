@@ -1,16 +1,18 @@
 <template>
   <div class="blog-loader">
-    <div class="blog-loader__image">
-      <div class="blog-loader__pellets">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-      <div class="blog-loader__pacman">
-        <span class="blog-loader__pacman-top"></span>
-        <span class="blog-loader__pacman-bottom"></span>
-        <span class="blog-loader__pacman-left"></span>
-        <div class="blog-loader__pacman-eye"></div>
+    <div class="blog-loader__inner">
+      <div class="blog-loader__image">
+        <div class="blog-loader__pellets">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="blog-loader__pacman">
+          <span class="blog-loader__pacman-top"></span>
+          <span class="blog-loader__pacman-bottom"></span>
+          <span class="blog-loader__pacman-left"></span>
+          <div class="blog-loader__pacman-eye"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -23,10 +25,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/variables.scss";
+
 .blog-loader {
-  position: relative;
-  height: 10rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   width: 100%;
+
+  &__inner {
+    position: relative;
+    min-height: $loader-height;
+    width: 100%;
+  }
 
   &__image {
     position: absolute;

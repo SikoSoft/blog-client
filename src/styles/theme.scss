@@ -25,9 +25,16 @@ header {
   display: flex;
   max-width: 1920px;
   margin: auto;
+
+  &--loading {
+    main {
+      padding-bottom: $loader-height;
+    }
+  }
 }
 
 main {
+  position: relative;
   padding: $space-xlarge;
   flex: 7;
 }

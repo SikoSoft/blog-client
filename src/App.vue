@@ -3,7 +3,7 @@
     <header>
       <blog-header />
     </header>
-    <div class="main-container">
+    <div class="main-container" :class="{ 'main-container--loading': isLoading }">
       <main>
         <blog-loader v-if="isLoading" />
         <router-view />
