@@ -87,6 +87,8 @@ export default {
       return Promise.resolve();
     }
 
+    commit("setLoading", { loading: true });
+
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntry.href.replace("{id}", id), {
         method: state.api.getEntry.method,
@@ -99,6 +101,7 @@ export default {
             commit("setEntries", { entries: [json, ...state.entries] });
             commit("setGetEntriesStart", { start: state.getEntriesStart + 1 });
           }
+          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
@@ -317,6 +320,8 @@ export default {
       return Promise.resolve();
     }
 
+    commit("setLoading", { loading: true });
+
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
         method: state.api.getEntriesByFilter.method
@@ -324,6 +329,7 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntriesByFilter", { filterId, entries: json.entries });
+          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
