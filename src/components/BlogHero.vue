@@ -43,7 +43,7 @@ export default {
 .blog-hero {
   position: relative;
   height: 400px;
-  background: radial-gradient(circle at center, #333 0, #000);
+  background: radial-gradient(circle at center, #222 0, #000);
 
   &__image {
     opacity: 0.2;
