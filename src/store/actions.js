@@ -71,14 +71,24 @@ export default {
     dispatch("getEntries", true);
   },
 
-  getEntriesByTag({ state, commit }, tag) {
+  getEntriesByTag({ state, commit, getters }, tag) {
     if (state.entriesByTag[tag]) {
-      return;
+      return Promise.resolve();
     }
 
-    commit("setEntriesByTag", {
-      tag,
-      entries: state.entries.filter(entry => entry.tags.includes(tag))
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
+        method: state.api.getEntriesByTag.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntriesByTag", {
+            tag,
+            entries: json.entries
+          });
+        })
+        .catch(e => reject(e));
     });
   },
 
