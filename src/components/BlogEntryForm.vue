@@ -133,6 +133,7 @@ export default {
       this.editor.setContents(JSON.parse(this.body));
     }
     imageHandler.setup({
+      setProgress: this.setProgress,
       editor: this.editor,
       uploadImage: this.api.uploadImage,
       headers: this.headers
@@ -182,7 +183,8 @@ export default {
       "setDraftById",
       "updateEntryId",
       "updateDraftId",
-      "deleteEntry"
+      "deleteEntry",
+      "setProgress"
     ]),
 
     publishDraft(e) {

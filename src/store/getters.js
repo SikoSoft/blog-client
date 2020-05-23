@@ -82,5 +82,9 @@ export default {
   filters: state => state.filters,
 
   entriesByFilter: state => filter =>
-    state.entriesByFilter[filter] ? state.entriesByFilter[filter] : []
+    state.entriesByFilter[filter] ? state.entriesByFilter[filter] : [],
+
+  showProgressBar: state => state.showProgressBar,
+
+  progress: state => state.progress
 };

@@ -166,5 +166,13 @@ export default {
       "entries",
       state.entries.filter(entry => entry.id !== id)
     );
+  },
+
+  setProgress: (state, { progress }) => {
+    state.progress = progress;
+  },
+
+  setShowProgressBar: (state, { show }) => {
+    state.showProgressBar = show;
   }
 };

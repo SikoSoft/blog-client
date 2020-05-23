@@ -28,5 +28,7 @@ export default {
   getEntriesStart: 0,
   endOfEntries: false,
   imagesLoaded: {},
-  filters: []
+  filters: [],
+  progress: 0,
+  showProgressBar: false
 };

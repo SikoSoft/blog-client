@@ -371,5 +371,17 @@ export default {
         commit("deleteEntry", { id });
         commit("setGetEntriesStart", { start: state.getEntriesStart - 1 });
       });
+  },
+
+  setProgress: ({ state, commit }, { progress }) => {
+    if (progress > 0 && !state.showProgressBar) {
+      commit("setShowProgressBar", { show: true });
+    }
+    if (progress === 1) {
+      setTimeout(() => {
+        commit("setShowProgressBar", { show: false });
+      }, 1000);
+    }
+    commit("setProgress", { progress });
   }
 };
