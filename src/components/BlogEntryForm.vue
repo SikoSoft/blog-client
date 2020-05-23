@@ -1,7 +1,7 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
     <div v-if="!initialEntry.id && drafts">
-      <select @change="loadDraft">
+      <select @change="loadDraft" class="blog-entry-form__draft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
           <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
@@ -305,6 +305,10 @@ export default {
 
 .blog-entry-form {
   margin: 16px 0;
+
+  .blog-entry-form__draft {
+    max-width: 90%;
+  }
 
   input,
   button,
