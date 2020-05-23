@@ -215,7 +215,7 @@ export default {
           this[this.public === 1 ? "getEntry" : "getDraft"]({
             id: json.id,
             force: true,
-            addToList: true
+            addToList: !this.entryId ? true : false
           }).then(() => {
             this.setLoading({ loading: false });
             this.hideEntryForm();
