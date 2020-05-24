@@ -1,6 +1,6 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
-    <div v-if="!initialEntry.id && drafts">
+    <div v-if="!initialEntry.id && drafts.length">
       <select @change="loadDraft" class="blog-entry-form__draft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
