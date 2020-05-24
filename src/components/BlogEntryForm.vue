@@ -74,6 +74,8 @@
                 deleteEntry({ id: entry.id });
               } else {
                 deleteDraft({ id: entry.id });
+                loadDraft();
+                hideConfirmationDialog();
               }
             }
           "
@@ -280,6 +282,9 @@ export default {
         this.editor.setContents(state.body);
         this.tags = state.tags;
       } catch (e) {
+        this.title = "";
+        this.newId = "";
+        this.editor.setContents([]);
         console.log("corrupt form data", e);
       }
     },
@@ -293,7 +298,7 @@ export default {
     },
 
     loadDraft(e) {
-      if (e.target.value) {
+      if (e && e.target && e.target.value) {
         this.entry = this.$store.getters.draftById(e.target.value);
         this.title = this.entry.title;
         this.newId = this.entry.id;
