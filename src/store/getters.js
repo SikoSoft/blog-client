@@ -67,7 +67,9 @@ export default {
   drafts: state => state.drafts,
 
   draftById: state => id => {
-    return state.drafts.filter(draft => draft.id === id)[0];
+    return state.draftsById[id]
+      ? state.draftsById[id]
+      : state.drafts.filter(draft => draft.id === id)[0];
   },
 
   windowYLoadNew: state => state.windowYLoadNew,

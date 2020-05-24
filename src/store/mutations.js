@@ -168,6 +168,14 @@ export default {
     );
   },
 
+  deleteDraft: (state, { id }) => {
+    Vue.set(
+      state,
+      "drafts",
+      state.drafts.filter(draft => draft.id !== id)
+    );
+  },
+
   setProgress: (state, { progress }) => {
     state.progress = progress;
   },

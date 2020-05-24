@@ -70,7 +70,11 @@
           :text="$strings.yes"
           :action="
             () => {
-              deleteEntry({ id: entry.id });
+              if (this.isPublic === 1) {
+                deleteEntry({ id: entry.id });
+              } else {
+                deleteDraft({ id: entry.id });
+              }
             }
           "
         />
@@ -167,6 +171,10 @@ export default {
 
     showNewId() {
       return this.entryId;
+    },
+
+    isPublic() {
+      return this.public === 1;
     }
   },
 
@@ -184,6 +192,7 @@ export default {
       "updateEntryId",
       "updateDraftId",
       "deleteEntry",
+      "deleteDraft",
       "setProgress"
     ]),
 

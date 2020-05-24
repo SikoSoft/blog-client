@@ -296,7 +296,7 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          commit("setDraftById", { draftId: id, entry: json });
+          commit("setDraftById", { id: id, draft: json });
           resolve();
         })
         .catch(e => reject(e));
@@ -370,6 +370,18 @@ export default {
       .then(() => {
         commit("deleteEntry", { id });
         commit("setGetEntriesStart", { start: state.getEntriesStart - 1 });
+      });
+  },
+
+  deleteDraft: ({ commit, getters }, { id }) => {
+    const draft = getters.draftById(id);
+    fetch(draft.api.delete.href, {
+      method: draft.api.delete.method,
+      headers: getters.headers
+    })
+      .then(response => response.json())
+      .then(() => {
+        commit("deleteDraft", { id });
       });
   },
 
