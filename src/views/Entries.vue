@@ -25,6 +25,7 @@ export default {
   mounted() {
     window.addEventListener("scroll", () => {
       if (
+        this.initialized &&
         this.$route.name === "entries" &&
         window.scrollY > this.windowYLoadNew &&
         !this.gettingEntries &&
