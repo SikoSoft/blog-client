@@ -65,21 +65,7 @@
         :title="$strings.deleteEntry"
         :message="$strings.confirmDeleteEntry"
       >
-        <blog-button
-          destroy
-          :text="$strings.yes"
-          :action="
-            () => {
-              if (this.isPublic) {
-                deleteEntry({ id: entry.id });
-              } else {
-                deleteDraft({ id: entry.id });
-                loadDraft();
-                hideConfirmationDialog();
-              }
-            }
-          "
-        />
+        <blog-button destroy :text="$strings.yes" :action="handleDelete" />
         <blog-button :text="$strings.no" :action="hideConfirmationDialog" />
       </blog-confirmation-dialog>
     </div>
@@ -157,7 +143,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers", "user", "drafts"]),
+    ...mapGetters(["api", "headers", "user", "drafts", "entryFormIsOpen"]),
 
     entryId() {
       return this.entry && this.entry.id ? this.entry.id : false;
@@ -181,7 +167,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["setLoading"]),
+    ...mapMutations(["setLoading", "hideEntryForm"]),
 
     ...mapActions([
       "getEntry",
@@ -310,6 +296,21 @@ export default {
         this.entry = false;
         this.public = 0;
         this.loadFormState();
+      }
+    },
+
+    handleDelete() {
+      if (this.isPublic) {
+        this.deleteEntry({ id: this.entry.id });
+      } else {
+        this.deleteDraft({ id: this.entry.id });
+        this.loadDraft();
+        this.hideConfirmationDialog();
+      }
+      if (this.entryFormIsOpen) {
+        this.hideEntryForm();
+      } else {
+        this.$router.push({ path: "/" });
       }
     }
   }
