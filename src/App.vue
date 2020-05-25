@@ -11,6 +11,7 @@
       <blog-sidebar v-if="showSidebar" />
     </div>
     <blog-toasts />
+    <blog-progress-bar v-if="showProgressBar" />
   </div>
 </template>
 
@@ -18,12 +19,19 @@
 import { mapGetters } from "vuex";
 
 import BlogLoader from "@/components/BlogLoader.vue";
-import BlogHeader from "./components/BlogHeader.vue";
-import BlogToasts from "./components/BlogToasts.vue";
-import BlogSidebar from "./components/BlogSidebar.vue";
+import BlogHeader from "@/components/BlogHeader.vue";
+import BlogToasts from "@/components/BlogToasts.vue";
+import BlogSidebar from "@/components/BlogSidebar.vue";
+import BlogProgressBar from "@/components/BlogProgressBar.vue";
 
 export default {
-  components: { BlogLoader, BlogHeader, BlogToasts, BlogSidebar },
+  components: {
+    BlogLoader,
+    BlogHeader,
+    BlogToasts,
+    BlogSidebar,
+    BlogProgressBar
+  },
 
   data() {
     return {
@@ -90,7 +98,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "isLoading", "settings"]),
+    ...mapGetters(["initialized", "isLoading", "settings", "showProgressBar"]),
 
     showSidebar() {
       return (
