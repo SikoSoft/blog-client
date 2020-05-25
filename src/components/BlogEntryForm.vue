@@ -70,7 +70,7 @@
           :text="$strings.yes"
           :action="
             () => {
-              if (this.isPublic === 1) {
+              if (this.isPublic) {
                 deleteEntry({ id: entry.id });
               } else {
                 deleteDraft({ id: entry.id });
