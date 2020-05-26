@@ -4,7 +4,9 @@
       <select @change="loadDraft" class="blog-entry-form__draft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
-          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{
+            draft.title
+          }}</option>
         </optgroup>
       </select>
     </div>
@@ -38,9 +40,24 @@
     </div>
     <div>
       <template v-if="!entryId || entry.public === 1">
-        <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
-        <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
-        <blog-button create v-if="!entry.id" :text="$strings.saveAsDraft" :action="saveDraft" />
+        <blog-button
+          create
+          v-if="entry.id"
+          :text="$strings.updateEntry"
+          :action="submitForm"
+        />
+        <blog-button
+          create
+          v-else
+          :text="$strings.postEntry"
+          :action="submitForm"
+        />
+        <blog-button
+          create
+          v-if="!entry.id"
+          :text="$strings.saveAsDraft"
+          :action="saveDraft"
+        />
         <blog-button
           destroy
           type="button"
@@ -50,7 +67,11 @@
         />
       </template>
       <template v-else>
-        <blog-button create :text="$strings.publishDraft" :action="publishDraft" />
+        <blog-button
+          create
+          :text="$strings.publishDraft"
+          :action="publishDraft"
+        />
         <blog-button create :text="$strings.updateDraft" :action="saveDraft" />
         <blog-button
           destroy
@@ -181,7 +202,8 @@ export default {
       "updateDraftId",
       "deleteEntry",
       "deleteDraft",
-      "setProgress"
+      "setProgress",
+      "addToast"
     ]),
 
     publishDraft(e) {
@@ -211,31 +233,35 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this[this.public === 1 ? "getEntry" : "getDraft"]({
-            id: json.id,
-            force: true,
-            addToList: !this.entryId ? true : false
-          }).then(() => {
-            this.setLoading({ loading: false });
-            this.hideEntryForm();
-            this.setEditMode({ id: json.id, mode: false });
-            localStorage.removeItem(this.formId);
-            const routeType = this.public === 1 ? "entry" : "draft";
-            if (this.entryId && this.entryId !== json.id) {
-              this.$emit("idChanged", json.id);
-              this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
-                id: this.entryId,
-                newId: json.id
-              });
-            }
-            if (window.location.pathname !== `/${routeType}/${json.id}`) {
-              if (!this.entryId) {
-                this.$router.push({ path: `/${routeType}/${json.id}` });
-              } else {
-                this.$emit("edited", json.id);
+          if (!json.errorCode) {
+            this[this.public === 1 ? "getEntry" : "getDraft"]({
+              id: json.id,
+              force: true,
+              addToList: !this.entryId ? true : false
+            }).then(() => {
+              this.setLoading({ loading: false });
+              this.hideEntryForm();
+              this.setEditMode({ id: json.id, mode: false });
+              localStorage.removeItem(this.formId);
+              const routeType = this.public === 1 ? "entry" : "draft";
+              if (this.entryId && this.entryId !== json.id) {
+                this.$emit("idChanged", json.id);
+                this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
+                  id: this.entryId,
+                  newId: json.id
+                });
               }
-            }
-          });
+              if (window.location.pathname !== `/${routeType}/${json.id}`) {
+                if (!this.entryId) {
+                  this.$router.push({ path: `/${routeType}/${json.id}` });
+                } else {
+                  this.$emit("edited", json.id);
+                }
+              }
+            });
+          } else {
+            this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
+          }
         });
       e.preventDefault();
     },
