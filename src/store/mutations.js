@@ -9,8 +9,12 @@ export default {
     state.isLoading = loading;
   },
 
-  setEntries: (state, { entries }) => {
-    Vue.set(state, "entries", [...state.entries, ...entries]);
+  setEntries: (state, { entries, append }) => {
+    if (append) {
+      Vue.set(state, "entries", [...state.entries, ...entries]);
+    } else {
+      Vue.set(state, "entries", [...entries]);
+    }
   },
 
   setEntriesByTag: (state, { tag, entries }) => {
@@ -69,13 +73,13 @@ export default {
     Vue.set(state.editMode, id, mode);
   },
 
-  setEntryById: (state, { entryId, entry }) => {
-    Vue.set(state.entriesById, entryId, entry);
+  setEntryById: (state, { id, entry }) => {
+    Vue.set(state.entriesById, entry.id, entry);
     Vue.set(
       state,
       "entries",
       [...state.entries].map(e => {
-        return entryId !== e.id ? e : { ...entry, entryId };
+        return id !== e.id ? e : { ...entry, id: entry.id };
       })
     );
   },
@@ -154,5 +158,29 @@ export default {
 
   setFilters: (state, { filters }) => {
     state.filters = filters;
+  },
+
+  deleteEntry: (state, { id }) => {
+    Vue.set(
+      state,
+      "entries",
+      state.entries.filter(entry => entry.id !== id)
+    );
+  },
+
+  deleteDraft: (state, { id }) => {
+    Vue.set(
+      state,
+      "drafts",
+      state.drafts.filter(draft => draft.id !== id)
+    );
+  },
+
+  setProgress: (state, { progress }) => {
+    state.progress = progress;
+  },
+
+  setShowProgressBar: (state, { show }) => {
+    state.showProgressBar = show;
   }
 };

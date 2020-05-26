@@ -3,6 +3,11 @@ export default {
     const fd = new FormData();
     fd.append("image", file);
     const xhr = new XMLHttpRequest();
+    xhr.upload.onprogress = e => {
+      if (e.lengthComputable) {
+        this.setProgress({ progress: e.loaded / e.total });
+      }
+    };
     xhr.open(this.uploadImage.method, this.uploadImage.href, true);
     Object.keys(this.headers).forEach(header => {
       xhr.setRequestHeader(header, this.headers[header]);
@@ -33,7 +38,8 @@ export default {
     };
   },
 
-  setup({ editor, uploadImage, headers }) {
+  setup({ setProgress, editor, uploadImage, headers }) {
+    this.setProgress = setProgress;
     this.editor = editor;
     this.uploadImage = uploadImage;
     this.headers = headers;

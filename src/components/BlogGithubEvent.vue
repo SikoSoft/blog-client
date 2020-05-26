@@ -24,6 +24,12 @@ export default {
           return "comment";
         case "PushEvent":
           return "git-commit";
+        case "CreateEvent":
+          return "git-branch";
+        case "DeleteEvent":
+          return "trashcan";
+        case "PullRequestEvent":
+          return "git-pull-request";
         default:
           return "alert";
       }
@@ -41,11 +47,30 @@ export default {
       return `https://github.com/${this.repo.name}`;
     },
 
+    refName() {
+      return this.payload.ref;
+    },
+
+    refType() {
+      return this.payload.ref_type;
+    },
+
+    action() {
+      if (this.payload.action === "closed") {
+        return this.$strings.closed;
+      } else {
+        return this.$strings.opened;
+      }
+    },
+
     message() {
       return this.$strings.githubEventTypes[this.type]
         .replace("{repo}", this.repoName)
         .replace("{issue}", this.issueName)
-        .replace("{desc}", this.commitDesc);
+        .replace("{desc}", this.commitDesc)
+        .replace("{refName}", this.refName)
+        .replace("{refType}", this.refType)
+        .replace("{action}", this.action);
     },
 
     issueName() {

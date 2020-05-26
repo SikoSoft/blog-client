@@ -67,7 +67,9 @@ export default {
   drafts: state => state.drafts,
 
   draftById: state => id => {
-    return state.drafts.filter(draft => draft.id === id)[0];
+    return state.draftsById[id]
+      ? state.draftsById[id]
+      : state.drafts.filter(draft => draft.id === id)[0];
   },
 
   windowYLoadNew: state => state.windowYLoadNew,
@@ -82,5 +84,9 @@ export default {
   filters: state => state.filters,
 
   entriesByFilter: state => filter =>
-    state.entriesByFilter[filter] ? state.entriesByFilter[filter] : []
+    state.entriesByFilter[filter] ? state.entriesByFilter[filter] : [],
+
+  showProgressBar: state => state.showProgressBar,
+
+  progress: state => state.progress
 };

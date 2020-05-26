@@ -46,11 +46,11 @@ export default {
   padding-left: $space-xlarge;
   background: linear-gradient(
     to bottom,
-    $color-bg-secondary,
+    $color-bg-secondary-highlight,
     5%,
-    #303030,
+    $color-bg-secondary,
     95%,
-    $color-bg-secondary
+    $color-bg-secondary-highlight
   );
   font-size: 2rem;
   white-space: nowrap;
@@ -77,7 +77,7 @@ export default {
     display: inline-block;
     height: 8rem;
     &--disabled {
-      color: #fff;
+      color: rgba(255, 255, 255, 0.75);
       cursor: text;
     }
   }

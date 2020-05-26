@@ -3,25 +3,35 @@
     <header>
       <blog-header />
     </header>
-    <div class="main-container">
+    <div class="main-container" :class="{ 'main-container--loading': isLoading }">
       <main>
+        <blog-loader v-if="isLoading" />
         <router-view />
       </main>
       <blog-sidebar v-if="showSidebar" />
     </div>
     <blog-toasts />
+    <blog-progress-bar v-if="showProgressBar" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
-import BlogHeader from "./components/BlogHeader.vue";
-import BlogToasts from "./components/BlogToasts.vue";
-import BlogSidebar from "./components/BlogSidebar.vue";
+import BlogLoader from "@/components/BlogLoader.vue";
+import BlogHeader from "@/components/BlogHeader.vue";
+import BlogToasts from "@/components/BlogToasts.vue";
+import BlogSidebar from "@/components/BlogSidebar.vue";
+import BlogProgressBar from "@/components/BlogProgressBar.vue";
 
 export default {
-  components: { BlogHeader, BlogToasts, BlogSidebar },
+  components: {
+    BlogLoader,
+    BlogHeader,
+    BlogToasts,
+    BlogSidebar,
+    BlogProgressBar
+  },
 
   data() {
     return {
@@ -88,7 +98,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "settings"]),
+    ...mapGetters(["initialized", "isLoading", "settings", "showProgressBar"]),
 
     showSidebar() {
       return (

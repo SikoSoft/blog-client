@@ -39,7 +39,7 @@ export default {
   position: relative;
   min-height: 3rem;
   padding: $space-xsmall $space-xlarge;
-  background-color: #333;
+  background-color: $color-bg-secondary;
   transition: all 0.3s;
 
   &--open {

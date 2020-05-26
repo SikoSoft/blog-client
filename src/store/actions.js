@@ -55,8 +55,8 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntries", {
-            start: state.getEntriesStart,
-            entries: json.entries
+            entries: json.entries,
+            append: true
           });
           commit("setEndOfEntries", { end: json.end });
           commit("setLoading", { loading: false });
@@ -71,21 +71,33 @@ export default {
     dispatch("getEntries", true);
   },
 
-  getEntriesByTag({ state, commit }, tag) {
+  getEntriesByTag({ state, commit, getters }, tag) {
     if (state.entriesByTag[tag]) {
-      return;
+      return Promise.resolve();
     }
 
-    commit("setEntriesByTag", {
-      tag,
-      entries: state.entries.filter(entry => entry.tags.includes(tag))
+    return new Promise((resolve, reject) => {
+      fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
+        method: state.api.getEntriesByTag.method,
+        headers: getters.headers
+      })
+        .then(response => response.json())
+        .then(json => {
+          commit("setEntriesByTag", {
+            tag,
+            entries: json.entries
+          });
+        })
+        .catch(e => reject(e));
     });
   },
 
-  async getEntry({ state, commit, getters }, { id, force }) {
+  async getEntry({ state, commit, getters }, { id, force, addToList }) {
     if (getters.entryById(id) && !force) {
       return Promise.resolve();
     }
+
+    commit("setLoading", { loading: true });
 
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntry.href.replace("{id}", id), {
@@ -94,7 +106,12 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          commit("setEntryById", { entryId: id, entry: json });
+          commit("setEntryById", { id, entry: json });
+          if (addToList) {
+            commit("setEntries", { entries: [json, ...state.entries] });
+            commit("setGetEntriesStart", { start: state.getEntriesStart + 1 });
+          }
+          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
@@ -279,7 +296,7 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          commit("setDraftById", { draftId: id, entry: json });
+          commit("setDraftById", { id: id, draft: json });
           resolve();
         })
         .catch(e => reject(e));
@@ -313,6 +330,8 @@ export default {
       return Promise.resolve();
     }
 
+    commit("setLoading", { loading: true });
+
     return new Promise((resolve, reject) => {
       fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
         method: state.api.getEntriesByFilter.method
@@ -320,8 +339,61 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntriesByFilter", { filterId, entries: json.entries });
+          commit("setLoading", { loading: false });
           resolve();
-        });
+        })
+        .catch(e => reject(e));
     });
+  },
+
+  updateEntryId: ({ commit, getters }, { id, newId }) => {
+    commit("setEntryById", {
+      id,
+      entry: { ...getters.entryById(id), id: newId }
+    });
+  },
+
+  updateDraftId: ({ commit, getters }, { id, newId }) => {
+    commit("setDraftById", {
+      id,
+      draft: { ...getters.draftById(id), id: newId }
+    });
+  },
+
+  deleteEntry: ({ state, commit, getters }, { id }) => {
+    const entry = getters.entryById(id);
+    fetch(entry.api.delete.href, {
+      method: entry.api.delete.method,
+      headers: getters.headers
+    })
+      .then(response => response.json())
+      .then(() => {
+        commit("deleteEntry", { id });
+        commit("setGetEntriesStart", { start: state.getEntriesStart - 1 });
+      });
+  },
+
+  deleteDraft: ({ commit, getters }, { id }) => {
+    const draft = getters.draftById(id);
+    fetch(draft.api.delete.href, {
+      method: draft.api.delete.method,
+      headers: getters.headers
+    })
+      .then(response => response.json())
+      .then(() => {
+        commit("deleteDraft", { id });
+      });
+  },
+
+  setProgress: ({ state, commit }, { progress }) => {
+    if (progress > 0 && !state.showProgressBar) {
+      commit("setShowProgressBar", { show: true });
+    }
+    if (progress === 1) {
+      setTimeout(() => {
+        commit("setShowProgressBar", { show: false });
+      }, 1000);
+    }
+    commit("setProgress", { progress });
   }
 };

@@ -8,6 +8,7 @@
         :fullMode="settings.teaser_mode === 0"
         :ref="`entry${entry.id}`"
         @loaded="childLoaded"
+        @edited="childEdited"
       />
     </div>
   </div>
@@ -40,6 +41,23 @@ export default {
 
     childLoaded() {
       this.entriesLoaded++;
+    },
+
+    childEdited(id) {
+      setTimeout(() => {
+        window.scroll({
+          top: this.entryTop(id),
+          left: 0,
+          behavior: "smooth"
+        });
+      }, 0);
+    },
+
+    entryTop(id) {
+      return (
+        this.$refs[`entry${id}`][0].$refs.container.getBoundingClientRect()
+          .top + document.documentElement.scrollTop
+      );
     }
   },
 
@@ -47,9 +65,10 @@ export default {
     entriesLoaded() {
       if (this.entries.length && this.entries.length === this.entriesLoaded) {
         const lastId = this.entries[this.entries.length - 1].id;
-        const trigger = this.$refs[`entry${lastId}`][0].$refs.container;
         const windowY =
-          trigger.getBoundingClientRect().top +
+          this.$refs[
+            `entry${lastId}`
+          ][0].$refs.container.getBoundingClientRect().top +
           window.pageYOffset -
           window.innerHeight;
         this.setWindowYLoadNew({

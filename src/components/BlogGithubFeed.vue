@@ -2,7 +2,7 @@
   <div class="blog-github-feed">
     <h3 class="blog-github-feed__head">{{ $strings.githubFeed }}</h3>
     <ul class="blog-github-feed__list">
-      <blog-github-event v-for="event in feed" v-bind="event" :key="event.id" />
+      <blog-github-event v-for="event in filteredFeed" v-bind="event" :key="event.id" />
     </ul>
   </div>
 </template>
@@ -15,7 +15,15 @@ export default {
 
   props: ["feed"],
 
-  components: { BlogGithubEvent }
+  components: { BlogGithubEvent },
+
+  computed: {
+    filteredFeed() {
+      return this.feed.filter(
+        event => !!this.$strings.githubEventTypes[event.type]
+      );
+    }
+  }
 };
 </script>
 
