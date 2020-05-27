@@ -12,7 +12,10 @@
           @blur="tagsBlur"
         />
         <blog-button v-if="tagIsValid(tag)" :action="addTag" text="+" />
-        <ul class="blog-tag-manager__auto-list" v-if="tagsFocused && autoTags.length">
+        <ul
+          class="blog-tag-manager__auto-list"
+          v-if="true || (tagsFocused && autoTags.length)"
+        >
           <li
             class="blog-tag-manager__auto-list-item"
             :class="{
@@ -23,7 +26,9 @@
             :key="`autoTag-${autoTag}`"
             @mousedown="tag = autoTag"
             @mouseover="autoTagSelected = autoTag"
-          >{{ autoTag }}</li>
+          >
+            {{ autoTag }}
+          </li>
         </ul>
       </div>
     </div>
@@ -190,11 +195,15 @@ export default {
       margin: 0;
       padding: 0;
       width: 100%;
+      max-height: 22.5rem;
+      overflow-y: scroll;
 
       &-item {
         background-color: #ccc;
         color: #000;
-        padding: 8px;
+        padding: 0.5rem;
+        height: 1.25rem;
+        line-height: 1.25rem;
 
         &--selected {
           background-color: #fff;
