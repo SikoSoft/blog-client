@@ -183,6 +183,7 @@ export default {
 
     .blog-tag-manager__auto-list {
       position: absolute;
+      z-index: 2;
       top: calc(100% - 8px);
       left: 0;
       list-style: none;
