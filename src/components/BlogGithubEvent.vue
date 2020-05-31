@@ -48,7 +48,7 @@ export default {
     },
 
     refName() {
-      return this.payload.ref;
+      return this.payload.ref ? this.payload.ref : "";
     },
 
     refType() {
