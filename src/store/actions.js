@@ -87,6 +87,9 @@ export default {
             tag,
             entries: json.entries
           });
+          json.entries.forEach(entry => {
+            commit("setEntryById", { id: entry.id, entry });
+          });
         })
         .catch(e => reject(e));
     });
@@ -339,6 +342,9 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntriesByFilter", { filterId, entries: json.entries });
+          json.entries.forEach(entry => {
+            commit("setEntryById", { id: entry.id, entry });
+          });
           commit("setLoading", { loading: false });
           resolve();
         })
