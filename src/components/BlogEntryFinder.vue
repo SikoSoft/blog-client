@@ -1,7 +1,7 @@
 <template>
   <div class="blog-entry-finder">
     <div class="blog-entry-finder__input">
-      <input type="text" v-model="title" />
+      <input type="text" v-model="title" ref="title" @blur="blurInput" />
     </div>
     <ul class="blog-entry-finder__list">
       <li
@@ -31,11 +31,17 @@ export default {
   },
 
   mounted() {
-    console.log("mounted");
+    this.$refs.title.focus();
   },
 
   methods: {
-    ...mapActions(["findEntries"])
+    ...mapActions(["findEntries"]),
+
+    blurInput() {
+      setTimeout(() => {
+        this.$emit("inputBlurred");
+      }, 200);
+    }
   },
 
   watch: {

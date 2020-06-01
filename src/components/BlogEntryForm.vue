@@ -32,7 +32,11 @@
     </div>
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
-      <blog-entry-finder v-if="entryFinderOpen" @entryClicked="insertEntryLink" />
+      <blog-entry-finder
+        v-if="entryFinderOpen"
+        @entryClicked="insertEntryLink"
+        @inputBlurred="hideEntryFinder"
+      />
     </div>
     <div>
       <blog-tag-manager :tags="tags" :api="api" />
