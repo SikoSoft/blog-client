@@ -401,5 +401,16 @@ export default {
       }, 1000);
     }
     commit("setProgress", { progress });
+  },
+
+  findEntries: ({ state, commit, getters }, { title }) => {
+    fetch(`${state.api.findEntry.href}?title=${title}`, {
+      method: state.api.findEntry.method,
+      headers: getters.headers
+    })
+      .then(result => result.json())
+      .then(json => {
+        commit("setEntriesFound", { entriesFound: json });
+      });
   }
 };

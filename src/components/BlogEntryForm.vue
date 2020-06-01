@@ -4,9 +4,7 @@
       <select @change="loadDraft" class="blog-entry-form__draft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
-          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{
-            draft.title
-          }}</option>
+          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
         </optgroup>
       </select>
     </div>
@@ -34,30 +32,16 @@
     </div>
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
+      <blog-entry-finder v-if="entryFinderOpen" @entryClicked="insertEntryLink" />
     </div>
     <div>
       <blog-tag-manager :tags="tags" :api="api" />
     </div>
     <div>
       <template v-if="!entryId || entry.public === 1">
-        <blog-button
-          create
-          v-if="entry.id"
-          :text="$strings.updateEntry"
-          :action="submitForm"
-        />
-        <blog-button
-          create
-          v-else
-          :text="$strings.postEntry"
-          :action="submitForm"
-        />
-        <blog-button
-          create
-          v-if="!entry.id"
-          :text="$strings.saveAsDraft"
-          :action="saveDraft"
-        />
+        <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
+        <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
+        <blog-button create v-if="!entry.id" :text="$strings.saveAsDraft" :action="saveDraft" />
         <blog-button
           destroy
           type="button"
@@ -67,11 +51,7 @@
         />
       </template>
       <template v-else>
-        <blog-button
-          create
-          :text="$strings.publishDraft"
-          :action="publishDraft"
-        />
+        <blog-button create :text="$strings.publishDraft" :action="publishDraft" />
         <blog-button create :text="$strings.updateDraft" :action="saveDraft" />
         <blog-button
           destroy
@@ -97,6 +77,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
 
+import BlogEntryFinder from "@/components/BlogEntryFinder.vue";
 import BlogTagManager from "@/components/BlogTagManager.vue";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
 import BlogButton from "@/components/BlogButton.vue";
@@ -107,7 +88,12 @@ export default {
 
   props: ["initialEntry"],
 
-  components: { BlogTagManager, BlogConfirmationDialog, BlogButton },
+  components: {
+    BlogEntryFinder,
+    BlogTagManager,
+    BlogConfirmationDialog,
+    BlogButton
+  },
 
   data() {
     return {
@@ -119,7 +105,9 @@ export default {
       editor: false,
       initialized: false,
       confirmationDialogOpen: false,
-      public: this.initialEntry.public ? this.initialEntry.public : 1
+      public: this.initialEntry.public ? this.initialEntry.public : 1,
+      entryFinderOpen: false,
+      entryFinderRange: null
     };
   },
 
@@ -128,18 +116,27 @@ export default {
     this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
-        toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ script: "sub" }, { script: "super" }],
-          [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" }
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ script: "sub" }, { script: "super" }],
+            [
+              { list: "ordered" },
+              { list: "bullet" },
+              { indent: "-1" },
+              { indent: "+1" }
+            ],
+            ["link", "image", "video", "code-block"],
+            ["entry"],
+            ["clean"]
           ],
-          ["link", "image", "video", "code-block"]
-        ]
+          handlers: {
+            entry: () => {
+              this.showEntryFinder();
+            }
+          }
+        }
       }
     });
     if (this.body) {
@@ -151,12 +148,23 @@ export default {
       uploadImage: this.api.uploadImage,
       headers: this.headers
     });
-    this.editor.getModule("toolbar").addHandler("image", () => {
+    const toolbar = this.editor.getModule("toolbar");
+    toolbar.addHandler("image", () => {
       imageHandler.selectLocalImage();
     });
     this.editor.on("text-change", () => {
       this.saveFormState();
     });
+    this.editor.keyboard.addBinding(
+      {
+        key: "e",
+        shiftKey: true,
+        ctrlKey: true
+      },
+      () => {
+        this.showEntryFinder();
+      }
+    );
     if (localStorage.getItem(this.formId)) {
       this.loadFormState();
     }
@@ -309,6 +317,27 @@ export default {
       this.confirmationDialogOpen = false;
     },
 
+    showEntryFinder() {
+      this.entryFinderRange = this.editor.getSelection();
+      this.entryFinderOpen = true;
+    },
+
+    hideEntryFinder() {
+      this.entryFinderOpen = false;
+    },
+
+    insertEntryLink(payload) {
+      if (this.entryFinderRange) {
+        this.editor.insertText(
+          this.entryFinderRange.index,
+          payload.title,
+          "link",
+          `/entry/${payload.id}`
+        );
+      }
+      this.hideEntryFinder();
+    },
+
     loadDraft(e) {
       if (e && e.target && e.target.value) {
         this.entry = this.$store.getters.draftById(e.target.value);
@@ -374,6 +403,10 @@ export default {
     min-height: 10rem;
     font-family: $font-family;
     font-size: $font-large;
+  }
+
+  .ql-entry:after {
+    content: "entry";
   }
 }
 </style>

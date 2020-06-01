@@ -10,6 +10,7 @@ export default {
   entriesByTag: {},
   entriesById: {},
   entriesByFilter: {},
+  entriesFound: [],
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
