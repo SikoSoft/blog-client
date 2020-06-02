@@ -18,7 +18,8 @@ export default {
     return {
       gettingEntries: false,
       gettingEntriesCoolingDown: false,
-      gettingEntriesCoolDown: 1500
+      gettingEntriesCoolDown: 1500,
+      hasLogged: ["/"]
     };
   },
 
@@ -33,6 +34,33 @@ export default {
         !this.gettingEntriesCoolingDown
       ) {
         this.loadEntries();
+      }
+
+      if (this.settings.auto_entry_url) {
+        let path = "/";
+        let title = this.title;
+        for (let i = 0; i < this.reversedEntries.length; i++) {
+          let entry = this.reversedEntries[i];
+          if (window.scrollY >= this.entryTops[entry.id]) {
+            path = `/entry/${entry.id}`;
+            title = entry.title;
+            break;
+          }
+        }
+        if (window.location.pathname !== path) {
+          console.log("replace state", path);
+          window.history.replaceState(null, title, path);
+          if (
+            process.env.NODE_ENV === "production" &&
+            process.env.VUE_APP_TRACKING_CODE &&
+            !this.hasLogged.includes(path)
+          ) {
+            window.gtag("config", process.env.VUE_APP_TRACKING_CODE, {
+              page_path: path
+            });
+            this.hasLogged.push(path);
+          }
+        }
       }
     });
 
@@ -65,7 +93,19 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "entries", "windowYLoadNew", "endOfEntries"])
+    ...mapGetters([
+      "initialized",
+      "entries",
+      "windowYLoadNew",
+      "endOfEntries",
+      "entryTops",
+      "title",
+      "settings"
+    ]),
+
+    reversedEntries() {
+      return [...this.entries].reverse();
+    }
   }
 };
 </script>

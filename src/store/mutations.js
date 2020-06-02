@@ -186,5 +186,9 @@ export default {
 
   setEntriesFound: (state, { entriesFound }) => {
     state.entriesFound = entriesFound;
+  },
+
+  setEntryTop: (state, { id, top }) => {
+    Vue.set(state.entryTops, id, top);
   }
 };

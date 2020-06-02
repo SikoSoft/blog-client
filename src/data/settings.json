@@ -36,6 +36,11 @@
       "id": "teaser_mode",
       "label": "Show only a small part of each entry in the list",
       "type": "toggle"
+    },
+    {
+      "id": "auto_entry_url",
+      "label": "Automatically update browser URL when scrolling to entry",
+      "type": "toggle"
     }
   ],
   "Sidebar": [

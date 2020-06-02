@@ -91,4 +91,6 @@ export default {
   progress: state => state.progress,
 
   entriesFound: state => state.entriesFound,
+
+  entryTops: state => state.entryTops
 };

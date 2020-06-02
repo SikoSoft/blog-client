@@ -11,6 +11,7 @@ export default {
   entriesById: {},
   entriesByFilter: {},
   entriesFound: [],
+  entryTops: {},
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
