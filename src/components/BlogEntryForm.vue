@@ -32,11 +32,13 @@
     </div>
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
-      <blog-entry-finder
-        v-if="entryFinderOpen"
-        @entryClicked="insertEntryLink"
-        @inputBlurred="hideEntryFinder"
-      />
+      <div class="blog-entry-form__entry-finder">
+        <blog-entry-finder
+          v-if="entryFinderOpen"
+          @entryClicked="insertEntryLink"
+          @inputBlurred="hideEntryFinder"
+        />
+      </div>
     </div>
     <div>
       <blog-tag-manager :tags="tags" :api="api" />
@@ -407,6 +409,17 @@ export default {
     min-height: 10rem;
     font-family: $font-family;
     font-size: $font-large;
+    position: relative;
+  }
+
+  .blog-entry-form__body {
+    position: relative;
+  }
+
+  .blog-entry-form__entry-finder {
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .ql-entry:after {
