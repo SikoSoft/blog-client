@@ -12,10 +12,7 @@
           @blur="tagsBlur"
         />
         <blog-button v-if="tagIsValid(tag)" :action="addTag" text="+" />
-        <ul
-          class="blog-tag-manager__auto-list"
-          v-if="true || (tagsFocused && autoTags.length)"
-        >
+        <ul class="blog-tag-manager__auto-list" v-if="tagsFocused && autoTags.length">
           <li
             class="blog-tag-manager__auto-list-item"
             :class="{
@@ -26,9 +23,7 @@
             :key="`autoTag-${autoTag}`"
             @mousedown="tag = autoTag"
             @mouseover="autoTagSelected = autoTag"
-          >
-            {{ autoTag }}
-          </li>
+          >{{ autoTag }}</li>
         </ul>
       </div>
     </div>
@@ -162,6 +157,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/mixins.scss";
 @import "@/styles/variables.scss";
 
 .blog-tag-manager {
@@ -187,29 +183,15 @@ export default {
     }
 
     .blog-tag-manager__auto-list {
+      @include dropdown-list;
+
       position: absolute;
       z-index: 2;
       top: calc(100% - 8px);
       left: 0;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      max-height: 22.5rem;
-      overflow-y: scroll;
 
       &-item {
-        background-color: #ccc;
-        color: #000;
-        padding: 0.5rem;
-        height: 1.25rem;
-        line-height: 1.25rem;
-
-        &--selected {
-          background-color: #fff;
-          font-weight: bold;
-          cursor: pointer;
-        }
+        @include dropdown-item;
       }
     }
   }
