@@ -1,14 +1,24 @@
 <template>
   <div class="blog-entry-finder">
     <div class="blog-entry-finder__input">
-      <input type="text" v-model="title" ref="title" @blur="blurInput" />
+      <input
+        type="text"
+        :placeholder="$strings.title"
+        v-model="title"
+        ref="title"
+        @blur="blurInput"
+      />
     </div>
     <ul class="blog-entry-finder__list">
       <li
         class="blog-entry-finder__list-item"
+        :class="{
+          'blog-entry-finder__list-item--selected': entry.id === selectedItem
+        }"
         v-for="entry in entriesFound"
         :key="entry.id"
         @click="$emit('entryClicked', entry)"
+        @mouseover="selectedItem = entry.id"
       >{{ entry.title }}</li>
     </ul>
   </div>
@@ -22,7 +32,8 @@ export default {
 
   data() {
     return {
-      title: ""
+      title: "",
+      selectedItem: ""
     };
   },
 
@@ -55,6 +66,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/mixins.scss";
 @import "@/styles/variables.scss";
 
 .blog-entry-finder {
@@ -67,16 +79,10 @@ export default {
   }
 
   &__list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include dropdown-list;
 
     &-item {
-      margin: $space-small 0;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      cursor: pointer;
+      @include dropdown-item;
     }
   }
 }

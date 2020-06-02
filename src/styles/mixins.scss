@@ -39,6 +39,9 @@
   padding: 0.5rem;
   height: 1.25rem;
   line-height: 1.25rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
   &--selected {
     background-color: #fff;
