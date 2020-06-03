@@ -32,7 +32,7 @@
     </div>
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
-      <div class="blog-entry-form__entry-finder">
+      <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
         <blog-entry-finder
           v-if="entryFinderOpen"
           @entryClicked="insertEntryLink"
@@ -113,7 +113,8 @@ export default {
       confirmationDialogOpen: false,
       public: this.initialEntry.public ? this.initialEntry.public : 1,
       entryFinderOpen: false,
-      entryFinderRange: null
+      entryFinderRange: null,
+      editorSelectionPosition: {}
     };
   },
 
@@ -159,7 +160,11 @@ export default {
       imageHandler.selectLocalImage();
     });
     this.editor.on("text-change", () => {
+      this.updateSelectionPosition();
       this.saveFormState();
+    });
+    this.editor.on("selection-change", () => {
+      this.updateSelectionPosition();
     });
     this.editor.keyboard.addBinding(
       {
@@ -198,6 +203,13 @@ export default {
 
     isPublic() {
       return this.public === 1;
+    },
+
+    entryFinderStyle() {
+      return {
+        top: `calc(${this.editorSelectionPosition.top}px + 2rem)`,
+        left: `${this.editorSelectionPosition.left}px`
+      };
     }
   },
 
@@ -323,6 +335,24 @@ export default {
       this.confirmationDialogOpen = false;
     },
 
+    updateSelectionPosition() {
+      const range = this.editor.getSelection();
+      if (range) {
+        const selectionRange = this.editor.root.ownerDocument
+          .getSelection()
+          .getRangeAt(0);
+        if (selectionRange) {
+          const rects = selectionRange.getClientRects();
+          if (rects.length > 0) {
+            this.editorSelectionPosition = {
+              top: rects[0].top,
+              left: rects[0].left
+            };
+          }
+        }
+      }
+    },
+
     showEntryFinder() {
       this.entryFinderRange = this.editor.getSelection();
       this.entryFinderOpen = true;
@@ -417,7 +447,7 @@ export default {
   }
 
   .blog-entry-form__entry-finder {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 2;
