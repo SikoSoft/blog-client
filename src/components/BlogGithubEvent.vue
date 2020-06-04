@@ -48,7 +48,7 @@ export default {
     },
 
     refName() {
-      return this.payload.ref;
+      return this.payload.ref ? this.payload.ref : "";
     },
 
     refType() {
@@ -63,6 +63,10 @@ export default {
       }
     },
 
+    title() {
+      return this.payload.pull_request ? this.payload.pull_request.title : "";
+    },
+
     message() {
       return this.$strings.githubEventTypes[this.type]
         .replace("{repo}", this.repoName)
@@ -70,7 +74,8 @@ export default {
         .replace("{desc}", this.commitDesc)
         .replace("{refName}", this.refName)
         .replace("{refType}", this.refType)
-        .replace("{action}", this.action);
+        .replace("{action}", this.action)
+        .replace("{title}", this.title);
     },
 
     issueName() {

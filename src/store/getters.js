@@ -88,5 +88,9 @@ export default {
 
   showProgressBar: state => state.showProgressBar,
 
-  progress: state => state.progress
+  progress: state => state.progress,
+
+  entriesFound: state => state.entriesFound,
+
+  entryTops: state => state.entryTops
 };

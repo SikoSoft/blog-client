@@ -23,8 +23,10 @@ header {
 
 .main-container {
   display: flex;
+  align-items: flex-start;
   max-width: 1920px;
   margin: auto;
+  transition: height 0.3s;
 
   &--loading {
     main {
@@ -37,6 +39,7 @@ main {
   position: relative;
   padding: $space-xlarge;
   flex: 7;
+  min-height: $loader-height;
 }
 
 aside {

@@ -32,6 +32,13 @@
     </div>
     <div class="blog-entry-form__body">
       <div :id="editorId"></div>
+      <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
+        <blog-entry-finder
+          v-if="entryFinderOpen"
+          @entryClicked="insertEntryLink"
+          @inputBlurred="hideEntryFinder"
+        />
+      </div>
     </div>
     <div>
       <blog-tag-manager :tags="tags" :api="api" />
@@ -76,6 +83,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
 
+import BlogEntryFinder from "@/components/BlogEntryFinder.vue";
 import BlogTagManager from "@/components/BlogTagManager.vue";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
 import BlogButton from "@/components/BlogButton.vue";
@@ -86,7 +94,12 @@ export default {
 
   props: ["initialEntry"],
 
-  components: { BlogTagManager, BlogConfirmationDialog, BlogButton },
+  components: {
+    BlogEntryFinder,
+    BlogTagManager,
+    BlogConfirmationDialog,
+    BlogButton
+  },
 
   data() {
     return {
@@ -98,7 +111,10 @@ export default {
       editor: false,
       initialized: false,
       confirmationDialogOpen: false,
-      public: this.initialEntry.public ? this.initialEntry.public : 1
+      public: this.initialEntry.public ? this.initialEntry.public : 1,
+      entryFinderOpen: false,
+      entryFinderRange: null,
+      editorSelectionPosition: {}
     };
   },
 
@@ -107,18 +123,27 @@ export default {
     this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
-        toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ script: "sub" }, { script: "super" }],
-          [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" }
+        toolbar: {
+          container: [
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ script: "sub" }, { script: "super" }],
+            [
+              { list: "ordered" },
+              { list: "bullet" },
+              { indent: "-1" },
+              { indent: "+1" }
+            ],
+            ["link", "image", "video", "code-block"],
+            ["entry"],
+            ["clean"]
           ],
-          ["link", "image", "video", "code-block"]
-        ]
+          handlers: {
+            entry: () => {
+              this.showEntryFinder();
+            }
+          }
+        }
       }
     });
     if (this.body) {
@@ -130,12 +155,27 @@ export default {
       uploadImage: this.api.uploadImage,
       headers: this.headers
     });
-    this.editor.getModule("toolbar").addHandler("image", () => {
+    const toolbar = this.editor.getModule("toolbar");
+    toolbar.addHandler("image", () => {
       imageHandler.selectLocalImage();
     });
     this.editor.on("text-change", () => {
+      this.updateSelectionPosition();
       this.saveFormState();
     });
+    this.editor.on("selection-change", () => {
+      this.updateSelectionPosition();
+    });
+    this.editor.keyboard.addBinding(
+      {
+        key: "e",
+        shiftKey: true,
+        ctrlKey: true
+      },
+      () => {
+        this.showEntryFinder();
+      }
+    );
     if (localStorage.getItem(this.formId)) {
       this.loadFormState();
     }
@@ -163,6 +203,13 @@ export default {
 
     isPublic() {
       return this.public === 1;
+    },
+
+    entryFinderStyle() {
+      return {
+        top: `calc(${this.editorSelectionPosition.top}px + 2rem)`,
+        left: `${this.editorSelectionPosition.left}px`
+      };
     }
   },
 
@@ -181,7 +228,8 @@ export default {
       "updateDraftId",
       "deleteEntry",
       "deleteDraft",
-      "setProgress"
+      "setProgress",
+      "addToast"
     ]),
 
     publishDraft(e) {
@@ -211,31 +259,35 @@ export default {
       })
         .then(response => response.json())
         .then(json => {
-          this[this.public === 1 ? "getEntry" : "getDraft"]({
-            id: json.id,
-            force: true,
-            addToList: !this.entryId ? true : false
-          }).then(() => {
-            this.setLoading({ loading: false });
-            this.hideEntryForm();
-            this.setEditMode({ id: json.id, mode: false });
-            localStorage.removeItem(this.formId);
-            const routeType = this.public === 1 ? "entry" : "draft";
-            if (this.entryId && this.entryId !== json.id) {
-              this.$emit("idChanged", json.id);
-              this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
-                id: this.entryId,
-                newId: json.id
-              });
-            }
-            if (window.location.pathname !== `/${routeType}/${json.id}`) {
-              if (!this.entryId) {
-                this.$router.push({ path: `/${routeType}/${json.id}` });
-              } else {
-                this.$emit("edited", json.id);
+          if (!json.errorCode) {
+            this[this.public === 1 ? "getEntry" : "getDraft"]({
+              id: json.id,
+              force: true,
+              addToList: !this.entryId ? true : false
+            }).then(() => {
+              this.setLoading({ loading: false });
+              this.hideEntryForm();
+              this.setEditMode({ id: json.id, mode: false });
+              localStorage.removeItem(this.formId);
+              const routeType = this.public === 1 ? "entry" : "draft";
+              if (this.entryId && this.entryId !== json.id) {
+                this.$emit("idChanged", json.id);
+                this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
+                  id: this.entryId,
+                  newId: json.id
+                });
               }
-            }
-          });
+              if (window.location.pathname !== `/${routeType}/${json.id}`) {
+                if (!this.entryId) {
+                  this.$router.push({ path: `/${routeType}/${json.id}` });
+                } else {
+                  this.$emit("edited", json.id);
+                }
+              }
+            });
+          } else {
+            this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
+          }
         });
       e.preventDefault();
     },
@@ -281,6 +333,45 @@ export default {
 
     hideConfirmationDialog() {
       this.confirmationDialogOpen = false;
+    },
+
+    updateSelectionPosition() {
+      const range = this.editor.getSelection();
+      if (range) {
+        const selectionRange = this.editor.root.ownerDocument
+          .getSelection()
+          .getRangeAt(0);
+        if (selectionRange) {
+          const rects = selectionRange.getClientRects();
+          if (rects.length > 0) {
+            this.editorSelectionPosition = {
+              top: rects[0].top,
+              left: rects[0].left
+            };
+          }
+        }
+      }
+    },
+
+    showEntryFinder() {
+      this.entryFinderRange = this.editor.getSelection();
+      this.entryFinderOpen = true;
+    },
+
+    hideEntryFinder() {
+      this.entryFinderOpen = false;
+    },
+
+    insertEntryLink(payload) {
+      if (this.entryFinderRange) {
+        this.editor.insertText(
+          this.entryFinderRange.index,
+          payload.title,
+          "link",
+          `/entry/${payload.id}`
+        );
+      }
+      this.hideEntryFinder();
     },
 
     loadDraft(e) {
@@ -348,6 +439,22 @@ export default {
     min-height: 10rem;
     font-family: $font-family;
     font-size: $font-large;
+    position: relative;
+  }
+
+  .blog-entry-form__body {
+    position: relative;
+  }
+
+  .blog-entry-form__entry-finder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+  .ql-entry:after {
+    content: "entry";
   }
 }
 </style>

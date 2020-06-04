@@ -87,6 +87,9 @@ export default {
             tag,
             entries: json.entries
           });
+          json.entries.forEach(entry => {
+            commit("setEntryById", { id: entry.id, entry });
+          });
         })
         .catch(e => reject(e));
     });
@@ -339,6 +342,9 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setEntriesByFilter", { filterId, entries: json.entries });
+          json.entries.forEach(entry => {
+            commit("setEntryById", { id: entry.id, entry });
+          });
           commit("setLoading", { loading: false });
           resolve();
         })
@@ -395,5 +401,16 @@ export default {
       }, 1000);
     }
     commit("setProgress", { progress });
+  },
+
+  findEntries: ({ state, commit, getters }, { title }) => {
+    fetch(`${state.api.findEntry.href}?title=${title}`, {
+      method: state.api.findEntry.method,
+      headers: getters.headers
+    })
+      .then(result => result.json())
+      .then(json => {
+        commit("setEntriesFound", { entriesFound: json });
+      });
   }
 };

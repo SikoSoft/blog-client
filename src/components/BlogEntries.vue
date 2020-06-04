@@ -37,7 +37,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["setWindowYLoadNew"]),
+    ...mapMutations(["setWindowYLoadNew", "setEntryTop"]),
 
     childLoaded() {
       this.entriesLoaded++;
@@ -73,6 +73,10 @@ export default {
           window.innerHeight;
         this.setWindowYLoadNew({
           windowY
+        });
+
+        this.entries.forEach(entry => {
+          this.setEntryTop({ id: entry.id, top: this.entryTop(entry.id) });
         });
       }
     }

@@ -157,6 +157,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/mixins.scss";
 @import "@/styles/variables.scss";
 
 .blog-tag-manager {
@@ -182,24 +183,15 @@ export default {
     }
 
     .blog-tag-manager__auto-list {
+      @include dropdown-list;
+
       position: absolute;
+      z-index: 2;
       top: calc(100% - 8px);
       left: 0;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      width: 100%;
 
       &-item {
-        background-color: #ccc;
-        color: #000;
-        padding: 8px;
-
-        &--selected {
-          background-color: #fff;
-          font-weight: bold;
-          cursor: pointer;
-        }
+        @include dropdown-item;
       }
     }
   }
