@@ -24,7 +24,28 @@ export default {
   },
 
   mounted() {
-    window.addEventListener("scroll", () => {
+    window.addEventListener("scroll", this.scrollHandler);
+    this.setTitle(process.env.VUE_APP_SITE_NAME);
+    this.initialize().then(() => {
+      this.loadEntries();
+    });
+    this.setBreadcrumbs([]);
+  },
+
+  destroyed() {
+    window.removeEventListener("scroll", this.scrollHandler);
+  },
+
+  methods: {
+    ...mapActions([
+      "initialize",
+      "getEntries",
+      "getMoreEntries",
+      "setBreadcrumbs",
+      "setTitle"
+    ]),
+
+    scrollHandler() {
       if (
         this.initialized &&
         this.$route.name === "entries" &&
@@ -35,7 +56,6 @@ export default {
       ) {
         this.loadEntries();
       }
-
       if (this.settings.auto_entry_url) {
         let path = "/";
         let title = this.title;
@@ -62,23 +82,7 @@ export default {
           }
         }
       }
-    });
-
-    this.setTitle(process.env.VUE_APP_SITE_NAME);
-    this.initialize().then(() => {
-      this.loadEntries();
-    });
-    this.setBreadcrumbs([]);
-  },
-
-  methods: {
-    ...mapActions([
-      "initialize",
-      "getEntries",
-      "getMoreEntries",
-      "setBreadcrumbs",
-      "setTitle"
-    ]),
+    },
 
     loadEntries() {
       this.gettingEntries = true;
