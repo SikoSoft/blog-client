@@ -1,11 +1,11 @@
 <template>
   <div class="entry">
-    <blog-entry v-if="entry" v-bind="entry" :fullMode="true" />
+    <blog-entry v-if="loaded && entry" v-bind="entry" :fullMode="true" />
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import BlogEntry from "@/components/BlogEntry.vue";
 
 export default {
@@ -16,11 +16,14 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      routeType: this.$route.path.match(/\/draft\//) ? "draft" : "entry"
+      routeType: this.$route.path.match(/\/draft\//) ? "draft" : "entry",
+      loaded: false
     };
   },
 
   computed: {
+    ...mapGetters(["initialized"]),
+
     entry: function() {
       return this.$store.getters[
         this.routeType === "entry" ? "entryById" : "draftById"
@@ -52,6 +55,7 @@ export default {
         this[this.routeType === "entry" ? "getEntry" : "getDraft"]({
           id: this.id
         }).then(() => {
+          this.loaded = true;
           this.setBreadcrumbs([
             {
               href: `/${this.routeType}/${this.entry.id}`,

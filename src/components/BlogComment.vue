@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-comment" :class="classes">
+  <div :id="`comment-${id}`" class="blog-comment" :class="classes">
     <div class="blog-comment__avatar">
       <div class="blog-comment__avatar-image"></div>
     </div>

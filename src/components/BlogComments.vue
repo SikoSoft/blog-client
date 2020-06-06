@@ -27,7 +27,9 @@ export default {
   props: ["entry"],
 
   mounted() {
-    this.getComments({ entryId: this.entry.id });
+    this.getComments({ entryId: this.entry.id }).then(() => {
+      this.$emit("commentsLoaded");
+    });
   },
 
   computed: {

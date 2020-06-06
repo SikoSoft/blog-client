@@ -41,13 +41,16 @@ export default {
 
   mounted() {
     this.$router.afterEach(to => {
-      window.scroll({
-        top:
-          document.getElementById("blog-breadcrumb").getBoundingClientRect()
-            .top + window.scrollY,
-        left: 0,
-        behavior: "smooth"
-      });
+      if (!to.hash.match("#comment-")) {
+        console.log("do this scroll");
+        window.scroll({
+          top:
+            document.getElementById("blog-breadcrumb").getBoundingClientRect()
+              .top + window.scrollY,
+          left: 0,
+          behavior: "smooth"
+        });
+      }
       if (
         process.env.NODE_ENV === "production" &&
         process.env.VUE_APP_TRACKING_CODE

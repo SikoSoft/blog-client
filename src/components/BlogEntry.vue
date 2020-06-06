@@ -30,7 +30,7 @@
       </div>
       <div class="blog-entry__comments" v-if="showComments">
         <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
-        <blog-comments :entry="entry" />
+        <blog-comments @commentsLoaded="commentsLoaded" :entry="entry" />
       </div>
     </template>
     <template v-else>
@@ -157,6 +157,22 @@ export default {
 
     edited(id) {
       this.$emit("edited", id);
+    },
+
+    commentsLoaded() {
+      console.log("commentsLoaded");
+      const commentContainer = document.querySelector(this.$route.hash);
+      if (commentContainer) {
+        setTimeout(() => {
+          console.log("scroll to comment");
+          window.scrollTo({
+            top:
+              commentContainer.getBoundingClientRect().top +
+              document.documentElement.scrollTop,
+            left: window.scrollX
+          });
+        }, 100);
+      }
     }
   },
 
