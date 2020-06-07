@@ -185,7 +185,6 @@ export default {
         const commentContainer = document.querySelector(this.$route.hash);
         if (commentContainer) {
           setTimeout(() => {
-            console.log("scroll to comment");
             window.scrollTo({
               top:
                 commentContainer.getBoundingClientRect().top +

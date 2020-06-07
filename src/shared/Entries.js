@@ -18,7 +18,7 @@ export default {
 
   mounted() {
     window.addEventListener("scroll", this.scrollHandler);
-    this.setTitle(process.env.VUE_APP_SITE_NAME);
+    this.setTitle(this.title);
     this.initialize().then(() => {
       this.postInit().then(() => {
         this.loadEntries();
@@ -52,7 +52,7 @@ export default {
         this.loadEntries();
       }
       if (this.settings.auto_entry_url) {
-        let path = "/";
+        let path = this.path;
         let title = this.title;
         for (let i = 0; i < this.reversedEntries.length; i++) {
           let entry = this.reversedEntries[i];
@@ -63,7 +63,6 @@ export default {
           }
         }
         if (window.location.pathname !== path) {
-          console.log("replace state", path);
           window.history.replaceState(null, title, path);
           if (
             process.env.NODE_ENV === "production" &&
@@ -84,7 +83,11 @@ export default {
         return;
       }
       this.gettingEntries = true;
-      this[this.entries.length ? "getMoreEntries" : "getEntries"]().then(() => {
+      this[this.entries.length ? "getMoreEntries" : "getEntries"]({
+        ...(this.tag && { tag: this.tag }),
+        ...(this.filterId && { filterId: this.filterId }),
+        type: this.type
+      }).then(() => {
         this.gettingEntries = false;
         this.gettingEntriesCoolingDown = true;
         this.gettingEntriesTimeout = setTimeout(() => {
@@ -105,12 +108,36 @@ export default {
       "windowYLoadNew",
       "endOfEntries",
       "entryTops",
-      "title",
+      //"title",
       "settings"
     ]),
 
+    title() {
+      return process.env.VUE_APP_SITE_NAME;
+    },
+
     reversedEntries() {
       return [...this.entries].reverse();
+    },
+
+    path() {
+      return this.$route.path;
+    },
+
+    type() {
+      return this.$options.name.replace("entries-", "");
+    },
+
+    getMethod() {},
+
+    getPayload() {
+      return {};
+    }
+  },
+
+  watch: {
+    title(newTitle) {
+      this.setTitle(newTitle);
     }
   }
 };

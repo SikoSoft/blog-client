@@ -35,28 +35,55 @@ export default {
       });
   },
 
-  async getEntries({ state, commit, getters }, force) {
+  async getEntries(
+    { state, commit, getters },
+    { force, type, tag, filterId } = {}
+  ) {
     if (state.entries.length > 0 && !force) {
       return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });
 
-    const getUrl =
-      state.getEntriesStart === 0
-        ? state.api.getEntries.href
-        : `${state.api.getEntries.href}/${state.getEntriesStart}`;
+    const start = state.entries[type].start;
+
+    let getUrl, getMethod;
+    switch (type) {
+      case "tag":
+        getUrl = state.api.getEntriesByTag.href.replace("{tag}", tag);
+        getMethod = state.api.getEntriesByTag.method;
+        break;
+      case "filter":
+        getUrl = state.api.getEntriesByFilter.href.replace(
+          "{filter}",
+          filterId
+        );
+        getMethod = state.api.getEntriesByFilter.method;
+        break;
+      default:
+        getUrl =
+          start === 0
+            ? state.api.getEntries.href
+            : `${state.api.getEntries.href}/${start}`;
+        getMethod = state.api.getEntries.method;
+    }
 
     return new Promise((resolve, reject) => {
       fetch(getUrl, {
-        method: state.api.getEntries.method,
+        method: getMethod,
         headers: getters.headers
       })
         .then(response => response.json())
         .then(json => {
           commit("setEntries", {
+            type,
+            tag,
+            filterId,
             entries: json.entries,
             append: true
+          });
+          json.entries.forEach(entry => {
+            commit("setEntryById", { id: entry.id, entry });
           });
           commit("setEndOfEntries", { end: json.end });
           commit("setLoading", { loading: false });
@@ -66,33 +93,9 @@ export default {
     });
   },
 
-  getMoreEntries({ dispatch }) {
+  getMoreEntries({ dispatch }, { type, filterId, tag }) {
     dispatch("setNextEntriesBatch");
-    dispatch("getEntries", true);
-  },
-
-  getEntriesByTag({ state, commit, getters }, tag) {
-    if (state.entriesByTag[tag]) {
-      return Promise.resolve();
-    }
-
-    return new Promise((resolve, reject) => {
-      fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
-        method: state.api.getEntriesByTag.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setEntriesByTag", {
-            tag,
-            entries: json.entries
-          });
-          json.entries.forEach(entry => {
-            commit("setEntryById", { id: entry.id, entry });
-          });
-        })
-        .catch(e => reject(e));
-    });
+    dispatch("getEntries", { type, filterId, tag, force: true });
   },
 
   async getEntry({ state, commit, getters }, { id, force, addToList }) {
@@ -322,30 +325,6 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setFilters", { filters: json });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
-  },
-
-  async getEntriesByFilter({ commit, state }, { filterId }) {
-    if (state.entriesByFilter[filterId]) {
-      return Promise.resolve();
-    }
-
-    commit("setLoading", { loading: true });
-
-    return new Promise((resolve, reject) => {
-      fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
-        method: state.api.getEntriesByFilter.method
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setEntriesByFilter", { filterId, entries: json.entries });
-          json.entries.forEach(entry => {
-            commit("setEntryById", { id: entry.id, entry });
-          });
-          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));

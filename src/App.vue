@@ -3,7 +3,10 @@
     <header>
       <blog-header />
     </header>
-    <div class="main-container" :class="{ 'main-container--loading': isLoading }">
+    <div
+      class="main-container"
+      :class="{ 'main-container--loading': isLoading }"
+    >
       <main>
         <blog-loader v-if="isLoading" />
         <router-view />
@@ -42,7 +45,6 @@ export default {
   mounted() {
     this.$router.afterEach(to => {
       if (!to.hash.match("#comment-")) {
-        console.log("do this scroll");
         window.scroll({
           top:
             document.getElementById("blog-breadcrumb").getBoundingClientRect()

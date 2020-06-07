@@ -32,12 +32,16 @@ export default {
     };
   },
 
+  updated() {
+    this.resetEntryTops();
+  },
+
   computed: {
     ...mapGetters(["initialized", "settings"])
   },
 
   methods: {
-    ...mapMutations(["setWindowYLoadNew", "setEntryTop"]),
+    ...mapMutations(["setWindowYLoadNew", "setEntryTop", "resetEntryTops"]),
 
     childLoaded() {
       this.entriesLoaded++;
@@ -74,7 +78,6 @@ export default {
         this.setWindowYLoadNew({
           windowY
         });
-
         this.entries.forEach(entry => {
           this.setEntryTop({ id: entry.id, top: this.entryTop(entry.id) });
         });
@@ -83,9 +86,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.blog-entries {
-  //padding: 10px;
-}
-</style>

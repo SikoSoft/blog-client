@@ -9,20 +9,18 @@ export default {
     state.isLoading = loading;
   },
 
-  setEntries: (state, { entries, append }) => {
+  setEntries: (state, { entries, type, tag, filterId, append }) => {
+    const target =
+      type === "default" ? state.entries[type] : state.entries[type].list;
+    const value = type === "tag" ? tag : type === "filter" ? filterId : "list";
     if (append) {
-      Vue.set(state, "entries", [...state.entries, ...entries]);
+      Vue.set(target, value, [
+        ...(target[value] ? target[value] : []),
+        ...entries
+      ]);
     } else {
-      Vue.set(state, "entries", [...entries]);
+      Vue.set(target, value, [...entries]);
     }
-  },
-
-  setEntriesByTag: (state, { tag, entries }) => {
-    Vue.set(state.entriesByTag, tag, entries);
-  },
-
-  setEntriesByFilter: (state, { filterId, entries }) => {
-    Vue.set(state.entriesByFilter, filterId, entries);
   },
 
   setUser: (state, { user }) => {
@@ -76,9 +74,9 @@ export default {
   setEntryById: (state, { id, entry }) => {
     Vue.set(state.entriesById, entry.id, entry);
     Vue.set(
-      state,
-      "entries",
-      [...state.entries].map(e => {
+      state.entries.default,
+      "list",
+      [...state.entries.default.list].map(e => {
         return id !== e.id ? e : { ...entry, id: entry.id };
       })
     );
@@ -190,5 +188,9 @@ export default {
 
   setEntryTop: (state, { id, top }) => {
     Vue.set(state.entryTops, id, top);
+  },
+
+  resetEntryTops: state => {
+    Vue.set(state, "entryTops", {});
   }
 };

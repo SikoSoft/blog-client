@@ -6,12 +6,31 @@ export default {
   breadcrumbs: [],
   user: {},
   roles: [],
-  entries: [],
-  entriesByTag: {},
+  entries: {
+    default: {
+      end: false,
+      loadNew: 0,
+      list: [],
+      start: 0,
+      top: 0
+    },
+    filter: {
+      end: false,
+      loadNew: 0,
+      list: {},
+      start: 0,
+      top: 0
+    },
+    tag: {
+      end: false,
+      loadNew: 0,
+      list: {},
+      start: 0,
+      top: 0
+    }
+  },
   entriesById: {},
-  entriesByFilter: {},
   entriesFound: [],
-  entryTops: {},
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
@@ -26,9 +45,9 @@ export default {
   tokens: [],
   drafts: [],
   draftsById: {},
-  windowYLoadNew: 0,
-  getEntriesStart: 0,
-  endOfEntries: false,
+  //windowYLoadNew: 0,
+  //getEntriesStart: 0,
+  //endOfEntries: false,
   imagesLoaded: {},
   filters: [],
   progress: 0,

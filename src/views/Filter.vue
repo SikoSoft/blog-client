@@ -5,71 +5,44 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BlogEntries from "@/components/BlogEntries.vue";
+import { mapGetters, mapActions } from "vuex";
+
+import Entries from "@/shared/Entries.js";
 
 export default {
+  ...Entries,
+
   name: "entries-filter",
 
-  components: { BlogEntries },
-
-  data() {
-    return {
-      isUpdating: false
-    };
-  },
-
-  mounted() {
-    this.update();
-  },
-
-  updated() {
-    this.update();
-  },
-
   computed: {
+    ...Entries.computed,
+
     ...mapGetters(["filters"]),
 
-    filter() {
+    filterId() {
       return this.$route.params.filter;
     },
 
     entries() {
-      return this.$store.getters.entriesByFilter(this.filter);
+      return this.$store.getters.entriesByFilter(this.filterId);
     },
 
-    label() {
-      return this.$store.getters.filters.filter(
-        filter => filter.id === this.filter
-      )[0].label;
+    title() {
+      return this.$store.getters.filters.length
+        ? this.$store.getters.filters.filter(
+            filter => filter.id === this.filterId
+          )[0].label
+        : "";
     }
   },
 
   methods: {
-    ...mapActions([
-      "initialize",
-      "getFilters",
-      "getEntriesByFilter",
-      "setBreadcrumbs",
-      "setTitle"
-    ]),
+    ...Entries.methods,
 
-    update() {
-      if (this.isUpdating) {
-        return;
-      }
-      this.isUpdating = true;
-      this.initialize().then(() => {
-        this.getFilters().then(() => {
-          this.getEntriesByFilter({ filterId: this.filter }).then(() => {
-            this.setBreadcrumbs([
-              { href: `/filter/${this.filter}`, label: this.label }
-            ]);
-            this.setTitle(this.label);
-            this.isUpdating = false;
-          });
-        });
-      });
+    ...mapActions(["getFilters"]),
+
+    async postInit() {
+      return this.getFilters();
     }
   }
 };

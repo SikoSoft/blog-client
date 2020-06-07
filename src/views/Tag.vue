@@ -1,15 +1,51 @@
 <template>
   <div class="tag">
     <blog-tag :tag="tag" />
-    <blog-entries :entries="entriesByTag[tag]" />
+    <blog-entries :entries="entries" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BlogTag from "@/components/BlogTag.vue";
-import BlogEntries from "@/components/BlogEntries.vue";
+import { mapActions } from "vuex";
 
+import BlogTag from "@/components/BlogTag.vue";
+import Entries from "@/shared/Entries.js";
+
+export default {
+  ...Entries,
+
+  name: "entries-tag",
+
+  components: { ...Entries.components, BlogTag },
+
+  computed: {
+    ...Entries.computed,
+
+    tag() {
+      return this.$route.params.tag;
+    },
+
+    entries() {
+      return this.$store.getters.entriesByTag(this.tag);
+    },
+
+    title() {
+      return this.$strings.entriesWithTag.replace("{tag}", this.tag);
+    }
+  },
+
+  methods: {
+    ...Entries.methods,
+
+    ...mapActions(["getFilters"]),
+
+    async postInit() {
+      return this.getFilters();
+    }
+  }
+};
+
+/*
 export default {
   name: "tag",
 
@@ -56,4 +92,5 @@ export default {
     }
   }
 };
+*/
 </script>
