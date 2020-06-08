@@ -73,7 +73,7 @@ export default {
       : state.drafts.filter(draft => draft.id === id)[0];
   },
 
-  windowYLoadNew: state => state.windowYLoadNew,
+  windowYLoadNew: state => type => state.entries[type].loadNew,
 
   getEntriesStart: state => state.getEntriesStart,
 
@@ -93,5 +93,5 @@ export default {
 
   entriesFound: state => state.entriesFound,
 
-  entryTops: state => state.entryTops
+  entryTops: state => type => state.entries[type].top
 };

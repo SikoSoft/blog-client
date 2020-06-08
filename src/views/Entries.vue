@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <blog-entries v-if="initialized" :entries="entries" />
+    <blog-entries v-if="initialized" :type="type" :entries="entries" />
   </div>
 </template>
 

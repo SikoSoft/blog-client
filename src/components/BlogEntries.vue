@@ -22,7 +22,7 @@ import BlogEntry from "@/components/BlogEntry.vue";
 export default {
   name: "blog-entries",
 
-  props: ["entries"],
+  props: ["type", "entries"],
 
   components: { BlogEntry },
 
@@ -32,16 +32,12 @@ export default {
     };
   },
 
-  updated() {
-    this.resetEntryTops();
-  },
-
   computed: {
     ...mapGetters(["initialized", "settings"])
   },
 
   methods: {
-    ...mapMutations(["setWindowYLoadNew", "setEntryTop", "resetEntryTops"]),
+    ...mapMutations(["setWindowYLoadNew", "setEntryTop"]),
 
     childLoaded() {
       this.entriesLoaded++;
@@ -76,10 +72,15 @@ export default {
           window.pageYOffset -
           window.innerHeight;
         this.setWindowYLoadNew({
+          type: this.type,
           windowY
         });
         this.entries.forEach(entry => {
-          this.setEntryTop({ id: entry.id, top: this.entryTop(entry.id) });
+          this.setEntryTop({
+            type: this.type,
+            id: entry.id,
+            top: this.entryTop(entry.id)
+          });
         });
       }
     }

@@ -134,16 +134,16 @@ export default {
     state.drafts = drafts;
   },
 
-  setWindowYLoadNew: (state, { windowY }) => {
-    state.windowYLoadNew = windowY;
+  setWindowYLoadNew: (state, { type, windowY }) => {
+    state.entries[type].loadNew = windowY;
   },
 
-  setGetEntriesStart: (state, { start }) => {
-    state.getEntriesStart = start;
+  setEntriesStart: (state, { type, start }) => {
+    state.entries[type].start = start;
   },
 
-  setEndOfEntries: (state, { end }) => {
-    state.endOfEntries = end;
+  setEndOfEntries: (state, { type, end }) => {
+    state.entries[type].end = end;
   },
 
   imageLoaded: (state, { entryId }) => {
@@ -186,11 +186,7 @@ export default {
     state.entriesFound = entriesFound;
   },
 
-  setEntryTop: (state, { id, top }) => {
-    Vue.set(state.entryTops, id, top);
-  },
-
-  resetEntryTops: state => {
-    Vue.set(state, "entryTops", {});
+  setEntryTop: (state, { type, id, top }) => {
+    Vue.set(state.entries[type].top, id, top);
   }
 };

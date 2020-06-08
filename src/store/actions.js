@@ -85,7 +85,7 @@ export default {
           json.entries.forEach(entry => {
             commit("setEntryById", { id: entry.id, entry });
           });
-          commit("setEndOfEntries", { end: json.end });
+          commit("setEndOfEntries", { type, end: json.end });
           commit("setLoading", { loading: false });
           resolve();
         })
@@ -94,7 +94,7 @@ export default {
   },
 
   getMoreEntries({ dispatch }, { type, filterId, tag }) {
-    dispatch("setNextEntriesBatch");
+    dispatch("setNextEntriesBatch", { type });
     dispatch("getEntries", { type, filterId, tag, force: true });
   },
 
@@ -115,7 +115,10 @@ export default {
           commit("setEntryById", { id, entry: json });
           if (addToList) {
             commit("setEntries", { entries: [json, ...state.entries] });
-            commit("setGetEntriesStart", { start: state.getEntriesStart + 1 });
+            commit("setEntriesStart", {
+              type: "default",
+              start: state.getEntriesStart + 1
+            });
           }
           commit("setLoading", { loading: false });
           resolve();
@@ -309,9 +312,10 @@ export default {
     });
   },
 
-  setNextEntriesBatch({ commit, state }) {
-    commit("setGetEntriesStart", {
-      start: state.getEntriesStart + state.settings.per_load
+  setNextEntriesBatch({ commit, state }, { type }) {
+    commit("setEntriesStart", {
+      type,
+      start: state.entries[type].start + state.settings.per_load
     });
   },
 
@@ -354,7 +358,10 @@ export default {
       .then(response => response.json())
       .then(() => {
         commit("deleteEntry", { id });
-        commit("setGetEntriesStart", { start: state.getEntriesStart - 1 });
+        commit("setEntriesStart", {
+          type: "default",
+          start: state.getEntriesStart - 1
+        });
       });
   },
 

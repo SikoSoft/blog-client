@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <blog-entries :entries="entries" />
+    <blog-entries :type="type" :entries="entries" />
   </div>
 </template>
 

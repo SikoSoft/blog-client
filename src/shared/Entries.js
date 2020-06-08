@@ -105,9 +105,7 @@ export default {
     ...mapGetters([
       "initialized",
       "entries",
-      "windowYLoadNew",
       "endOfEntries",
-      "entryTops",
       //"title",
       "settings"
     ]),
@@ -128,10 +126,12 @@ export default {
       return this.$options.name.replace("entries-", "");
     },
 
-    getMethod() {},
+    windowYLoadNew() {
+      return this.$store.getters.windowYLoadNew(this.type);
+    },
 
-    getPayload() {
-      return {};
+    entryTops() {
+      return this.$store.getters.entryTops(this.type);
     }
   },
 
