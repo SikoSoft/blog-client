@@ -114,7 +114,10 @@ export default {
         .then(json => {
           commit("setEntryById", { id, entry: json });
           if (addToList) {
-            commit("setEntries", { entries: [json, ...state.entries] });
+            commit("setEntries", {
+              type: "default",
+              entries: [json, ...state.entries.default.list]
+            });
             commit("setEntriesStart", {
               type: "default",
               start: state.getEntriesStart + 1
