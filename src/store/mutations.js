@@ -160,10 +160,19 @@ export default {
 
   deleteEntry: (state, { id }) => {
     Vue.set(
-      state,
-      "entries",
-      state.entries.filter(entry => entry.id !== id)
+      state.entries.default,
+      "list",
+      state.entries.default.list.filter(entry => entry.id !== id)
     );
+    ["tag", "filter"].forEach(type => {
+      Object.keys(state.entries[type].list).forEach(listId => {
+        Vue.set(
+          state.entries[type].list,
+          listId,
+          state.entries[type].list[listId].filter(entry => entry.id !== id)
+        );
+      });
+    });
   },
 
   deleteDraft: (state, { id }) => {

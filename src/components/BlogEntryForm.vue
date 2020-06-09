@@ -400,7 +400,7 @@ export default {
       }
       if (this.entryFormIsOpen) {
         this.hideEntryForm();
-      } else {
+      } else if (window.location.pathname !== "/") {
         this.$router.push({ path: "/" });
       }
     }
