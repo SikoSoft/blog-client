@@ -61,12 +61,11 @@ export default {
         getMethod = state.api.getEntriesByFilter.method;
         break;
       default:
-        getUrl =
-          start === 0
-            ? state.api.getEntries.href
-            : `${state.api.getEntries.href}/${start}`;
+        getUrl = state.api.getEntries.href;
         getMethod = state.api.getEntries.method;
     }
+
+    getUrl += start > 0 ? `/${start}` : "";
 
     return new Promise((resolve, reject) => {
       fetch(getUrl, {
