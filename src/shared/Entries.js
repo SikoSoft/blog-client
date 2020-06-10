@@ -41,6 +41,9 @@ export default {
     ]),
 
     scrollHandler() {
+      if (this.entryFormIsOpen) {
+        return;
+      }
       if (
         this.initialized &&
         this.$route.name === "entries" &&
@@ -106,7 +109,7 @@ export default {
       "initialized",
       "entries",
       "endOfEntries",
-      //"title",
+      "entryFormIsOpen",
       "settings"
     ]),
 
