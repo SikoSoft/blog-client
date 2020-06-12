@@ -36,6 +36,7 @@
   "admin": "Admin",
   "settings": "Settings",
   "tokens": "Tokens",
+  "filters": "Filters",
   "pleaseEnterYourName": "Please enter your name",
   "pleaseEnterAMessage": "Please enter a message",
   "accessDenied": "Access denied",
