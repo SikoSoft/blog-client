@@ -6,6 +6,7 @@
   "id": "ID",
   "body": "Body",
   "tags": "Tags",
+  "image": "Image",
   "newEntry": "New entry",
   "postEntry": "Post entry",
   "saveAsDraft": "Save as draft",
