@@ -1,7 +1,7 @@
 <template>
   <div class="admin-filters">
     <ul class="admin-filters__list">
-      <admin-filter v-for="filter in filters" :key="filter.id" v-bind="filter" />
+      <admin-filter v-for="filter in filters" :key="filter.id" :initial="filter" />
     </ul>
   </div>
 </template>

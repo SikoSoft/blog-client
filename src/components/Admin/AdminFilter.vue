@@ -3,18 +3,20 @@
     <div class="admin-filter__col">
       <input
         class="admin-filter__input"
+        :class="{ 'admin-filter__input--unsaved': initial.id !== id }"
         :placeholder="$strings.id"
         type="text"
-        :value="id"
+        v-model="id"
         @keydown="handleUpdate"
       />
     </div>
     <div class="admin-filter__col">
       <input
         class="admin-filter__input"
+        :class="{ 'admin-filter__input--unsaved': initial.label !== label }"
         :placeholder="$strings.title"
         type="text"
-        :value="label"
+        v-model="label"
         @keydown="handleUpdate"
       />
     </div>
@@ -28,7 +30,15 @@
 export default {
   name: "admin-filter",
 
-  props: ["id", "label", "image"],
+  props: ["initial"],
+
+  data() {
+    return {
+      id: this.initial.id,
+      label: this.initial.label,
+      image: this.initial.image
+    };
+  },
 
   methods: {
     handleUpdate() {}
@@ -57,8 +67,8 @@ export default {
     width: 100%;
     box-sizing: border-box;
     border: 2px transparent solid;
-    &.admin-filters__filter-input--unsaved {
-      background-color: $color-action-neutral-bg;
+    &--unsaved {
+      border: 2px $color-action-neutral-bg solid;
     }
   }
 }
