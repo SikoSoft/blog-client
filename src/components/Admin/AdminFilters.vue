@@ -7,7 +7,19 @@
       <div class="admin-filters__show-id-label">{{ $strings.showIdField }}</div>
     </div>
     <ul class="admin-filters__list">
-      <admin-filter v-for="filter in filters" :key="filter.id" :initial="filter" :showId="showId" />
+      <fieldset class="admin-filters__saved">
+        <legend></legend>
+        <admin-filter
+          v-for="filter in filters"
+          :key="filter.id"
+          :initial="filter"
+          :showId="showId"
+        />
+      </fieldset>
+      <fieldset class="admin-filters__new">
+        <legend>{{ $strings.newFilter }}</legend>
+        <admin-filter key="new" :showId="showId" />
+      </fieldset>
     </ul>
   </div>
 </template>
@@ -65,6 +77,14 @@ export default {
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+
+  &__saved {
+    border-color: transparent;
+  }
+  &__new {
+    border-radius: 1rem;
+    border-color: $color-border-primary;
   }
 }
 </style>

@@ -400,5 +400,37 @@ export default {
       .then(json => {
         commit("setEntriesFound", { entriesFound: json });
       });
+  },
+
+  updateFilter: ({ state, commit, getters }, { id, newId, label, image }) => {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.updateFilter.href.replace("{filter}", id), {
+        method: state.api.updateFilter.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id, newId, label, image })
+      })
+        .then(result => result.json())
+        .then(json => {
+          commit("", json);
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  createFilter: ({ state, commit, getters }, { newId, label, image }) => {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.newFilter.href, {
+        method: state.api.newFilter.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id: newId, label, image })
+      })
+        .then(result => result.json())
+        .then(json => {
+          commit("", json);
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
   }
 };

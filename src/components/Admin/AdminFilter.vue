@@ -3,7 +3,9 @@
     <div class="admin-filter__col">
       <input
         class="admin-filter__input"
-        :class="{ 'admin-filter__input--unsaved': initial.label !== label }"
+        :class="{
+          'admin-filter__input--unsaved': initial && initial.label !== label
+        }"
         :placeholder="$strings.title"
         type="text"
         v-model="label"
@@ -13,10 +15,12 @@
     <div class="admin-filter__col" :class="{ 'admin-filter__col--gone': !showId }">
       <input
         class="admin-filter__input"
-        :class="{ 'admin-filter__input--unsaved': initial.id !== id }"
+        :class="{
+          'admin-filter__input--unsaved': initial && initial.id !== id
+        }"
         :placeholder="$strings.id"
         type="text"
-        v-model="id"
+        v-model="newId"
         @keydown="handleUpdate"
       />
     </div>
@@ -27,6 +31,8 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "admin-filter",
 
@@ -34,14 +40,38 @@ export default {
 
   data() {
     return {
-      id: this.initial.id,
-      label: this.initial.label,
-      image: this.initial.image
+      id: this.initial ? this.initial.id : "",
+      newId: this.initial ? this.initial.id : "",
+      label: this.initial ? this.initial.label : "",
+      image: this.initial ? this.initial.image : "",
+      updateTimeout: 0
     };
   },
 
   methods: {
-    handleUpdate() {}
+    ...mapActions(["createFilter", "updateFilter"]),
+
+    handleUpdate() {
+      if (!this.newId) {
+        return;
+      }
+      if (this.updateTimeout) {
+        clearTimeout(this.updateTimeout);
+      }
+      this.updateTimeout = setTimeout(() => {
+        const filter = {
+          id: this.id,
+          newId: this.newId,
+          label: this.label,
+          image: this.image
+        };
+        if (this.id) {
+          this.updateFilter(filter);
+        } else {
+          this.createFilter(filter);
+        }
+      }, 500);
+    }
   }
 };
 </script>

@@ -55,6 +55,7 @@
   "branch": "branch",
   "tag": "tag",
   "showIdField": "Show ID field",
+  "newFilter": "New filter",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
