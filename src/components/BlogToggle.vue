@@ -8,20 +8,20 @@
 export default {
   name: "blog-toggle",
 
-  props: ["isOn"],
+  props: ["value"],
 
   computed: {
     classes() {
       return {
-        "blog-toggle__indicator--on": this.isOn,
-        "blog-toggle__indicator--off": !this.isOn
+        "blog-toggle__indicator--on": this.value,
+        "blog-toggle__indicator--off": !this.value
       };
     }
   },
 
   methods: {
     toggle() {
-      this.$parent.value = this.$parent.value === 1 ? 0 : 1;
+      this.$emit("input", !this.value);
     }
   }
 };
