@@ -54,6 +54,7 @@
   "closed": "Closed",
   "branch": "branch",
   "tag": "tag",
+  "showIdField": "Show ID field",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

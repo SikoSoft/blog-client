@@ -3,20 +3,20 @@
     <div class="admin-filter__col">
       <input
         class="admin-filter__input"
-        :class="{ 'admin-filter__input--unsaved': initial.id !== id }"
-        :placeholder="$strings.id"
-        type="text"
-        v-model="id"
-        @keydown="handleUpdate"
-      />
-    </div>
-    <div class="admin-filter__col">
-      <input
-        class="admin-filter__input"
         :class="{ 'admin-filter__input--unsaved': initial.label !== label }"
         :placeholder="$strings.title"
         type="text"
         v-model="label"
+        @keydown="handleUpdate"
+      />
+    </div>
+    <div class="admin-filter__col" :class="{ 'admin-filter__col--gone': !showId }">
+      <input
+        class="admin-filter__input"
+        :class="{ 'admin-filter__input--unsaved': initial.id !== id }"
+        :placeholder="$strings.id"
+        type="text"
+        v-model="id"
         @keydown="handleUpdate"
       />
     </div>
@@ -30,7 +30,7 @@
 export default {
   name: "admin-filter",
 
-  props: ["initial"],
+  props: ["initial", "showId"],
 
   data() {
     return {
@@ -54,6 +54,8 @@ export default {
   display: flex;
   &__col {
     padding: $space-xxxsmall;
+    transition: all 0.5s;
+    opacity: 1;
 
     &:first-child,
     &:nth-child(2) {
@@ -62,6 +64,13 @@ export default {
     &:last-child {
       flex: 2;
     }
+  }
+  .admin-filter__col--gone {
+    flex: 0 !important;
+    padding: $space-xxxsmall 0 !important;
+    overflow: hidden;
+    width: 0;
+    opacity: 0;
   }
   &__input {
     width: 100%;
