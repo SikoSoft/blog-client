@@ -29,7 +29,7 @@
         <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
       </div>
     </div>
-    <div class="admin-filter__delete">
+    <div class="admin-filter__delete" v-if="id">
       <blog-button
         destroy
         :text="$strings.delete"
