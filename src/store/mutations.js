@@ -216,5 +216,13 @@ export default {
 
   addFilter: (state, { id, label, image }) => {
     Vue.set(state, "filters", [...state.filters, { id, label, image }]);
+  },
+
+  deleteFilter: (state, { id }) => {
+    Vue.set(
+      state,
+      "filters",
+      state.filters.filter(filter => filter.id !== id)
+    );
   }
 };

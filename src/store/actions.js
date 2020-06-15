@@ -432,5 +432,19 @@ export default {
         })
         .catch(e => reject(e));
     });
+  },
+
+  deleteFilter: ({ state, commit, getters }, { id }) => {
+    return new Promise(resolve => {
+      fetch(state.api.deleteFilter.href.replace("{filter}", id), {
+        method: state.api.deleteFilter.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteFilter", { id });
+          resolve();
+        });
+    });
   }
 };

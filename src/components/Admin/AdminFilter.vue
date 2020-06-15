@@ -1,31 +1,44 @@
 <template>
   <li class="admin-filter">
-    <div class="admin-filter__col">
-      <input
-        class="admin-filter__input"
-        :class="{
-          'admin-filter__input--unsaved': initial && initial.label !== label
-        }"
-        :placeholder="$strings.title"
-        type="text"
-        v-model="label"
-        @keydown="handleUpdate"
-      />
+    <div class="admin-filter__fields">
+      <div class="admin-filter__field">
+        <input
+          class="admin-filter__input"
+          :class="{
+            'admin-filter__input--unsaved': initial && initial.label !== label
+          }"
+          :placeholder="$strings.title"
+          type="text"
+          v-model="label"
+          @keydown="handleUpdate"
+        />
+      </div>
+      <div class="admin-filter__field" :class="{ 'admin-filter__field--gone': !showId }">
+        <input
+          class="admin-filter__input"
+          :class="{
+            'admin-filter__input--unsaved': initial && initial.id !== id
+          }"
+          :placeholder="$strings.id"
+          type="text"
+          v-model="newId"
+          @keydown="handleUpdate"
+        />
+      </div>
+      <div class="admin-filter__field">
+        <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
+      </div>
     </div>
-    <div class="admin-filter__col" :class="{ 'admin-filter__col--gone': !showId }">
-      <input
-        class="admin-filter__input"
-        :class="{
-          'admin-filter__input--unsaved': initial && initial.id !== id
-        }"
-        :placeholder="$strings.id"
-        type="text"
-        v-model="newId"
-        @keydown="handleUpdate"
+    <div class="admin-filter__delete">
+      <blog-button
+        destroy
+        :text="$strings.delete"
+        :action="
+          () => {
+            deleteFilter({ id });
+          }
+        "
       />
-    </div>
-    <div class="admin-filter__col">
-      <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
     </div>
   </li>
 </template>
@@ -33,8 +46,12 @@
 <script>
 import { mapActions } from "vuex";
 
+import BlogButton from "@/components/BlogButton.vue";
+
 export default {
   name: "admin-filter",
+
+  components: { BlogButton },
 
   props: ["initial", "showId"],
 
@@ -49,7 +66,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["createFilter", "updateFilter"]),
+    ...mapActions(["createFilter", "updateFilter", "deleteFilter"]),
 
     handleUpdate() {
       if (!this.newId) {
@@ -84,9 +101,12 @@ export default {
 @import "@/styles/variables.scss";
 
 .admin-filter {
-  margin: $space-small 0;
-  display: flex;
-  &__col {
+  .admin-filter__fields {
+    margin: $space-small 0;
+    display: flex;
+  }
+
+  &__field {
     padding: $space-xxxsmall;
     transition: all 0.5s;
     opacity: 1;
@@ -99,7 +119,7 @@ export default {
       flex: 2;
     }
   }
-  .admin-filter__col--gone {
+  .admin-filter__field--gone {
     flex: 0 !important;
     padding: $space-xxxsmall 0 !important;
     overflow: hidden;
@@ -112,6 +132,19 @@ export default {
     border: 2px transparent solid;
     &--unsaved {
       border: 2px $color-action-neutral-bg solid;
+    }
+  }
+  &__delete {
+    height: 0;
+    transition: all 0.3s;
+    opacity: 0;
+    overflow: hidden;
+  }
+  &:hover {
+    .admin-filter__delete {
+      height: 3rem;
+      line-height: 3rem;
+      opacity: 1;
     }
   }
 }
