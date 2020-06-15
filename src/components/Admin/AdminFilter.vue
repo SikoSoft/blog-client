@@ -68,7 +68,11 @@ export default {
         if (this.id) {
           this.updateFilter(filter);
         } else {
-          this.createFilter(filter);
+          this.createFilter(filter).then(() => {
+            this.newId = "";
+            this.label = "";
+            this.image = "";
+          });
         }
       }, 500);
     }

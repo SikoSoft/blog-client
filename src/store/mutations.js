@@ -197,5 +197,24 @@ export default {
 
   setEntryTop: (state, { type, id, top }) => {
     Vue.set(state.entries[type].top, id, top);
+  },
+
+  setFilter: (state, { newId, id, label, image }) => {
+    Vue.set(
+      state,
+      "filters",
+      state.filters.map(filter => {
+        if (filter.id === id) {
+          filter.id = newId;
+          filter.label = label;
+          filter.image = image;
+        }
+        return filter;
+      })
+    );
+  },
+
+  addFilter: (state, { id, label, image }) => {
+    Vue.set(state, "filters", [...state.filters, { id, label, image }]);
   }
 };

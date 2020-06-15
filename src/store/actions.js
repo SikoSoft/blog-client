@@ -402,16 +402,16 @@ export default {
       });
   },
 
-  updateFilter: ({ state, commit, getters }, { id, newId, label, image }) => {
+  updateFilter: ({ state, commit, getters }, payload) => {
     return new Promise((resolve, reject) => {
-      fetch(state.api.updateFilter.href.replace("{filter}", id), {
+      fetch(state.api.updateFilter.href.replace("{filter}", payload.id), {
         method: state.api.updateFilter.method,
         headers: getters.headers,
-        body: JSON.stringify({ id, newId, label, image })
+        body: JSON.stringify(payload)
       })
         .then(result => result.json())
-        .then(json => {
-          commit("", json);
+        .then(() => {
+          commit("setFilter", payload);
           resolve();
         })
         .catch(e => reject(e));
@@ -426,8 +426,8 @@ export default {
         body: JSON.stringify({ id: newId, label, image })
       })
         .then(result => result.json())
-        .then(json => {
-          commit("", json);
+        .then(() => {
+          commit("addFilter", { id: newId, label, image });
           resolve();
         })
         .catch(e => reject(e));
