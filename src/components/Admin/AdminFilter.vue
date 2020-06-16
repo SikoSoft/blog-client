@@ -10,7 +10,7 @@
           :placeholder="$strings.title"
           type="text"
           v-model="label"
-          @keydown="handleUpdate"
+          @keydown="handleLabelUpdate"
         />
       </div>
       <div class="admin-filter__field" :class="{ 'admin-filter__field--gone': !showId }">
@@ -47,6 +47,7 @@
 import { mapActions } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
+import { sanitizeTitle } from "@/util/sanitizeTitle.js";
 
 export default {
   name: "admin-filter",
@@ -67,6 +68,13 @@ export default {
 
   methods: {
     ...mapActions(["createFilter", "updateFilter", "deleteFilter"]),
+
+    handleLabelUpdate() {
+      if (this.showId) {
+        this.newId = sanitizeTitle(this.label);
+      }
+      this.handleUpdate();
+    },
 
     handleUpdate() {
       if (!this.newId) {
