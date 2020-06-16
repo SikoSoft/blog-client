@@ -28,17 +28,17 @@
       <div class="admin-filter__field">
         <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
       </div>
-    </div>
-    <div class="admin-filter__delete" v-if="id">
-      <blog-button
-        destroy
-        :text="$strings.delete"
-        :action="
-          () => {
-            deleteFilter({ id });
-          }
-        "
-      />
+      <div class="admin-filter__field admin-filter__delete" v-if="id">
+        <blog-button
+          destroy
+          :text="$strings.delete"
+          :action="
+            () => {
+              deleteFilter({ id });
+            }
+          "
+        />
+      </div>
     </div>
   </li>
 </template>
@@ -115,17 +115,20 @@ export default {
     &:nth-child(2) {
       flex: 1;
     }
-    &:last-child {
+
+    &:nth-child(3) {
       flex: 2;
     }
   }
+
   .admin-filter__field--gone {
-    flex: 0 !important;
-    padding: $space-xxxsmall 0 !important;
+    flex: 0;
+    padding: $space-xxxsmall 0;
     overflow: hidden;
     width: 0;
     opacity: 0;
   }
+
   &__input {
     width: 100%;
     box-sizing: border-box;
@@ -134,16 +137,23 @@ export default {
       border: 2px $color-action-neutral-bg solid;
     }
   }
+
   &__delete {
-    height: 0;
+    flex: 0;
     transition: all 0.3s;
     opacity: 0;
     overflow: hidden;
+    vertical-align: top;
+    padding: $space-xxxsmall 0;
+
+    button {
+      vertical-align: top;
+      float: right;
+    }
   }
   &:hover {
     .admin-filter__delete {
-      height: 3rem;
-      line-height: 3rem;
+      flex: 0.25;
       opacity: 1;
     }
   }
