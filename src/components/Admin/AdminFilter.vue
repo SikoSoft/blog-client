@@ -29,17 +29,25 @@
         <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
       </div>
       <div class="admin-filter__field admin-filter__delete" v-if="id">
-        <blog-button
-          destroy
-          :text="$strings.delete"
-          :action="
-            () => {
-              deleteFilter({ id });
-            }
-          "
-        />
+        <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
       </div>
     </div>
+    <blog-confirmation-dialog
+      :title="$strings.deleteFilter"
+      :message="$strings.confirmDeleteFilter"
+      :isOpen="deleteDialogIsOpen"
+    >
+      <blog-button
+        destroy
+        :text="$strings.yes"
+        :action="
+          () => {
+            deleteFilter({ id });
+          }
+        "
+      />
+      <blog-button :text="$strings.no" :action="hideDeleteDialog" />
+    </blog-confirmation-dialog>
   </li>
 </template>
 
@@ -47,12 +55,13 @@
 import { mapActions } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
 
 export default {
   name: "admin-filter",
 
-  components: { BlogButton },
+  components: { BlogButton, BlogConfirmationDialog },
 
   props: ["initial", "showId"],
 
@@ -62,7 +71,8 @@ export default {
       newId: this.initial ? this.initial.id : "",
       label: this.initial ? this.initial.label : "",
       image: this.initial ? this.initial.image : "",
-      updateTimeout: 0
+      updateTimeout: 0,
+      deleteDialogIsOpen: false
     };
   },
 
@@ -100,6 +110,14 @@ export default {
           });
         }
       }, 500);
+    },
+
+    showDeleteDialog() {
+      this.deleteDialogIsOpen = true;
+    },
+
+    hideDeleteDialog() {
+      this.deleteDialogIsOpen = false;
     }
   }
 };

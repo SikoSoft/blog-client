@@ -402,7 +402,7 @@ export default {
       });
   },
 
-  updateFilter: ({ state, commit, getters }, payload) => {
+  updateFilter: ({ state, commit, getters, dispatch }, payload) => {
     return new Promise((resolve, reject) => {
       fetch(state.api.updateFilter.href.replace("{filter}", payload.id), {
         method: state.api.updateFilter.method,
@@ -412,13 +412,17 @@ export default {
         .then(result => result.json())
         .then(() => {
           commit("setFilter", payload);
+          dispatch("addToast", strings.filterUpdated);
           resolve();
         })
         .catch(e => reject(e));
     });
   },
 
-  createFilter: ({ state, commit, getters }, { newId, label, image }) => {
+  createFilter: (
+    { state, commit, getters, dispatch },
+    { newId, label, image }
+  ) => {
     return new Promise((resolve, reject) => {
       fetch(state.api.newFilter.href, {
         method: state.api.newFilter.method,
@@ -428,13 +432,14 @@ export default {
         .then(result => result.json())
         .then(() => {
           commit("addFilter", { id: newId, label, image });
+          dispatch("addToast", strings.filterAdded);
           resolve();
         })
         .catch(e => reject(e));
     });
   },
 
-  deleteFilter: ({ state, commit, getters }, { id }) => {
+  deleteFilter: ({ state, commit, getters, dispatch }, { id }) => {
     return new Promise(resolve => {
       fetch(state.api.deleteFilter.href.replace("{filter}", id), {
         method: state.api.deleteFilter.method,
@@ -443,6 +448,7 @@ export default {
         .then(result => result.json())
         .then(() => {
           commit("deleteFilter", { id });
+          dispatch("addToast", strings.filterDeleted);
           resolve();
         });
     });

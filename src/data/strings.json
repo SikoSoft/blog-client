@@ -56,6 +56,11 @@
   "tag": "tag",
   "showIdField": "Show ID field",
   "newFilter": "New filter",
+  "deleteFilter": "Delete filter",
+  "confirmDeleteFilter": "Are you sure you want to delete this filter?",
+  "filterDeleted": "The filter has been deleted.",
+  "filterUpdated": "The filter has been updated.",
+  "filterAdded": "The new filter has been added.",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
