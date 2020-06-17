@@ -61,6 +61,7 @@
   "filterDeleted": "The filter has been deleted.",
   "filterUpdated": "The filter has been updated.",
   "filterAdded": "The new filter has been added.",
+  "upload": "Upload",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

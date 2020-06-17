@@ -8,14 +8,23 @@ export default {
         this.setProgress({ progress: e.loaded / e.total });
       }
     };
-    xhr.open(this.uploadImage.method, this.uploadImage.href, true);
+    xhr.open(
+      this.uploadImage.method,
+      this.uploadImage.href.replace("{type}", this.type),
+      true
+    );
     Object.keys(this.headers).forEach(header => {
       xhr.setRequestHeader(header, this.headers[header]);
     });
     xhr.onload = () => {
       if (xhr.status === 200) {
         const url = JSON.parse(xhr.responseText).url;
-        this.insertToEditor(url);
+        if (this.editor) {
+          this.insertToEditor(url);
+        }
+        if (this.setImage) {
+          this.setImage(url);
+        }
       }
     };
     xhr.send(fd);
@@ -38,9 +47,11 @@ export default {
     };
   },
 
-  setup({ setProgress, editor, uploadImage, headers }) {
+  setup({ type, setProgress, editor, setImage, uploadImage, headers }) {
+    this.type = type ? type : "entry";
     this.setProgress = setProgress;
     this.editor = editor;
+    this.setImage = setImage;
     this.uploadImage = uploadImage;
     this.headers = headers;
   }

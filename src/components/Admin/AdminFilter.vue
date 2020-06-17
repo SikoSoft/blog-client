@@ -26,7 +26,20 @@
         />
       </div>
       <div class="admin-filter__field">
-        <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
+        <blog-button
+          class="admin-filter__image-upload"
+          :text="$strings.upload"
+          :action="selectImage"
+        />
+        <input
+          ref="image"
+          class="admin-filter__input admin-filter__input-image"
+          :placeholder="$strings.image"
+          type="text"
+          :value="image"
+          @keydown="handleUpdate"
+          @change="handleUpdate"
+        />
         <img class="admin-filter__image" :src="image" v-if="image" />
       </div>
       <div class="admin-filter__field admin-filter__delete" v-if="id">
@@ -53,11 +66,12 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
+import imageHandler from "@/util/imageHandler";
 
 export default {
   name: "admin-filter",
@@ -77,8 +91,36 @@ export default {
     };
   },
 
+  mounted() {
+    imageHandler.setup({
+      type: "filter",
+      setProgress: this.setProgress,
+      setImage: this.setImage,
+      uploadImage: this.api.uploadImage,
+      headers: this.headers
+    });
+  },
+
+  computed: {
+    ...mapGetters(["headers", "api"])
+  },
+
   methods: {
-    ...mapActions(["createFilter", "updateFilter", "deleteFilter"]),
+    ...mapActions([
+      "createFilter",
+      "updateFilter",
+      "deleteFilter",
+      "setProgress"
+    ]),
+
+    selectImage() {
+      imageHandler.selectLocalImage();
+    },
+
+    setImage(url) {
+      this.image = url;
+      this.handleUpdate();
+    },
 
     handleLabelUpdate() {
       if (this.showId) {
@@ -137,6 +179,7 @@ export default {
     padding: $space-xxxsmall;
     transition: all 0.5s;
     opacity: 1;
+    position: relative;
 
     &:first-child,
     &:nth-child(2) {
@@ -191,6 +234,23 @@ export default {
 
   .admin-filter__image {
     max-width: 320px;
+  }
+
+  .admin-filter__input-image {
+    padding-left: 4rem;
+  }
+
+  .admin-filter__image-upload {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.25rem;
+    border-color: $color-border-primary;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: $color-button-over;
+    }
   }
 }
 </style>
