@@ -27,6 +27,7 @@
       </div>
       <div class="admin-filter__field">
         <input class="admin-filter__input" :placeholder="$strings.image" type="text" :value="image" />
+        <img class="admin-filter__image" :src="image" v-if="image" />
       </div>
       <div class="admin-filter__field admin-filter__delete" v-if="id">
         <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
@@ -159,6 +160,7 @@ export default {
     width: 100%;
     box-sizing: border-box;
     border: 2px transparent solid;
+
     &--unsaved {
       border: 2px $color-action-neutral-bg solid;
     }
@@ -166,7 +168,6 @@ export default {
 
   &__delete {
     flex: 0;
-    transition: all 0.3s;
     opacity: 0;
     overflow: hidden;
     vertical-align: top;
@@ -177,11 +178,19 @@ export default {
       float: right;
     }
   }
+
   &:hover {
+    .admin-filter__field:nth-child(3) {
+      flex: 1.75;
+    }
     .admin-filter__delete {
       flex: 0.25;
       opacity: 1;
     }
+  }
+
+  .admin-filter__image {
+    max-width: 320px;
   }
 }
 </style>
