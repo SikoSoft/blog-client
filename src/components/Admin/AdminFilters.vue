@@ -6,21 +6,21 @@
       </div>
       <div class="admin-filters__show-id-label">{{ $strings.showIdField }}</div>
     </div>
-    <ul class="admin-filters__list">
-      <fieldset class="admin-filters__saved">
-        <legend></legend>
+    <fieldset class="admin-filters__saved">
+      <legend></legend>
+      <ul class="admin-filters__list">
         <admin-filter
           v-for="filter in filters"
           :key="filter.id"
           :initial="filter"
           :showId="showId"
         />
-      </fieldset>
-      <fieldset class="admin-filters__new">
-        <legend>{{ $strings.newFilter }}</legend>
-        <admin-filter key="new" :showId="showId" />
-      </fieldset>
-    </ul>
+      </ul>
+    </fieldset>
+    <fieldset class="admin-filters__new">
+      <legend>{{ $strings.newFilter }}</legend>
+      <admin-filter key="new" :showId="showId" />
+    </fieldset>
   </div>
 </template>
 
