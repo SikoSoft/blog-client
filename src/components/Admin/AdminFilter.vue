@@ -170,6 +170,12 @@ export default {
 @import "@/styles/variables.scss";
 
 .admin-filter {
+  background-color: $color-bg-secondary;
+  border: 1px $color-border-secondary solid;
+  border-radius: 1rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+
   .admin-filter__fields {
     margin: $space-small 0;
     display: flex;
