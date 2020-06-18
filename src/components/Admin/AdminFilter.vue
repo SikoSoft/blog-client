@@ -1,5 +1,5 @@
 <template>
-  <li class="admin-filter">
+  <li class="admin-filter" :class="{ 'admin-filter--new': !id }">
     <div class="admin-filter__fields">
       <div class="admin-filter__field">
         <input
@@ -222,7 +222,7 @@ export default {
     }
   }
 
-  &:hover {
+  &:hover:not(.admin-filter--new) {
     .admin-filter__field:nth-child(3) {
       flex: 1.75;
     }
