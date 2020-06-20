@@ -452,5 +452,20 @@ export default {
           resolve();
         });
     });
+  },
+
+  setFilterOrder: ({ state, commit, getters, dispatch }, { filterIds }) => {
+    return new Promise(resolve => {
+      fetch(state.api.saveFilterOrder.href, {
+        method: state.api.saveFilterOrder.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("setFilterOrder", { filterIds });
+          dispatch("addToast", strings.filterOrderSaved);
+          resolve();
+        });
+    });
   }
 };

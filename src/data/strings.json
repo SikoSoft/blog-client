@@ -61,6 +61,7 @@
   "filterDeleted": "The filter has been deleted.",
   "filterUpdated": "The filter has been updated.",
   "filterAdded": "The new filter has been added.",
+  "filterOrderSaved": "The ordering of filters has been saved.",
   "upload": "Upload",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",

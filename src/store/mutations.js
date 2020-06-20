@@ -224,5 +224,16 @@ export default {
       "filters",
       state.filters.filter(filter => filter.id !== id)
     );
+  },
+
+  setFilterOrder: (state, { filterIds }) => {
+    const newFilters = [];
+    filterIds.forEach(filterId => {
+      const filters = state.filters.filter(f => f.id === filterId);
+      if (filters.length) {
+        newFilters.push(filters[0]);
+      }
+    });
+    Vue(state, "filters", newFilters);
   }
 };
