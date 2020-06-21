@@ -50,7 +50,7 @@ export default {
       isDragging: false,
       draggedFilter: null,
       droppedFilter: null,
-      filterIds: []
+      orderedFilters: []
     };
   },
 
@@ -77,30 +77,33 @@ export default {
       this.isDragging = true;
       this.draggedFilter = e.target;
       e.target.classList.add("admin-filters__list-item--moving");
-      this.filterIds = this.filters.map(filter => filter.id);
+      this.orderedFilters = this.filters.map(filter => filter.id);
     },
 
     dragEnd() {
       const draggedId = this.draggedFilter.getAttribute("data-id");
-      const draggedIndex = this.filterIds.indexOf(draggedId);
-      const droppedIndex = this.filterIds.indexOf(
+      const draggedIndex = this.orderedFilters.indexOf(draggedId);
+      const droppedIndex = this.orderedFilters.indexOf(
         this.droppedFilter.getAttribute("data-id")
       );
       this.draggedFilter.classList.remove("admin-filters__list-item--moving");
       const orderedFilters =
         draggedIndex === droppedIndex
-          ? this.filterIds
-          : this.filterIds.filter(filterId => filterId !== draggedId);
+          ? this.orderedFilters
+          : this.orderedFilters.filter(filterId => filterId !== draggedId);
       if (draggedIndex !== droppedIndex) {
         orderedFilters.splice(droppedIndex, 0, draggedId);
       }
       this.droppedFilter.classList.remove("admin-filters__list-item--over");
       this.isDragging = false;
-      this.setFilterOrder({ orderedFilters });
+      if (
+        JSON.stringify(this.orderedFilters) !== JSON.stringify(orderedFilters)
+      ) {
+        this.setFilterOrder({ orderedFilters });
+      }
     },
 
     drop(e) {
-      console.log("drop", e.target, e.currentTarget);
       this.droppedFilter = e.target;
     }
   },
@@ -153,7 +156,6 @@ export default {
       &--over {
         border: 0.25rem $color-border-primary dashed;
         opacity: 0.9;
-        //filter: grayscale(100%);
       }
     }
   }
