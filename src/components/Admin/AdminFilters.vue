@@ -8,13 +8,22 @@
     </div>
     <fieldset class="admin-filters__saved">
       <legend></legend>
-      <ul class="admin-filters__list">
-        <admin-filter
+      <ul class="admin-filters__list" :class="{ 'admin-filters__list--dragging': isDragging }">
+        <li
+          :data-id="filter.id"
+          class="admin-filters__list-item"
           v-for="filter in filters"
           :key="filter.id"
-          :initial="filter"
-          :showId="showId"
-        />
+          draggable="true"
+          @dragenter="dragEnter"
+          @dragleave="dragLeave"
+          @dragover="dragOver"
+          @dragstart="dragStart"
+          @dragend="dragEnd"
+          @drop="drop"
+        >
+          <admin-filter :initial="filter" :showId="showId" />
+        </li>
       </ul>
     </fieldset>
     <fieldset class="admin-filters__new">
@@ -37,7 +46,11 @@ export default {
 
   data() {
     return {
-      showId: false
+      showId: false,
+      isDragging: false,
+      draggedFilter: null,
+      droppedFilter: null,
+      filterIds: []
     };
   },
 
@@ -46,7 +59,50 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getFilters"])
+    ...mapActions(["getFilters", "setFilterOrder"]),
+
+    dragEnter(e) {
+      e.currentTarget.classList.add("admin-filters__list-item--over");
+    },
+
+    dragLeave(e) {
+      e.currentTarget.classList.remove("admin-filters__list-item--over");
+    },
+
+    dragOver(e) {
+      e.preventDefault();
+    },
+
+    dragStart(e) {
+      this.isDragging = true;
+      this.draggedFilter = e.target;
+      e.target.classList.add("admin-filters__list-item--moving");
+      this.filterIds = this.filters.map(filter => filter.id);
+    },
+
+    dragEnd() {
+      const draggedId = this.draggedFilter.getAttribute("data-id");
+      const draggedIndex = this.filterIds.indexOf(draggedId);
+      const droppedIndex = this.filterIds.indexOf(
+        this.droppedFilter.getAttribute("data-id")
+      );
+      this.draggedFilter.classList.remove("admin-filters__list-item--moving");
+      const orderedFilters =
+        draggedIndex === droppedIndex
+          ? this.filterIds
+          : this.filterIds.filter(filterId => filterId !== draggedId);
+      if (draggedIndex !== droppedIndex) {
+        orderedFilters.splice(droppedIndex, 0, draggedId);
+      }
+      this.droppedFilter.classList.remove("admin-filters__list-item--over");
+      this.isDragging = false;
+      this.setFilterOrder({ orderedFilters });
+    },
+
+    drop(e) {
+      console.log("drop", e.target, e.currentTarget);
+      this.droppedFilter = e.target;
+    }
   },
 
   mounted() {
@@ -77,6 +133,29 @@ export default {
     list-style: none;
     padding: 0;
     margin: 0;
+    transform: all 0.3s;
+
+    &--dragging li * {
+      pointer-events: none;
+    }
+
+    &-item {
+      transition: all 0.3s;
+      cursor: move;
+      border: 0.25rem transparent solid;
+      border-radius: 1rem;
+
+      &--moving {
+        transform: scale(0.8);
+        opacity: 0.8;
+      }
+
+      &--over {
+        border: 0.25rem $color-border-primary dashed;
+        opacity: 0.9;
+        //filter: grayscale(100%);
+      }
+    }
   }
 
   &__saved {

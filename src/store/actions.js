@@ -454,15 +454,19 @@ export default {
     });
   },
 
-  setFilterOrder: ({ state, commit, getters, dispatch }, { filterIds }) => {
+  setFilterOrder: (
+    { state, commit, getters, dispatch },
+    { orderedFilters }
+  ) => {
     return new Promise(resolve => {
       fetch(state.api.saveFilterOrder.href, {
         method: state.api.saveFilterOrder.method,
-        headers: getters.headers
+        headers: getters.headers,
+        body: JSON.stringify({ orderedFilters })
       })
         .then(result => result.json())
         .then(() => {
-          commit("setFilterOrder", { filterIds });
+          commit("setFilterOrder", { orderedFilters });
           dispatch("addToast", strings.filterOrderSaved);
           resolve();
         });

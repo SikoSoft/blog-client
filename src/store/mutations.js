@@ -226,14 +226,14 @@ export default {
     );
   },
 
-  setFilterOrder: (state, { filterIds }) => {
+  setFilterOrder: (state, { orderedFilters }) => {
     const newFilters = [];
-    filterIds.forEach(filterId => {
+    orderedFilters.forEach(filterId => {
       const filters = state.filters.filter(f => f.id === filterId);
       if (filters.length) {
         newFilters.push(filters[0]);
       }
     });
-    Vue(state, "filters", newFilters);
+    Vue.set(state, "filters", newFilters);
   }
 };
