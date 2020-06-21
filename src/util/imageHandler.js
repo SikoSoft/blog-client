@@ -1,4 +1,13 @@
-export default {
+export default class imageHandler {
+  constructor({ type, setProgress, editor, setImage, uploadImage, headers }) {
+    this.type = type ? type : "entry";
+    this.setProgress = setProgress;
+    this.editor = editor;
+    this.setImage = setImage;
+    this.uploadImage = uploadImage;
+    this.headers = headers;
+  }
+
   saveToServer(file) {
     const fd = new FormData();
     fd.append("image", file);
@@ -23,17 +32,18 @@ export default {
           this.insertToEditor(url);
         }
         if (this.setImage) {
+          console.log(this);
           this.setImage(url);
         }
       }
     };
     xhr.send(fd);
-  },
+  }
 
   insertToEditor(url) {
     const range = this.editor.getSelection();
     this.editor.insertEmbed(range.index, "image", url);
-  },
+  }
 
   selectLocalImage() {
     const input = document.createElement("input");
@@ -45,14 +55,5 @@ export default {
         this.saveToServer(file);
       }
     };
-  },
-
-  setup({ type, setProgress, editor, setImage, uploadImage, headers }) {
-    this.type = type ? type : "entry";
-    this.setProgress = setProgress;
-    this.editor = editor;
-    this.setImage = setImage;
-    this.uploadImage = uploadImage;
-    this.headers = headers;
   }
-};
+}

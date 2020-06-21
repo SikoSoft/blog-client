@@ -92,7 +92,7 @@ export default {
   },
 
   mounted() {
-    imageHandler.setup({
+    this.imageHandler = new imageHandler({
       type: "filter",
       setProgress: this.setProgress,
       setImage: this.setImage,
@@ -114,10 +114,11 @@ export default {
     ]),
 
     selectImage() {
-      imageHandler.selectLocalImage();
+      this.imageHandler.selectLocalImage();
     },
 
     setImage(url) {
+      console.log(this);
       this.image = url;
       this.handleUpdate();
     },
