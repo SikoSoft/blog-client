@@ -235,5 +235,9 @@ export default {
       }
     });
     Vue.set(state, "filters", newFilters);
+  },
+
+  setFilterRules: (state, { rules }) => {
+    Vue.set(state, "filterRules", rules);
   }
 };

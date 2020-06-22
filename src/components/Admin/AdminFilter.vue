@@ -46,6 +46,9 @@
         <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
       </div>
     </div>
+    <div class="admin-filter__rules">
+      <admin-filter-rules :rules="rules" />
+    </div>
     <blog-confirmation-dialog
       :title="$strings.deleteFilter"
       :message="$strings.confirmDeleteFilter"
@@ -70,13 +73,14 @@ import { mapActions, mapGetters } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
+import AdminFilterRules from "@/components/Admin/AdminFilterRules.vue";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
 import imageHandler from "@/util/imageHandler";
 
 export default {
   name: "admin-filter",
 
-  components: { BlogButton, BlogConfirmationDialog },
+  components: { BlogButton, BlogConfirmationDialog, AdminFilterRules },
 
   props: ["initial", "showId"],
 
@@ -86,6 +90,7 @@ export default {
       newId: this.initial ? this.initial.id : "",
       label: this.initial ? this.initial.label : "",
       image: this.initial ? this.initial.image : "",
+      rules: this.initial ? this.initial.rules : [],
       updateTimeout: 0,
       deleteDialogIsOpen: false
     };

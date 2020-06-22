@@ -40,7 +40,7 @@ import AdminFilter from "@/components/Admin/AdminFilter.vue";
 import BlogToggle from "@/components/BlogToggle.vue";
 
 export default {
-  name: "filters",
+  name: "admin-filters",
 
   components: { BlogToggle, AdminFilter },
 
@@ -59,7 +59,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getFilters", "setFilterOrder"]),
+    ...mapActions(["getFilters", "getFilterRules", "setFilterOrder"]),
 
     dragEnter(e) {
       e.currentTarget.classList.add("admin-filters__list-item--over");
@@ -109,7 +109,7 @@ export default {
   },
 
   mounted() {
-    this.getFilters().then(() => {});
+    Promise.all([this.getFilters(), this.getFilterRules()]).then(() => {});
   }
 };
 </script>

@@ -471,5 +471,19 @@ export default {
           resolve();
         });
     });
+  },
+
+  getFilterRules: ({ state, commit, getters }) => {
+    return new Promise(resolve => {
+      fetch(state.api.getFilterRules.href, {
+        method: state.api.getFilterRules.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(json => {
+          commit("setFilterRules", { rules: json });
+          resolve(json);
+        });
+    });
   }
 };
