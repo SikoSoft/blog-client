@@ -1,22 +1,25 @@
 <template>
   <div class="admin-filter-rules">
     <ul class="admin-filter-rules__list">
-      <li v-for="rule in rules" :key="id(rule)"></li>
+      <li v-for="rule in rules" :key="rule.id">
+        <admin-filter-rule :filterId="filterId" :initial="{ ...rule }" />
+      </li>
+      <li>
+        <admin-filter-rule :filterId="filterId" />
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
+import AdminFilterRule from "@/components/Admin/AdminFilterRule.vue";
+
 export default {
   name: "admin-filter-rules",
 
-  props: ["rules"],
+  components: { AdminFilterRule },
 
-  methods: {
-    id(rule) {
-      return `${rule.filter_id}-${rule.type}-${rule.value}`;
-    }
-  }
+  props: ["rules", "filterId"]
 };
 </script>
 

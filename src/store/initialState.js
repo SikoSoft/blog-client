@@ -47,6 +47,7 @@ export default {
   draftsById: {},
   imagesLoaded: {},
   filters: [],
+  filterRules: [],
   progress: 0,
   showProgressBar: false
 };

@@ -480,9 +480,46 @@ export default {
         headers: getters.headers
       })
         .then(result => result.json())
-        .then(json => {
-          commit("setFilterRules", { rules: json });
-          resolve(json);
+        .then(({ rules }) => {
+          commit("setFilterRules", { rules });
+          resolve(rules);
+        });
+    });
+  },
+
+  addFilterRule: (
+    { state, getters, dispatch },
+    { filterId, type, value, operator }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.addFilterRule.href.replace("{filterId}", filterId), {
+        method: state.api.addFilterRule.method,
+        headers: getters.headers,
+        body: JSON.stringify({ type, value, operator })
+      })
+        .then(result => result.json())
+        .then(() => {
+          dispatch("addToast", strings.filterRuleAdded);
+          resolve();
+        });
+    });
+  },
+
+  deleteFilterRule: (
+    { state, getters, dispatch, commit },
+    { filterId, id }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.deleteFilterRule.href.replace("{filterId}", filterId), {
+        method: state.api.deleteFilterRule.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id: id })
+      })
+        .then(result => result.json())
+        .then(() => {
+          dispatch("addToast", strings.filterRuleDeleted);
+          commit("deleteFilterRule", { id });
+          resolve();
         });
     });
   }

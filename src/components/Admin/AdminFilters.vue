@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-filters">
+  <div class="admin-filters" v-if="initialized">
     <div class="admin-filters__show-id">
       <div class="admin-filters__show-id-toggle">
         <blog-toggle v-model="showId" />
@@ -8,7 +8,10 @@
     </div>
     <fieldset class="admin-filters__saved">
       <legend></legend>
-      <ul class="admin-filters__list" :class="{ 'admin-filters__list--dragging': isDragging }">
+      <ul
+        class="admin-filters__list"
+        :class="{ 'admin-filters__list--dragging': isDragging }"
+      >
         <li
           :data-id="filter.id"
           class="admin-filters__list-item"
@@ -22,7 +25,10 @@
           @dragend="dragEnd"
           @drop="drop"
         >
-          <admin-filter :initial="filter" :showId="showId" />
+          <admin-filter
+            :initial="{ ...filter, rules: rules(filter.id) }"
+            :showId="showId"
+          />
         </li>
       </ul>
     </fieldset>
@@ -46,6 +52,7 @@ export default {
 
   data() {
     return {
+      initialized: false,
       showId: false,
       isDragging: false,
       draggedFilter: null,
@@ -55,11 +62,17 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["filters"])
+    ...mapGetters(["filters", "filterRules"])
   },
 
   methods: {
     ...mapActions(["getFilters", "getFilterRules", "setFilterOrder"]),
+
+    rules(filterId) {
+      return (
+        this.filterRules.filter(filter => filter.filter_id === filterId) || []
+      );
+    },
 
     dragEnter(e) {
       e.currentTarget.classList.add("admin-filters__list-item--over");
@@ -109,7 +122,9 @@ export default {
   },
 
   mounted() {
-    Promise.all([this.getFilters(), this.getFilterRules()]).then(() => {});
+    Promise.all([this.getFilters(), this.getFilterRules()]).then(() => {
+      this.initialized = true;
+    });
   }
 };
 </script>

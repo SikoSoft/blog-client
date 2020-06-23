@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="admin-filter__rules">
-      <admin-filter-rules :rules="rules" />
+      <admin-filter-rules :rules="rules" :filterId="id" />
     </div>
     <blog-confirmation-dialog
       :title="$strings.deleteFilter"

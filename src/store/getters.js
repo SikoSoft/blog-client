@@ -84,6 +84,8 @@ export default {
 
   filters: state => state.filters,
 
+  filterRules: state => (state.filterRules ? state.filterRules : []),
+
   entriesByFilter: state => filter =>
     state.entries.filter.list[filter] ? state.entries.filter.list[filter] : [],
 
