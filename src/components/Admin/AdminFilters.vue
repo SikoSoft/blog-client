@@ -8,10 +8,7 @@
     </div>
     <fieldset class="admin-filters__saved">
       <legend></legend>
-      <ul
-        class="admin-filters__list"
-        :class="{ 'admin-filters__list--dragging': isDragging }"
-      >
+      <ul class="admin-filters__list" :class="{ 'admin-filters__list--dragging': isDragging }">
         <li
           :data-id="filter.id"
           class="admin-filters__list-item"
@@ -25,10 +22,7 @@
           @dragend="dragEnd"
           @drop="drop"
         >
-          <admin-filter
-            :initial="{ ...filter, rules: rules(filter.id) }"
-            :showId="showId"
-          />
+          <admin-filter :initial="{ ...filter }" :rules="rules(filter.id)" :showId="showId" />
         </li>
       </ul>
     </fieldset>

@@ -488,7 +488,7 @@ export default {
   },
 
   addFilterRule: (
-    { state, getters, dispatch },
+    { state, getters, dispatch, commit },
     { filterId, type, value, operator }
   ) => {
     return new Promise(resolve => {
@@ -498,8 +498,15 @@ export default {
         body: JSON.stringify({ type, value, operator })
       })
         .then(result => result.json())
-        .then(() => {
+        .then(json => {
           dispatch("addToast", strings.filterRuleAdded);
+          commit("addFilterRule", {
+            filterId,
+            id: json.id,
+            type,
+            value,
+            operator
+          });
           resolve();
         });
     });
@@ -513,7 +520,7 @@ export default {
       fetch(state.api.deleteFilterRule.href.replace("{filterId}", filterId), {
         method: state.api.deleteFilterRule.method,
         headers: getters.headers,
-        body: JSON.stringify({ id: id })
+        body: JSON.stringify({ id })
       })
         .then(result => result.json())
         .then(() => {

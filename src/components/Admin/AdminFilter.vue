@@ -82,7 +82,7 @@ export default {
 
   components: { BlogButton, BlogConfirmationDialog, AdminFilterRules },
 
-  props: ["initial", "showId"],
+  props: ["initial", "rules", "showId"],
 
   data() {
     return {
@@ -90,7 +90,6 @@ export default {
       newId: this.initial ? this.initial.id : "",
       label: this.initial ? this.initial.label : "",
       image: this.initial ? this.initial.image : "",
-      rules: this.initial ? this.initial.rules : [],
       updateTimeout: 0,
       deleteDialogIsOpen: false
     };

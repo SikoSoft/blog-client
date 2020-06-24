@@ -241,6 +241,13 @@ export default {
     Vue.set(state, "filterRules", rules);
   },
 
+  addFilterRule: (state, { filterId, id, type, value, operator }) => {
+    Vue.set(state, "filterRules", [
+      ...state.filterRules,
+      { filter_id: filterId, id, type, value, operator }
+    ]);
+  },
+
   deleteFilterRule: (state, { id }) => {
     Vue.set(
       state,

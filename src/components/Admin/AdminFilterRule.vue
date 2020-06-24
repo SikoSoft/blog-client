@@ -13,7 +13,9 @@
       :text="$strings.add"
       :action="
         () => {
-          addFilterRule({ filterId, type, operator, value });
+          addFilterRule({ filterId, type, operator, value }).then(() => {
+            reset();
+          });
         }
       "
     />
@@ -64,6 +66,12 @@ export default {
 
   methods: {
     ...mapActions(["addFilterRule", "deleteFilterRule"]),
+
+    reset() {
+      this.type = this.initial ? this.initial.type : this.types[0];
+      this.operator = this.initial ? this.initial.operator : this.operators[0];
+      this.value = this.initial ? this.initial.value : "";
+    },
 
     deleteRule() {
       this.$emit("deleteRule", { id: this.id });
