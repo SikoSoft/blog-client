@@ -529,5 +529,30 @@ export default {
           resolve();
         });
     });
+  },
+
+  updateFilterRule: (
+    { state, getters, dispatch, commit },
+    { filterId, id, type, value, operator }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.saveFilterRule.href.replace("{filterId}", filterId), {
+        method: state.api.saveFilterRule.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id, type, value, operator })
+      })
+        .then(result => result.json())
+        .then(() => {
+          dispatch("addToast", strings.filterRuleAdded);
+          commit("updateFilterRule", {
+            filterId,
+            id,
+            type,
+            value,
+            operator
+          });
+          resolve();
+        });
+    });
   }
 };

@@ -28,6 +28,7 @@
   "termsOfService": "Terms of Service",
   "publish": "Publish",
   "delete": "Delete",
+  "update": "Update",
   "add": "Add",
   "commentsPublished": "The selected comments have been published.",
   "commentsDeleted": "The selected comments have been deleted.",

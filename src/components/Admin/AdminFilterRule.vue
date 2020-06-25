@@ -19,7 +19,18 @@
         }
       "
     />
-    <blog-button v-else destroy :text="$strings.delete" :action="showDeleteDialog" />
+    <template v-else>
+      <blog-button
+        create
+        :text="$strings.update"
+        :action="
+          () => {
+            updateFilterRule({ filterId, id, type, operator, value });
+          }
+        "
+      />
+      <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
+    </template>
     <blog-confirmation-dialog
       :title="$strings.deleteFilterRule"
       :message="$strings.confirmDeleteFilterRule"
@@ -65,7 +76,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["addFilterRule", "deleteFilterRule"]),
+    ...mapActions(["addFilterRule", "deleteFilterRule", "updateFilterRule"]),
 
     reset() {
       this.type = this.initial ? this.initial.type : this.types[0];

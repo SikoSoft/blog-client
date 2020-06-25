@@ -254,5 +254,15 @@ export default {
       "filterRules",
       state.filterRules.filter(filter => filter.id !== id)
     );
+  },
+
+  updateFilterRule: (state, payload) => {
+    Vue.set(
+      state,
+      "filterRules",
+      state.filterRules.map(rule =>
+        rule.id === payload.id ? { ...rule, ...payload } : rule
+      )
+    );
   }
 };
