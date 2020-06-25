@@ -7,19 +7,20 @@
       <option :value="operator" v-for="operator in operators" :key="operator">{{ operator }}</option>
     </select>
     <input type="text" v-model="value" />
-    <blog-button
-      v-if="!id"
-      create
-      :text="$strings.add"
-      :action="
-        () => {
-          addFilterRule({ filterId, type, operator, value }).then(() => {
-            reset();
-          });
-        }
-      "
-    />
-    <template v-else>
+    <span class="admin-filter-rule__create-button" v-if="!id">
+      <blog-button
+        create
+        :text="$strings.add"
+        :action="
+          () => {
+            addFilterRule({ filterId, type, operator, value }).then(() => {
+              reset();
+            });
+          }
+        "
+      />
+    </span>
+    <span class="admin-filter-rule__edit-buttons" v-else>
       <blog-button
         create
         :text="$strings.update"
@@ -30,7 +31,7 @@
         "
       />
       <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
-    </template>
+    </span>
     <blog-confirmation-dialog
       :title="$strings.deleteFilterRule"
       :message="$strings.confirmDeleteFilterRule"
@@ -101,5 +102,33 @@ export default {
 
 <style lang="scss" scoped>
 .admin-filter-rule {
+  display: flex;
+
+  > {
+    vertical-align: middle;
+  }
+
+  *:nth-child(1),
+  *:nth-child(2),
+  *:nth-child(3) {
+    flex: 3;
+  }
+
+  &__create-button,
+  &__edit-buttons {
+    flex: 2;
+
+    button {
+      height: 100%;
+    }
+  }
+
+  &__create-button button {
+    width: 100%;
+  }
+
+  &__edit-buttons button {
+    width: 50%;
+  }
 }
 </style>
