@@ -1,58 +1,46 @@
 <template>
   <div class="tag">
     <blog-tag :tag="tag" />
-    <blog-entries :entries="entriesByTag[tag]" />
+    <blog-entries :type="type" :entries="entries" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
+
 import BlogTag from "@/components/BlogTag.vue";
-import BlogEntries from "@/components/BlogEntries.vue";
+import Entries from "@/shared/Entries.js";
 
 export default {
-  name: "tag",
+  ...Entries,
 
-  components: { BlogTag, BlogEntries },
+  name: "entries-tag",
 
-  mounted() {
-    this.update();
-  },
-
-  updated() {
-    this.update();
-  },
+  components: { ...Entries.components, BlogTag },
 
   computed: {
-    ...mapGetters(["entriesByTag"]),
+    ...Entries.computed,
 
     tag() {
       return this.$route.params.tag;
+    },
+
+    entries() {
+      return this.$store.getters.entriesByTag(this.tag);
+    },
+
+    title() {
+      return this.$strings.entriesWithTag.replace("{tag}", this.tag);
     }
   },
 
   methods: {
-    ...mapActions([
-      "initialize",
-      "getEntries",
-      "getEntriesByTag",
-      "setBreadcrumbs",
-      "setTitle"
-    ]),
+    ...Entries.methods,
 
-    update() {
-      this.initialize().then(() => {
-        this.getEntries().then(() => {
-          this.getEntriesByTag(this.tag);
-          this.setBreadcrumbs([
-            { href: "/tags", label: this.$strings.tags },
-            { href: `/tag/${this.tag}`, label: this.tag }
-          ]);
-          this.setTitle(
-            this.$strings.entriesWithTag.replace("{tag}", this.tag)
-          );
-        });
-      });
+    ...mapActions(["getFilters"]),
+
+    async postInit() {
+      return this.getFilters();
     }
   }
 };

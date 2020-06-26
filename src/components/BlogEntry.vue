@@ -1,13 +1,25 @@
 <template>
-  <div class="blog-entry" :class="{ 'blog-entry--full': fullMode }" ref="container">
+  <div
+    class="blog-entry"
+    :class="{ 'blog-entry--full': fullMode }"
+    ref="container"
+  >
     <template v-if="!editMode">
-      <h3 class="blog-entry__title" :class="{ 'blog-entry__title--clickable': !fullMode }">
-        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{ title }}</router-link>
+      <h3
+        class="blog-entry__title"
+        :class="{ 'blog-entry__title--clickable': !fullMode }"
+      >
+        <router-link :to="`/entry/${id}`" v-if="!fullMode">{{
+          title
+        }}</router-link>
         <template v-else>{{ title }}</template>
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div class="blog-entry__edit" v-if="user.rights.includes('update_entry')">
+        <div
+          class="blog-entry__edit"
+          v-if="user.rights.includes('update_entry')"
+        >
           <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
@@ -16,7 +28,9 @@
           <runtime-template-compiler :template="renderedBody" />
         </div>
         <div class="blog-entry__body-more" v-if="!fullMode">
-          <router-link :to="`/entry/${id}`">{{ $strings.readMore }}</router-link>
+          <router-link :to="`/entry/${id}`">{{
+            $strings.readMore
+          }}</router-link>
         </div>
       </div>
       <div class="blog-entry__foot">
@@ -29,13 +43,20 @@
         </div>
       </div>
       <div class="blog-entry__comments" v-if="showComments">
-        <blog-comment-form :entry="entry" v-if="user.rights.includes('post_comments')" />
-        <blog-comments :entry="entry" />
+        <blog-comment-form
+          :entry="entry"
+          v-if="user.rights.includes('post_comments')"
+        />
+        <blog-comments @commentsLoaded="commentsLoaded" :entry="entry" />
       </div>
     </template>
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
-      <blog-entry-form :initialEntry="entry" @idChanged="idChanged" @edited="edited" />
+      <blog-entry-form
+        :initialEntry="entry"
+        @idChanged="idChanged"
+        @edited="edited"
+      />
     </template>
   </div>
 </template>
@@ -157,6 +178,22 @@ export default {
 
     edited(id) {
       this.$emit("edited", id);
+    },
+
+    commentsLoaded() {
+      if (this.$route.hash) {
+        const commentContainer = document.querySelector(this.$route.hash);
+        if (commentContainer) {
+          setTimeout(() => {
+            window.scrollTo({
+              top:
+                commentContainer.getBoundingClientRect().top +
+                document.documentElement.scrollTop,
+              left: window.scrollX
+            });
+          }, 100);
+        }
+      }
     }
   },
 

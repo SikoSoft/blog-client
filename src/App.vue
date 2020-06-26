@@ -3,7 +3,10 @@
     <header>
       <blog-header />
     </header>
-    <div class="main-container" :class="{ 'main-container--loading': isLoading }">
+    <div
+      class="main-container"
+      :class="{ 'main-container--loading': isLoading }"
+    >
       <main>
         <blog-loader v-if="isLoading" />
         <router-view />
@@ -41,13 +44,15 @@ export default {
 
   mounted() {
     this.$router.afterEach(to => {
-      window.scroll({
-        top:
-          document.getElementById("blog-breadcrumb").getBoundingClientRect()
-            .top + window.scrollY,
-        left: 0,
-        behavior: "smooth"
-      });
+      if (!to.hash.match("#comment-")) {
+        window.scroll({
+          top:
+            document.getElementById("blog-breadcrumb").getBoundingClientRect()
+              .top + window.scrollY,
+          left: 0,
+          behavior: "smooth"
+        });
+      }
       if (
         process.env.NODE_ENV === "production" &&
         process.env.VUE_APP_TRACKING_CODE

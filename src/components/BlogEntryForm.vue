@@ -4,7 +4,11 @@
       <select @change="loadDraft" class="blog-entry-form__draft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
-          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">{{ draft.title }}</option>
+          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
+            {{
+            draft.title
+            }}
+          </option>
         </optgroup>
       </select>
     </div>
@@ -149,7 +153,7 @@ export default {
     if (this.body) {
       this.editor.setContents(JSON.parse(this.body));
     }
-    imageHandler.setup({
+    this.imageHandler = new imageHandler({
       setProgress: this.setProgress,
       editor: this.editor,
       uploadImage: this.api.uploadImage,
@@ -157,7 +161,7 @@ export default {
     });
     const toolbar = this.editor.getModule("toolbar");
     toolbar.addHandler("image", () => {
-      imageHandler.selectLocalImage();
+      this.imageHandler.selectLocalImage();
     });
     this.editor.on("text-change", () => {
       this.updateSelectionPosition();
@@ -400,7 +404,7 @@ export default {
       }
       if (this.entryFormIsOpen) {
         this.hideEntryForm();
-      } else {
+      } else if (window.location.pathname !== "/") {
         this.$router.push({ path: "/" });
       }
     }

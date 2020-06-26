@@ -14,14 +14,15 @@ export default {
 
   user: state => state.user,
 
-  entries: state => state.entries,
+  entries: state => state.entries.default.list,
 
-  entriesByTag: state => state.entriesByTag,
+  entriesByTag: state => tag =>
+    state.entries.tag.list[tag] ? state.entries.tag.list[tag] : [],
 
   entryById: state => id => {
     return state.entriesById[id]
       ? state.entriesById[id]
-      : state.entries.filter(entry => entry.id === id)[0];
+      : state.entries.default.list.filter(entry => entry.id === id)[0];
   },
 
   comments: state => state.comments,
@@ -72,7 +73,7 @@ export default {
       : state.drafts.filter(draft => draft.id === id)[0];
   },
 
-  windowYLoadNew: state => state.windowYLoadNew,
+  windowYLoadNew: state => type => state.entries[type].loadNew,
 
   getEntriesStart: state => state.getEntriesStart,
 
@@ -83,8 +84,10 @@ export default {
 
   filters: state => state.filters,
 
+  filterRules: state => (state.filterRules ? state.filterRules : []),
+
   entriesByFilter: state => filter =>
-    state.entriesByFilter[filter] ? state.entriesByFilter[filter] : [],
+    state.entries.filter.list[filter] ? state.entries.filter.list[filter] : [],
 
   showProgressBar: state => state.showProgressBar,
 
@@ -92,5 +95,5 @@ export default {
 
   entriesFound: state => state.entriesFound,
 
-  entryTops: state => state.entryTops
+  entryTops: state => type => state.entries[type].top
 };

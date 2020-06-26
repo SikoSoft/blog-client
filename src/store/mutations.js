@@ -9,20 +9,18 @@ export default {
     state.isLoading = loading;
   },
 
-  setEntries: (state, { entries, append }) => {
+  setEntries: (state, { entries, type, tag, filterId, append }) => {
+    const target =
+      type === "default" ? state.entries[type] : state.entries[type].list;
+    const value = type === "tag" ? tag : type === "filter" ? filterId : "list";
     if (append) {
-      Vue.set(state, "entries", [...state.entries, ...entries]);
+      Vue.set(target, value, [
+        ...(target[value] ? target[value] : []),
+        ...entries
+      ]);
     } else {
-      Vue.set(state, "entries", [...entries]);
+      Vue.set(target, value, [...entries]);
     }
-  },
-
-  setEntriesByTag: (state, { tag, entries }) => {
-    Vue.set(state.entriesByTag, tag, entries);
-  },
-
-  setEntriesByFilter: (state, { filterId, entries }) => {
-    Vue.set(state.entriesByFilter, filterId, entries);
   },
 
   setUser: (state, { user }) => {
@@ -76,9 +74,9 @@ export default {
   setEntryById: (state, { id, entry }) => {
     Vue.set(state.entriesById, entry.id, entry);
     Vue.set(
-      state,
-      "entries",
-      [...state.entries].map(e => {
+      state.entries.default,
+      "list",
+      [...state.entries.default.list].map(e => {
         return id !== e.id ? e : { ...entry, id: entry.id };
       })
     );
@@ -136,16 +134,16 @@ export default {
     state.drafts = drafts;
   },
 
-  setWindowYLoadNew: (state, { windowY }) => {
-    state.windowYLoadNew = windowY;
+  setWindowYLoadNew: (state, { type, windowY }) => {
+    state.entries[type].loadNew = windowY;
   },
 
-  setGetEntriesStart: (state, { start }) => {
-    state.getEntriesStart = start;
+  setEntriesStart: (state, { type, start }) => {
+    state.entries[type].start = start;
   },
 
-  setEndOfEntries: (state, { end }) => {
-    state.endOfEntries = end;
+  setEndOfEntries: (state, { type, end }) => {
+    state.entries[type].end = end;
   },
 
   imageLoaded: (state, { entryId }) => {
@@ -162,10 +160,19 @@ export default {
 
   deleteEntry: (state, { id }) => {
     Vue.set(
-      state,
-      "entries",
-      state.entries.filter(entry => entry.id !== id)
+      state.entries.default,
+      "list",
+      state.entries.default.list.filter(entry => entry.id !== id)
     );
+    ["tag", "filter"].forEach(type => {
+      Object.keys(state.entries[type].list).forEach(listId => {
+        Vue.set(
+          state.entries[type].list,
+          listId,
+          state.entries[type].list[listId].filter(entry => entry.id !== id)
+        );
+      });
+    });
   },
 
   deleteDraft: (state, { id }) => {
@@ -188,7 +195,74 @@ export default {
     state.entriesFound = entriesFound;
   },
 
-  setEntryTop: (state, { id, top }) => {
-    Vue.set(state.entryTops, id, top);
+  setEntryTop: (state, { type, id, top }) => {
+    Vue.set(state.entries[type].top, id, top);
+  },
+
+  setFilter: (state, { newId, id, label, image }) => {
+    Vue.set(
+      state,
+      "filters",
+      state.filters.map(filter => {
+        if (filter.id === id) {
+          filter.id = newId;
+          filter.label = label;
+          filter.image = image;
+        }
+        return filter;
+      })
+    );
+  },
+
+  addFilter: (state, { id, label, image }) => {
+    Vue.set(state, "filters", [...state.filters, { id, label, image }]);
+  },
+
+  deleteFilter: (state, { id }) => {
+    Vue.set(
+      state,
+      "filters",
+      state.filters.filter(filter => filter.id !== id)
+    );
+  },
+
+  setFilterOrder: (state, { orderedFilters }) => {
+    const newFilters = [];
+    orderedFilters.forEach(filterId => {
+      const filters = state.filters.filter(f => f.id === filterId);
+      if (filters.length) {
+        newFilters.push(filters[0]);
+      }
+    });
+    Vue.set(state, "filters", newFilters);
+  },
+
+  setFilterRules: (state, { rules }) => {
+    Vue.set(state, "filterRules", rules);
+  },
+
+  addFilterRule: (state, { filterId, id, type, value, operator }) => {
+    Vue.set(state, "filterRules", [
+      ...state.filterRules,
+      { filter_id: filterId, id, type, value, operator }
+    ]);
+  },
+
+  deleteFilterRule: (state, { id }) => {
+    Vue.set(
+      state,
+      "filterRules",
+      state.filterRules.filter(filter => filter.id !== id)
+    );
+  },
+
+  updateFilterRule: (state, payload) => {
+    Vue.set(
+      state,
+      "filterRules",
+      state.filterRules.map(rule =>
+        rule.id === payload.id ? { ...rule, ...payload } : rule
+      )
+    );
   }
 };

@@ -1,4 +1,13 @@
-export default {
+export default class imageHandler {
+  constructor({ type, setProgress, editor, setImage, uploadImage, headers }) {
+    this.type = type ? type : "entry";
+    this.setProgress = setProgress;
+    this.editor = editor;
+    this.setImage = setImage;
+    this.uploadImage = uploadImage;
+    this.headers = headers;
+  }
+
   saveToServer(file) {
     const fd = new FormData();
     fd.append("image", file);
@@ -8,23 +17,33 @@ export default {
         this.setProgress({ progress: e.loaded / e.total });
       }
     };
-    xhr.open(this.uploadImage.method, this.uploadImage.href, true);
+    xhr.open(
+      this.uploadImage.method,
+      this.uploadImage.href.replace("{type}", this.type),
+      true
+    );
     Object.keys(this.headers).forEach(header => {
       xhr.setRequestHeader(header, this.headers[header]);
     });
     xhr.onload = () => {
       if (xhr.status === 200) {
         const url = JSON.parse(xhr.responseText).url;
-        this.insertToEditor(url);
+        if (this.editor) {
+          this.insertToEditor(url);
+        }
+        if (this.setImage) {
+          console.log(this);
+          this.setImage(url);
+        }
       }
     };
     xhr.send(fd);
-  },
+  }
 
   insertToEditor(url) {
     const range = this.editor.getSelection();
     this.editor.insertEmbed(range.index, "image", url);
-  },
+  }
 
   selectLocalImage() {
     const input = document.createElement("input");
@@ -36,12 +55,5 @@ export default {
         this.saveToServer(file);
       }
     };
-  },
-
-  setup({ setProgress, editor, uploadImage, headers }) {
-    this.setProgress = setProgress;
-    this.editor = editor;
-    this.uploadImage = uploadImage;
-    this.headers = headers;
   }
-};
+}

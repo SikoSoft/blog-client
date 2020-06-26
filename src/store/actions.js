@@ -35,30 +35,56 @@ export default {
       });
   },
 
-  async getEntries({ state, commit, getters }, force) {
+  async getEntries(
+    { state, commit, getters },
+    { force, type, tag, filterId } = {}
+  ) {
     if (state.entries.length > 0 && !force) {
       return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });
 
-    const getUrl =
-      state.getEntriesStart === 0
-        ? state.api.getEntries.href
-        : `${state.api.getEntries.href}/${state.getEntriesStart}`;
+    const start = state.entries[type].start;
+
+    let getUrl, getMethod;
+    switch (type) {
+      case "tag":
+        getUrl = state.api.getEntriesByTag.href.replace("{tag}", tag);
+        getMethod = state.api.getEntriesByTag.method;
+        break;
+      case "filter":
+        getUrl = state.api.getEntriesByFilter.href.replace(
+          "{filter}",
+          filterId
+        );
+        getMethod = state.api.getEntriesByFilter.method;
+        break;
+      default:
+        getUrl = state.api.getEntries.href;
+        getMethod = state.api.getEntries.method;
+    }
+
+    getUrl += start > 0 ? `/${start}` : "";
 
     return new Promise((resolve, reject) => {
       fetch(getUrl, {
-        method: state.api.getEntries.method,
+        method: getMethod,
         headers: getters.headers
       })
         .then(response => response.json())
         .then(json => {
           commit("setEntries", {
+            type,
+            tag,
+            filterId,
             entries: json.entries,
             append: true
           });
-          commit("setEndOfEntries", { end: json.end });
+          json.entries.forEach(entry => {
+            commit("setEntryById", { id: entry.id, entry });
+          });
+          commit("setEndOfEntries", { type, end: json.end });
           commit("setLoading", { loading: false });
           resolve();
         })
@@ -66,33 +92,9 @@ export default {
     });
   },
 
-  getMoreEntries({ dispatch }) {
-    dispatch("setNextEntriesBatch");
-    dispatch("getEntries", true);
-  },
-
-  getEntriesByTag({ state, commit, getters }, tag) {
-    if (state.entriesByTag[tag]) {
-      return Promise.resolve();
-    }
-
-    return new Promise((resolve, reject) => {
-      fetch(state.api.getEntriesByTag.href.replace("{tag}", tag), {
-        method: state.api.getEntriesByTag.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setEntriesByTag", {
-            tag,
-            entries: json.entries
-          });
-          json.entries.forEach(entry => {
-            commit("setEntryById", { id: entry.id, entry });
-          });
-        })
-        .catch(e => reject(e));
-    });
+  getMoreEntries({ dispatch }, { type, filterId, tag }) {
+    dispatch("setNextEntriesBatch", { type });
+    dispatch("getEntries", { type, filterId, tag, force: true });
   },
 
   async getEntry({ state, commit, getters }, { id, force, addToList }) {
@@ -111,8 +113,14 @@ export default {
         .then(json => {
           commit("setEntryById", { id, entry: json });
           if (addToList) {
-            commit("setEntries", { entries: [json, ...state.entries] });
-            commit("setGetEntriesStart", { start: state.getEntriesStart + 1 });
+            commit("setEntries", {
+              type: "default",
+              entries: [json, ...state.entries.default.list]
+            });
+            commit("setEntriesStart", {
+              type: "default",
+              start: state.getEntriesStart + 1
+            });
           }
           commit("setLoading", { loading: false });
           resolve();
@@ -306,9 +314,10 @@ export default {
     });
   },
 
-  setNextEntriesBatch({ commit, state }) {
-    commit("setGetEntriesStart", {
-      start: state.getEntriesStart + state.settings.per_load
+  setNextEntriesBatch({ commit, state }, { type }) {
+    commit("setEntriesStart", {
+      type,
+      start: state.entries[type].start + state.settings.per_load
     });
   },
 
@@ -322,30 +331,6 @@ export default {
         .then(response => response.json())
         .then(json => {
           commit("setFilters", { filters: json });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
-  },
-
-  async getEntriesByFilter({ commit, state }, { filterId }) {
-    if (state.entriesByFilter[filterId]) {
-      return Promise.resolve();
-    }
-
-    commit("setLoading", { loading: true });
-
-    return new Promise((resolve, reject) => {
-      fetch(state.api.getEntriesByFilter.href.replace("{filter}", filterId), {
-        method: state.api.getEntriesByFilter.method
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setEntriesByFilter", { filterId, entries: json.entries });
-          json.entries.forEach(entry => {
-            commit("setEntryById", { id: entry.id, entry });
-          });
-          commit("setLoading", { loading: false });
           resolve();
         })
         .catch(e => reject(e));
@@ -375,7 +360,10 @@ export default {
       .then(response => response.json())
       .then(() => {
         commit("deleteEntry", { id });
-        commit("setGetEntriesStart", { start: state.getEntriesStart - 1 });
+        commit("setEntriesStart", {
+          type: "default",
+          start: state.getEntriesStart - 1
+        });
       });
   },
 
@@ -412,5 +400,159 @@ export default {
       .then(json => {
         commit("setEntriesFound", { entriesFound: json });
       });
+  },
+
+  updateFilter: ({ state, commit, getters, dispatch }, payload) => {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.updateFilter.href.replace("{filter}", payload.id), {
+        method: state.api.updateFilter.method,
+        headers: getters.headers,
+        body: JSON.stringify(payload)
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("setFilter", payload);
+          dispatch("addToast", strings.filterUpdated);
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  createFilter: (
+    { state, commit, getters, dispatch },
+    { newId, label, image }
+  ) => {
+    return new Promise((resolve, reject) => {
+      fetch(state.api.newFilter.href, {
+        method: state.api.newFilter.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id: newId, label, image })
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("addFilter", { id: newId, label, image });
+          dispatch("addToast", strings.filterAdded);
+          resolve();
+        })
+        .catch(e => reject(e));
+    });
+  },
+
+  deleteFilter: ({ state, commit, getters, dispatch }, { id }) => {
+    return new Promise(resolve => {
+      fetch(state.api.deleteFilter.href.replace("{filter}", id), {
+        method: state.api.deleteFilter.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteFilter", { id });
+          dispatch("addToast", strings.filterDeleted);
+          resolve();
+        });
+    });
+  },
+
+  setFilterOrder: (
+    { state, commit, getters, dispatch },
+    { orderedFilters }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.saveFilterOrder.href, {
+        method: state.api.saveFilterOrder.method,
+        headers: getters.headers,
+        body: JSON.stringify({ orderedFilters })
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("setFilterOrder", { orderedFilters });
+          dispatch("addToast", strings.filterOrderSaved);
+          resolve();
+        });
+    });
+  },
+
+  getFilterRules: ({ state, commit, getters }) => {
+    return new Promise(resolve => {
+      fetch(state.api.getFilterRules.href, {
+        method: state.api.getFilterRules.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(({ rules }) => {
+          commit("setFilterRules", { rules });
+          resolve(rules);
+        });
+    });
+  },
+
+  addFilterRule: (
+    { state, getters, dispatch, commit },
+    { filterId, type, value, operator }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.addFilterRule.href.replace("{filterId}", filterId), {
+        method: state.api.addFilterRule.method,
+        headers: getters.headers,
+        body: JSON.stringify({ type, value, operator })
+      })
+        .then(result => result.json())
+        .then(json => {
+          dispatch("addToast", strings.filterRuleAdded);
+          commit("addFilterRule", {
+            filterId,
+            id: json.id,
+            type,
+            value,
+            operator
+          });
+          resolve();
+        });
+    });
+  },
+
+  deleteFilterRule: (
+    { state, getters, dispatch, commit },
+    { filterId, id }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.deleteFilterRule.href.replace("{filterId}", filterId), {
+        method: state.api.deleteFilterRule.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id })
+      })
+        .then(result => result.json())
+        .then(() => {
+          dispatch("addToast", strings.filterRuleDeleted);
+          commit("deleteFilterRule", { id });
+          resolve();
+        });
+    });
+  },
+
+  updateFilterRule: (
+    { state, getters, dispatch, commit },
+    { filterId, id, type, value, operator }
+  ) => {
+    return new Promise(resolve => {
+      fetch(state.api.saveFilterRule.href.replace("{filterId}", filterId), {
+        method: state.api.saveFilterRule.method,
+        headers: getters.headers,
+        body: JSON.stringify({ id, type, value, operator })
+      })
+        .then(result => result.json())
+        .then(() => {
+          dispatch("addToast", strings.filterRuleAdded);
+          commit("updateFilterRule", {
+            filterId,
+            id,
+            type,
+            value,
+            operator
+          });
+          resolve();
+        });
+    });
   }
 };

@@ -22,6 +22,7 @@ export default {
 .blog-confirmation-dialog {
   display: none;
   position: fixed;
+  z-index: 1;
   top: 20vh;
   left: 20vw;
   width: 60vw;
