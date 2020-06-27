@@ -41,6 +41,18 @@
       "id": "auto_entry_url",
       "label": "Automatically update browser URL when scrolling to entry",
       "type": "toggle"
+    },
+    {
+      "id": "further_reading_min_tags",
+      "label": "Minimum matched tags for further reading",
+      "type": "number",
+      "maxLength": 3
+    },
+    {
+      "id": "further_reading_max",
+      "label": "Maximum entries for further reading",
+      "type": "number",
+      "maxLength": 3
     }
   ],
   "Sidebar": [
