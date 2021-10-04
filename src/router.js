@@ -6,6 +6,7 @@ import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
 import Token from "./views/Token.vue";
 import Settings from "./views/Settings.vue";
+import Roles from "./views/Roles.vue";
 import Tokens from "./views/Tokens.vue";
 import AccessDenied from "./views/AccessDenied.vue";
 import Admin from "./views/Admin.vue";
@@ -64,6 +65,11 @@ export default new Router({
       path: "/admin/settings",
       name: "settings",
       component: Settings
+    },
+    {
+      path: "/admin/roles",
+      name: "roles",
+      component: Roles
     },
     {
       path: "/admin/tokens",

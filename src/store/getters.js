@@ -63,6 +63,8 @@ export default {
 
   settings: state => state.settings,
 
+  roles: state => state.roles,
+
   tokens: state => state.tokens,
 
   drafts: state => state.drafts,

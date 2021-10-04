@@ -2,7 +2,9 @@
   <div class="admin-home">
     <ul class="admin-home__list">
       <li v-for="tool in tools" :key="tool">
-        <router-link :to="`/admin/${tool}`">{{ rights.Admin[`manage_${tool}`] }}</router-link>
+        <router-link :to="`/admin/${tool}`">{{
+          rights.Admin[`manage_${tool}`]
+        }}</router-link>
       </li>
     </ul>
   </div>
@@ -19,7 +21,7 @@ export default {
   data() {
     return {
       rights,
-      available: ["settings"]
+      available: ["settings", "roles"]
     };
   },
 
