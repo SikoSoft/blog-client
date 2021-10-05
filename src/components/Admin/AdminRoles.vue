@@ -10,7 +10,7 @@
             :value="role.name"
           />
         </td>
-        <td>
+        <td v-if="user.rights.includes('manage_rights')">
           <router-link :to="`/admin/rights/${role.id}`">{{
             $strings.manageRights
           }}</router-link>
@@ -62,7 +62,7 @@ export default {
   components: { BlogButton, BlogConfirmationDialog },
 
   computed: {
-    ...mapGetters(["roles"])
+    ...mapGetters(["roles", "user"])
   },
 
   methods: {

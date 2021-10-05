@@ -264,5 +264,9 @@ export default {
         rule.id === payload.id ? { ...rule, ...payload } : rule
       )
     );
+  },
+
+  setRoleRights: (state, { roleRights }) => {
+    Vue.set(state, "roleRights", roleRights);
   }
 };

@@ -51,5 +51,6 @@ export default {
   progress: 0,
   showProgressBar: false,
   sessToken: "",
-  authToken: ""
+  authToken: "",
+  roleRights: []
 };

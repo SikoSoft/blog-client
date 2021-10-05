@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       rights,
-      available: ["settings", "roles"]
+      available: ["settings", "roles", "rights"]
     };
   },
 

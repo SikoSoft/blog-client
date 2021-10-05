@@ -3,10 +3,8 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
 export default {
-  name: "admin-tag-rights",
+  name: "admin-tag-rights"
 };
 </script>
 

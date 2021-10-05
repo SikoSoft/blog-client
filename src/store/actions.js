@@ -554,5 +554,20 @@ export default {
           resolve();
         });
     });
+  },
+
+  getRoleRights: ({ state, commit }) => {
+    if (state.roleRights.length) {
+      return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+      fetch(state.api.getRoleRights.href, {})
+        .then(result => result.json())
+        .then(roleRights => {
+          commit("setRoleRights", { roleRights });
+          resolve();
+        });
+    });
   }
 };
