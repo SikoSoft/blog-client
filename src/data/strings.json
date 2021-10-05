@@ -48,6 +48,8 @@
   "manageRights": "Manage rights",
   "confirmDeleteRole": "Are you sure you would like to delete this role?",
   "roleDeleted": "The role has been deleted.",
+  "tagRights": "Tag rights",
+  "rolesPermittedAccess": "Roles that are permitted access",
   "pleaseEnterYourName": "Please enter your name",
   "pleaseEnterAMessage": "Please enter a message",
   "accessDenied": "Access denied",
