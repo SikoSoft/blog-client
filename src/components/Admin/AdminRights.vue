@@ -2,9 +2,13 @@
   <div class="admin-rights">
     <select @change="changeRole">
       <option value="0">{{ $strings.selectARole }}</option>
-      <option v-for="role in roles" :key="role.id" :value="role.id">{{
-        role.name
-      }}</option>
+      <option
+        v-for="r in roles"
+        :key="r.id"
+        :value="r.id"
+        :selected="r.id === role"
+        >{{ r.name }}</option
+      >
     </select>
 
     <div v-if="role">
@@ -20,43 +24,73 @@
           <td>
             <blog-button
               destroy
-              :action="deleteRight"
+              :action="
+                () => {
+                  showDeleteRightDialog(right.action);
+                }
+              "
               :text="$strings.deleteRight"
             />
           </td>
         </tr>
       </table>
 
-      <select v-model="newRight">
-        <option>{{ $strings.selectARight }}</option>
+      <select v-model="newAction">
+        <option :selected="!newAction" value="">{{
+          $strings.selectARight
+        }}</option>
         <optgroup
           v-for="groupName in Object.keys(rights)"
           :key="groupName"
           :label="groupName"
         >
           <option
-            v-for="right in rights[groupName]"
-            :key="right"
-            :value="right"
-            >{{ right }}</option
+            v-for="action in Object.keys(rights[groupName])"
+            :key="action"
+            :value="action"
+            :disabled="
+              roleRights.filter(right => right.action === action).length > 0
+            "
+            >{{ rights[groupName][action] }}</option
           >
         </optgroup>
       </select>
       <blog-button create :action="addRight" :text="$strings.addRight" />
+
+      <blog-confirmation-dialog
+        :title="$strings.deleteRight"
+        :message="$strings.confirmDeleteRight"
+        :isOpen="deleteDialogIsOpen"
+      >
+        <blog-button
+          destroy
+          :text="$strings.yes"
+          :action="
+            () => {
+              deleteRight();
+            }
+          "
+        />
+        <blog-button :text="$strings.no" :action="hideDeleteDialog" />
+      </blog-confirmation-dialog>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 import rights from "@/data/rights.json";
 
 import BlogButton from "@/components/BlogButton";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 
 export default {
   name: "admin-rights",
 
   components: {
-    BlogButton
+    BlogButton,
+    BlogConfirmationDialog
   },
 
   props: ["role"],
@@ -64,7 +98,9 @@ export default {
   data() {
     return {
       rights,
-      newRight: ""
+      newAction: "",
+      action: "",
+      deleteDialogIsOpen: false
     };
   },
 
@@ -87,15 +123,41 @@ export default {
   },
 
   methods: {
+    ...mapActions(["addRoleRight", "deleteRoleRight"]),
+
     changeRole(e) {
       if (parseInt(e.target.value) !== 0) {
         this.$router.push({ path: `/admin/rights/${e.target.value}` });
       }
     },
 
-    deleteRight() {},
+    showDeleteRightDialog(action) {
+      console.log("deleteRight", action);
+      this.action = action;
+      this.deleteDialogIsOpen = true;
+    },
 
-    addRight() {}
+    deleteRight() {
+      console.log("deleteRight", this.role, this.action);
+      this.deleteRoleRight({ role: this.role, action: this.action }).then(
+        () => {
+          this.deleteDialogIsOpen = false;
+        }
+      );
+    },
+
+    hideDeleteDialog() {
+      this.deleteDialogIsOpen = false;
+    },
+
+    addRight() {
+      this.addRoleRight({
+        role: this.role,
+        action: this.newAction
+      }).then(() => {
+        this.newAction = "";
+      });
+    }
   }
 };
 </script>

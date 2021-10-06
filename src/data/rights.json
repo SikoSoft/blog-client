@@ -2,7 +2,8 @@
   "Entries": {
     "create_entry": "Create entry",
     "update_entry": "Update entry",
-    "delete_entry": "Delete entry"
+    "delete_entry": "Delete entry",
+    "view_draft": "View draft"
   },
   "Comments": {
     "view_unpublished_comment": "View unpublished comments",

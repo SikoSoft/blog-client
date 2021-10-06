@@ -556,16 +556,57 @@ export default {
     });
   },
 
-  getRoleRights: ({ state, commit }) => {
+  getRoleRights: ({ state, commit, getters }) => {
     if (state.roleRights.length) {
       return Promise.resolve();
     }
 
     return new Promise(resolve => {
-      fetch(state.api.getRoleRights.href, {})
+      fetch(state.api.getRoleRights.href, {
+        method: state.api.getRoleRights.method,
+        headers: getters.headers
+      })
         .then(result => result.json())
         .then(roleRights => {
           commit("setRoleRights", { roleRights });
+          resolve();
+        });
+    });
+  },
+
+  addRoleRight: ({ state, commit, getters }, { role, action }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.addRoleRight.href
+          .replace("{role}", role)
+          .replace("{action}", action),
+        {
+          method: state.api.addRoleRight.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("addRoleRight", { role, action });
+          resolve();
+        });
+    });
+  },
+
+  deleteRoleRight: ({ state, commit, getters }, { role, action }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.deleteRoleRight.href
+          .replace("{role}", role)
+          .replace("{action}", action),
+        {
+          method: state.api.deleteRoleRight.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteRoleRight", { role, action });
           resolve();
         });
     });
