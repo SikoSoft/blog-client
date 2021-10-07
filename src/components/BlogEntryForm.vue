@@ -5,9 +5,7 @@
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
           <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
-            {{
-            draft.title
-            }}
+            {{ draft.title }}
           </option>
         </optgroup>
       </select>
@@ -45,13 +43,28 @@
       </div>
     </div>
     <div>
-      <blog-tag-manager :tags="tags" :api="api" />
+      <blog-tag-manager :tags="tags" />
     </div>
     <div>
       <template v-if="!entryId || entry.public === 1">
-        <blog-button create v-if="entry.id" :text="$strings.updateEntry" :action="submitForm" />
-        <blog-button create v-else :text="$strings.postEntry" :action="submitForm" />
-        <blog-button create v-if="!entry.id" :text="$strings.saveAsDraft" :action="saveDraft" />
+        <blog-button
+          create
+          v-if="entry.id"
+          :text="$strings.updateEntry"
+          :action="submitForm"
+        />
+        <blog-button
+          create
+          v-else
+          :text="$strings.postEntry"
+          :action="submitForm"
+        />
+        <blog-button
+          create
+          v-if="!entry.id"
+          :text="$strings.saveAsDraft"
+          :action="saveDraft"
+        />
         <blog-button
           destroy
           type="button"
@@ -61,7 +74,11 @@
         />
       </template>
       <template v-else>
-        <blog-button create :text="$strings.publishDraft" :action="publishDraft" />
+        <blog-button
+          create
+          :text="$strings.publishDraft"
+          :action="publishDraft"
+        />
         <blog-button create :text="$strings.updateDraft" :action="saveDraft" />
         <blog-button
           destroy
