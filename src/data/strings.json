@@ -55,7 +55,7 @@
   "rightDeleted": "The right has been deleted.",
   "confirmDeleteRole": "Are you sure you would like to delete this role?",
   "roleDeleted": "The role has been deleted.",
-  "tagRights": "Tag rights",
+  "tagPolicies": "Tag policies",
   "rolesPermittedAccess": "Roles that are permitted access",
   "pleaseEnterYourName": "Please enter your name",
   "pleaseEnterAMessage": "Please enter a message",
@@ -87,6 +87,7 @@
   "filterRuleAdded": "The rule has been added.",
   "filterRuleUpdated": "The rule has been updated.",
   "filterRuleDeleted": "The rule has been deleted.",
+  "rolesWithTagAccess": "The following roles have access for the tag: {tag}",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

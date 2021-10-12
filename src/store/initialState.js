@@ -52,5 +52,6 @@ export default {
   showProgressBar: false,
   sessToken: "",
   authToken: "",
-  roleRights: []
+  roleRights: [],
+  tagRoles: []
 };

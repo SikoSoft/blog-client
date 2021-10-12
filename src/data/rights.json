@@ -15,6 +15,7 @@
     "manage_settings": "Manage settings",
     "manage_roles": "Manage roles",
     "manage_rights": "Manage rights",
-    "manage_tokens": "Manage tokens"
+    "manage_tokens": "Manage tokens",
+    "manage_tag_policies": "Manage tag policies"
   }
 }

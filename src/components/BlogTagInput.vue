@@ -4,7 +4,7 @@
       ref="tagInput"
       type="text"
       v-model="tag"
-      :placeholder="$strings.tags"
+      :placeholder="$strings.tag"
       @keydown="tagsKeyDown"
       @focus="tagsFocus"
       @blur="tagsBlur"
@@ -168,6 +168,7 @@ export default {
 
 .blog-tag-input {
   display: inline-block;
+  position: relative;
 
   input {
     width: 12rem;

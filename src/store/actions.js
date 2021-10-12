@@ -610,5 +610,59 @@ export default {
           resolve();
         });
     });
+  },
+
+  getTagRoles: ({ state, commit, getters }) => {
+    if (state.tagRoles.length) {
+      return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+      fetch(state.api.getTagRoles.href, {
+        method: state.api.getTagRoles.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(tagRoles => {
+          commit("setTagRoles", { tagRoles });
+          resolve();
+        });
+    });
+  },
+
+  addTagRole: ({ state, commit, getters }, { tag, role }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.addTagRole.href.replace("{tag}", tag).replace("{role}", role),
+        {
+          method: state.api.addTagRole.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("addTagRole", { tag, role });
+          resolve();
+        });
+    });
+  },
+
+  deleteTagRole: ({ state, commit, getters }, { tag, role }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.deleteTagRole.href
+          .replace("{tag}", tag)
+          .replace("{role}", role),
+        {
+          method: state.api.deleteTagRole.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteTagRole", { tag, role });
+          resolve();
+        });
+    });
   }
 };

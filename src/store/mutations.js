@@ -280,5 +280,21 @@ export default {
         right => right.role !== role || right.action !== action
       )
     ]);
+  },
+
+  setTagRoles: (state, { tagRoles }) => {
+    Vue.set(state, "tagRoles", tagRoles);
+  },
+
+  addTagRole: (state, { tag, role }) => {
+    Vue.set(state, "tagRoles", [...state.tagRoles, { tag, role }]);
+  },
+
+  deleteTagRole: (state, { tag, role }) => {
+    Vue.set(state, "tagRoles", [
+      ...state.tagRoles.filter(
+        policy => policy.tag !== tag || policy.role !== role
+      )
+    ]);
   }
 };

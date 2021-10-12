@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       rights,
-      available: ["settings", "roles", "rights"]
+      available: ["settings", "roles", "rights", "tag_policies"]
     };
   },
 
