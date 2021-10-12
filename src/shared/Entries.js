@@ -1,4 +1,4 @@
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 import BlogEntries from "@/components/BlogEntries.vue";
 
@@ -49,7 +49,7 @@ export default {
         this.$route.name === "entries" &&
         window.scrollY > this.windowYLoadNew &&
         !this.gettingEntries &&
-        !this.endOfEntries &&
+        !this.entries[this.type].end &&
         !this.gettingEntriesCoolingDown
       ) {
         this.loadEntries();
@@ -105,10 +105,10 @@ export default {
   },
 
   computed: {
+    ...mapState(["entries"]),
+
     ...mapGetters([
       "initialized",
-      "entries",
-      "endOfEntries",
       "entryFormIsOpen",
       "settings"
     ]),
@@ -118,7 +118,7 @@ export default {
     },
 
     reversedEntries() {
-      return [...this.entries].reverse();
+      return [...this.entries[this.type].list].reverse();
     },
 
     path() {
