@@ -49,7 +49,7 @@ export default {
         this.$route.name === "entries" &&
         window.scrollY > this.windowYLoadNew &&
         !this.gettingEntries &&
-        !this.entries[this.type].end &&
+        !this.list.end &&
         !this.gettingEntriesCoolingDown
       ) {
         this.loadEntries();
@@ -86,7 +86,7 @@ export default {
         return;
       }
       this.gettingEntries = true;
-      this[this.entries.length ? "getMoreEntries" : "getEntries"]({
+      this[this.list.length ? "getMoreEntries" : "getEntries"]({
         ...(this.tag && { tag: this.tag }),
         ...(this.filterId && { filterId: this.filterId }),
         type: this.type
@@ -107,18 +107,34 @@ export default {
   computed: {
     ...mapState(["entries"]),
 
-    ...mapGetters([
-      "initialized",
-      "entryFormIsOpen",
-      "settings"
-    ]),
+    ...mapGetters(["initialized", "entryFormIsOpen", "settings"]),
 
     title() {
       return process.env.VUE_APP_SITE_NAME;
     },
 
+    list() {
+      let entriesList = [];
+      switch (this.type) {
+        case "tag":
+          entriesList = this.entries[this.type].list[this.tag]
+            ? this.entries[this.type].list[this.tag]
+            : [];
+          break;
+        case "filter":
+          entriesList = this.entries[this.type].list[this.filter]
+            ? this.entries[this.type].list[this.filter]
+            : [];
+          break;
+        default:
+          entriesList = this.entries[this.type].list;
+          break;
+      }
+      return entriesList;
+    },
+
     reversedEntries() {
-      return [...this.entries[this.type].list].reverse();
+      return [...this.list].reverse();
     },
 
     path() {
