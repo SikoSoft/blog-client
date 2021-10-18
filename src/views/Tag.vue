@@ -1,7 +1,7 @@
 <template>
   <div class="tag">
     <blog-tag :tag="tag" />
-    <blog-entries :type="type" :entries="entries" />
+    <blog-entries :type="type" :entries="list" />
   </div>
 </template>
 
@@ -25,9 +25,11 @@ export default {
       return this.$route.params.tag;
     },
 
+    /*
     entries() {
       return this.$store.getters.entriesByTag(this.tag);
     },
+    */
 
     title() {
       return this.$strings.entriesWithTag.replace("{tag}", this.tag);

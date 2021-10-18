@@ -264,5 +264,37 @@ export default {
         rule.id === payload.id ? { ...rule, ...payload } : rule
       )
     );
+  },
+
+  setRoleRights: (state, { roleRights }) => {
+    Vue.set(state, "roleRights", roleRights);
+  },
+
+  addRoleRight: (state, { role, action }) => {
+    Vue.set(state, "roleRights", [...state.roleRights, { role, action }]);
+  },
+
+  deleteRoleRight: (state, { role, action }) => {
+    Vue.set(state, "roleRights", [
+      ...state.roleRights.filter(
+        right => right.role !== role || right.action !== action
+      )
+    ]);
+  },
+
+  setTagRoles: (state, { tagRoles }) => {
+    Vue.set(state, "tagRoles", tagRoles);
+  },
+
+  addTagRole: (state, { tag, role }) => {
+    Vue.set(state, "tagRoles", [...state.tagRoles, { tag, role }]);
+  },
+
+  deleteTagRole: (state, { tag, role }) => {
+    Vue.set(state, "tagRoles", [
+      ...state.tagRoles.filter(
+        policy => policy.tag !== tag || policy.role !== role
+      )
+    ]);
   }
 };

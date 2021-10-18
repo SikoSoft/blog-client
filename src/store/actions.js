@@ -554,5 +554,115 @@ export default {
           resolve();
         });
     });
+  },
+
+  getRoleRights: ({ state, commit, getters }) => {
+    if (state.roleRights.length) {
+      return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+      fetch(state.api.getRoleRights.href, {
+        method: state.api.getRoleRights.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(roleRights => {
+          commit("setRoleRights", { roleRights });
+          resolve();
+        });
+    });
+  },
+
+  addRoleRight: ({ state, commit, getters }, { role, action }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.addRoleRight.href
+          .replace("{role}", role)
+          .replace("{action}", action),
+        {
+          method: state.api.addRoleRight.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("addRoleRight", { role, action });
+          resolve();
+        });
+    });
+  },
+
+  deleteRoleRight: ({ state, commit, getters }, { role, action }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.deleteRoleRight.href
+          .replace("{role}", role)
+          .replace("{action}", action),
+        {
+          method: state.api.deleteRoleRight.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteRoleRight", { role, action });
+          resolve();
+        });
+    });
+  },
+
+  getTagRoles: ({ state, commit, getters }) => {
+    if (state.tagRoles.length) {
+      return Promise.resolve();
+    }
+
+    return new Promise(resolve => {
+      fetch(state.api.getTagRoles.href, {
+        method: state.api.getTagRoles.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(tagRoles => {
+          commit("setTagRoles", { tagRoles });
+          resolve();
+        });
+    });
+  },
+
+  addTagRole: ({ state, commit, getters }, { tag, role }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.addTagRole.href.replace("{tag}", tag).replace("{role}", role),
+        {
+          method: state.api.addTagRole.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("addTagRole", { tag, role });
+          resolve();
+        });
+    });
+  },
+
+  deleteTagRole: ({ state, commit, getters }, { tag, role }) => {
+    return new Promise(resolve => {
+      fetch(
+        state.api.deleteTagRole.href
+          .replace("{tag}", tag)
+          .replace("{role}", role),
+        {
+          method: state.api.deleteTagRole.method,
+          headers: getters.headers
+        }
+      )
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteTagRole", { tag, role });
+          resolve();
+        });
+    });
   }
 };

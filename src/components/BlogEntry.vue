@@ -45,7 +45,7 @@
       <div class="blog-entry__comments" v-if="showComments">
         <blog-comment-form
           :entry="entry"
-          v-if="user.rights.includes('post_comments')"
+          v-if="user.rights.includes('post_comment')"
         />
         <blog-comments @commentsLoaded="commentsLoaded" :entry="entry" />
       </div>

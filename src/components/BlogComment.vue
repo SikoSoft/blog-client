@@ -60,8 +60,8 @@ export default {
 
     showCheckBox() {
       if (
-        (this.user.rights.includes("publish_comments") && this.public === 0) ||
-        this.user.rights.includes("delete_comments")
+        (this.user.rights.includes("publish_comment") && this.public === 0) ||
+        this.user.rights.includes("delete_comment")
       ) {
         return true;
       }

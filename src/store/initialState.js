@@ -49,5 +49,9 @@ export default {
   filters: [],
   filterRules: [],
   progress: 0,
-  showProgressBar: false
+  showProgressBar: false,
+  sessToken: "",
+  authToken: "",
+  roleRights: [],
+  tagRoles: []
 };

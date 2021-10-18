@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <blog-entries v-if="initialized" :type="type" :entries="entries" />
+    <blog-entries
+      v-if="initialized"
+      :type="type"
+      :entries="entries[type].list"
+    />
   </div>
 </template>
 

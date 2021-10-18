@@ -2,7 +2,8 @@
   "Entries": {
     "create_entry": "Create entry",
     "update_entry": "Update entry",
-    "delete_entry": "Delete entry"
+    "delete_entry": "Delete entry",
+    "view_draft": "View draft"
   },
   "Comments": {
     "view_unpublished_comment": "View unpublished comments",
@@ -14,6 +15,7 @@
     "manage_settings": "Manage settings",
     "manage_roles": "Manage roles",
     "manage_rights": "Manage rights",
-    "manage_tokens": "Manage tokens"
+    "manage_tokens": "Manage tokens",
+    "manage_tag_policies": "Manage tag policies"
   }
 }

@@ -1,17 +1,17 @@
 <template>
-  <div class="settings">
-    <admin-settings v-if="initialized" v-bind="settings" />
+  <div class="roles">
+    <admin-roles v-if="initialized" v-bind="roles" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import AdminSettings from "@/components/Admin/AdminSettings.vue";
+import AdminRoles from "@/components/Admin/AdminRoles.vue";
 
 export default {
-  name: "settings",
+  name: "roles",
 
-  components: { AdminSettings },
+  components: { AdminRoles },
 
   mounted() {
     this.update();
@@ -24,8 +24,8 @@ export default {
   computed: {
     ...mapGetters(["initialized", "user"]),
 
-    settings() {
-      return this.$store.getters.settings;
+    roles() {
+      return this.$store.getters.roles;
     }
   },
 
@@ -36,16 +36,16 @@ export default {
       this.initialize().then(() => {
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/settings", label: this.$strings.settings }
+          { href: "/admin/roles", label: this.$strings.roles }
         ]);
-        this.setTitle(this.$strings.settings);
+        this.setTitle(this.$strings.roles);
       });
     }
   },
 
   watch: {
     initialized() {
-      if (!this.user.rights.includes("manage_settings")) {
+      if (!this.user.rights.includes("manage_roles")) {
         this.$router.push({ path: "/access_denied" });
       }
     }

@@ -6,6 +6,9 @@ import Tags from "./views/Tags.vue";
 import Tag from "./views/Tag.vue";
 import Token from "./views/Token.vue";
 import Settings from "./views/Settings.vue";
+import Roles from "./views/Roles.vue";
+import Rights from "./views/Rights.vue";
+import TagPolicies from "./views/TagPolicies.vue";
 import Tokens from "./views/Tokens.vue";
 import AccessDenied from "./views/AccessDenied.vue";
 import Admin from "./views/Admin.vue";
@@ -66,6 +69,16 @@ export default new Router({
       component: Settings
     },
     {
+      path: "/admin/roles",
+      name: "roles",
+      component: Roles
+    },
+    {
+      path: "/admin/rights/:role?",
+      name: "rights",
+      component: Rights
+    },
+    {
       path: "/admin/tokens",
       name: "tokens",
       component: Tokens
@@ -76,7 +89,12 @@ export default new Router({
       component: Filters
     },
     {
-      path: "/accessDenied",
+      path: "/admin/tag_policies/:tag?",
+      name: "tag-policies",
+      component: TagPolicies
+    },
+    {
+      path: "/access_denied",
       name: "access-denied",
       component: AccessDenied
     },

@@ -1,31 +1,12 @@
 <template>
   <div class="blog-tag-manager">
     <div class="blog-tag-manager__new">
-      <div class="blog-tag-manager__input-wrapper">
-        <input
-          ref="tagInput"
-          type="text"
-          v-model="tag"
-          :placeholder="$strings.tags"
-          @keydown="tagsKeyDown"
-          @focus="tagsFocus"
-          @blur="tagsBlur"
-        />
-        <blog-button v-if="tagIsValid(tag)" :action="addTag" text="+" />
-        <ul class="blog-tag-manager__auto-list" v-if="tagsFocused && autoTags.length">
-          <li
-            class="blog-tag-manager__auto-list-item"
-            :class="{
-              'blog-tag-manager__auto-list-item--selected':
-                autoTag === autoTagSelected
-            }"
-            v-for="autoTag in autoTags"
-            :key="`autoTag-${autoTag}`"
-            @mousedown="tag = autoTag"
-            @mouseover="autoTagSelected = autoTag"
-          >{{ autoTag }}</li>
-        </ul>
-      </div>
+      <blog-tag-input
+        :tagsToFilter="tags"
+        @tagChanged="tagChanged"
+        @tagEntered="addTag"
+      />
+      <blog-button v-if="tagIsValid(tag)" :action="addTag" text="+" />
     </div>
     <ul class="blog-tag-manager__list">
       <li v-for="tag in tags" :key="`tags-${tag}`">
@@ -37,12 +18,15 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
+import BlogTagInput from "@/components/BlogTagInput.vue";
 import BlogButton from "@/components/BlogButton.vue";
 
 export default {
   name: "blog-tag-manager",
 
-  components: { BlogButton },
+  components: { BlogTagInput, BlogButton },
 
   data() {
     return {
@@ -56,72 +40,15 @@ export default {
     };
   },
 
-  props: ["tags", "api"],
+  props: ["tags"],
+
+  computed: {
+    ...mapGetters(["api"])
+  },
 
   methods: {
-    tagsKeyDown(e) {
-      switch (e.which) {
-        case 13:
-          if (this.autoTagSelected && this.autoTagSelected !== this.tag) {
-            this.tag = this.autoTagSelected;
-          } else if (this.tagIsValid(this.tag)) {
-            this.addTag();
-          }
-          e.preventDefault();
-          break;
-        case 38:
-          this.autoTagUp();
-          break;
-        case 40:
-          this.autoTagDown();
-          break;
-        default:
-          if (this.tagsTimeout) {
-            clearTimeout(this.tagsTimeout);
-          }
-          this.tagsTimeout = setTimeout(() => {
-            this.getTags();
-          }, this.tagsCoolDown);
-      }
-    },
-
-    autoTagUp() {
-      if (!this.autoTags) {
-        return;
-      }
-      if (this.autoTagSelected === "") {
-        this.autoTagSelected = this.autoTags[this.autoTags.length - 1];
-      } else {
-        let index = this.autoTags.indexOf(this.autoTagSelected) - 1;
-        if (index < 0) {
-          index = this.autoTags.length - 1;
-        }
-        this.autoTagSelected = this.autoTags[index];
-      }
-    },
-
-    autoTagDown() {
-      if (!this.autoTags) {
-        return;
-      }
-      if (this.autoTagSelected === "") {
-        this.autoTagSelected = this.autoTags[0];
-      } else {
-        let index = this.autoTags.indexOf(this.autoTagSelected) + 1;
-        const max = this.autoTags.length - 1;
-        if (index > max) {
-          index = 0;
-        }
-        this.autoTagSelected = this.autoTags[index];
-      }
-    },
-
-    tagsFocus() {
-      this.tagsFocused = true;
-    },
-
-    tagsBlur() {
-      this.tagsFocused = false;
+    tagChanged({ tag }) {
+      this.tag = tag;
     },
 
     tagIsValid(tag) {
@@ -132,25 +59,12 @@ export default {
     },
 
     addTag() {
-      this.$parent.setTags([...this.$parent.tags, this.tag.toLowerCase()]);
+      this.$parent.setTags([...this.$parent.tags, this.tag]);
       this.tag = "";
-      this.autoTags = this.autoTags.filter(tag => !this.tags.includes(tag));
-      this.autoTagSelected = "";
     },
 
     deleteTag(tag) {
       this.$parent.setTags(this.$parent.tags.filter(t => t != tag));
-    },
-
-    getTags() {
-      fetch(`${this.api.getTags.href}?tag=${encodeURIComponent(this.tag)}`, {
-        method: this.api.getTags.method,
-        headers: this.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          this.autoTags = json.tags.filter(tag => !this.tags.includes(tag));
-        });
     }
   }
 };
@@ -166,33 +80,12 @@ export default {
 
   &__new {
     margin-right: 1rem;
-  }
-
-  &__input-wrapper {
-    display: inline-block;
     position: relative;
-
-    input {
-      width: 12rem;
-    }
 
     button {
       position: absolute;
       top: 0;
       right: 0;
-    }
-
-    .blog-tag-manager__auto-list {
-      @include dropdown-list;
-
-      position: absolute;
-      z-index: 2;
-      top: calc(100% - 8px);
-      left: 0;
-
-      &-item {
-        @include dropdown-item;
-      }
     }
   }
 

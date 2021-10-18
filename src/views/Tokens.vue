@@ -39,7 +39,7 @@ export default {
   watch: {
     initialized() {
       if (!this.user.rights.includes("manage_tokens")) {
-        this.$router.push({ path: "/accessDenied" });
+        this.$router.push({ path: "/access_denied" });
       }
     }
   }
