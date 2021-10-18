@@ -3,7 +3,7 @@
     <admin-tag-policies
       v-if="initialized && tagRolesFetched"
       :tag="tag"
-      :tagRoles="tagRoles.filter(tagRole => tagRole.tag === tag)"
+      :tagRoles="tagRoles.filter((tagRole) => tagRole.tag === tag)"
     />
   </div>
 </template>
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       tagRolesFetching: false,
-      tagRolesFetched: false
+      tagRolesFetched: false,
     };
   },
 
@@ -39,7 +39,7 @@ export default {
 
     tag() {
       return this.$route.params.tag;
-    }
+    },
   },
 
   methods: {
@@ -49,7 +49,7 @@ export default {
       this.initialize().then(() => {
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
+          { href: "/admin/tag_policies", label: this.$strings.tagPolicies },
         ]);
         this.setTitle(this.$strings.tagPolicies);
         if (!this.tagRolesFetching) {
@@ -59,15 +59,15 @@ export default {
           });
         }
       });
-    }
+    },
   },
 
   watch: {
     initialized() {
       if (!this.user.rights.includes("manage_roles")) {
-        this.$router.push({ path: "/accessDenied" });
+        this.$router.push({ path: "/access_denied" });
       }
-    }
-  }
+    },
+  },
 };
 </script>

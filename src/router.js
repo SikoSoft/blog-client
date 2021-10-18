@@ -94,7 +94,7 @@ export default new Router({
       component: TagPolicies
     },
     {
-      path: "/accessDenied",
+      path: "/access_denied",
       name: "access-denied",
       component: AccessDenied
     },

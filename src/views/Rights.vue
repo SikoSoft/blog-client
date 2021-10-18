@@ -28,7 +28,7 @@ export default {
 
     role() {
       return parseInt(this.$route.params.role);
-    }
+    },
   },
 
   methods: {
@@ -36,27 +36,27 @@ export default {
       "initialize",
       "setBreadcrumbs",
       "setTitle",
-      "getRoleRights"
+      "getRoleRights",
     ]),
 
     update() {
       this.initialize().then(() => {
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/rights", label: this.$strings.rights }
+          { href: "/admin/rights", label: this.$strings.rights },
         ]);
         this.setTitle(this.$strings.rights);
         this.getRoleRights();
       });
-    }
+    },
   },
 
   watch: {
     initialized() {
       if (!this.user.rights.includes("manage_rights")) {
-        this.$router.push({ path: "/accessDenied" });
+        this.$router.push({ path: "/access_denied" });
       }
-    }
-  }
+    },
+  },
 };
 </script>
