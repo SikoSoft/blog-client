@@ -18,7 +18,7 @@ export default {
     this.initialize().then(() => {
       this.setBreadcrumbs([
         { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/tokens", label: this.$strings.tokens },
+        { href: "/admin/tokens", label: this.$strings.tokens }
       ]);
       this.setTitle(this.$strings.tokens);
     });
@@ -29,11 +29,11 @@ export default {
 
     settings() {
       return this.$store.getters.tokens;
-    },
+    }
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
   },
 
   watch: {
@@ -41,7 +41,7 @@ export default {
       if (!this.user.rights.includes("manage_tokens")) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>

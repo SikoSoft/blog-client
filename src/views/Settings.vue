@@ -26,7 +26,7 @@ export default {
 
     settings() {
       return this.$store.getters.settings;
-    },
+    }
   },
 
   methods: {
@@ -36,11 +36,11 @@ export default {
       this.initialize().then(() => {
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/settings", label: this.$strings.settings },
+          { href: "/admin/settings", label: this.$strings.settings }
         ]);
         this.setTitle(this.$strings.settings);
       });
-    },
+    }
   },
 
   watch: {
@@ -48,7 +48,7 @@ export default {
       if (!this.user.rights.includes("manage_settings")) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>
