@@ -670,7 +670,8 @@ export default {
     return new Promise(resolve => {
       fetch(state.api.addRole.href, {
         method: state.api.addRole.method,
-        headers: getters.headers
+        headers: getters.headers,
+        body: JSON.stringify({ name })
       })
         .then(result => result.json())
         .then(({ id }) => {
@@ -682,7 +683,7 @@ export default {
 
   deleteRole: ({ state, commit, getters }, { id }) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteRole.href, {
+      fetch(state.api.deleteRole.href.replace("{role}", id), {
         method: state.api.deleteRole.method,
         headers: getters.headers
       })

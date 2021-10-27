@@ -59,7 +59,8 @@
         :text="$strings.yes"
         :action="
           () => {
-            reqDeleteRole({ id });
+            deleteRole({ id: roleToDelete });
+            hideDeleteDialog();
           }
         "
       />
@@ -81,14 +82,14 @@ export default {
     return {
       deleteDialogIsOpen: false,
       newRoleName: "",
-      roleToDelete: -1,
+      roleToDelete: -1
     };
   },
 
   components: { BlogButton, BlogConfirmationDialog },
 
   computed: {
-    ...mapGetters(["roles", "user", "settings"]),
+    ...mapGetters(["roles", "user", "settings"])
   },
 
   methods: {
@@ -111,8 +112,8 @@ export default {
 
     showDeleteDialog() {
       this.deleteDialogIsOpen = true;
-    },
-  },
+    }
+  }
 };
 </script>
 

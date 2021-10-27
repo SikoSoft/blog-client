@@ -1,7 +1,12 @@
 <template>
   <div class="blog-hero">
-    <div class="blog-hero__image" :style="{ 'background-size': `auto ${imgSize}px` }"></div>
-    <h1 class="blog-hero__heading" :style="{ opacity: headingOpacity }">{{ title }}</h1>
+    <div
+      class="blog-hero__image"
+      :style="{ 'background-size': `auto ${imgSize}px` }"
+    ></div>
+    <h1 class="blog-hero__heading" :style="{ opacity: headingOpacity }">
+      {{ title }}
+    </h1>
     <div class="blog-hero__caption"></div>
   </div>
 </template>
@@ -49,7 +54,7 @@ export default {
     opacity: 0.2;
     height: 100%;
     width: 100%;
-    background-image: url("http://sikosoft.com/img/pepperSpray.png");
+    background-image: url("https://sikosoft.com/img/pepperSpray.png");
     background-position: right top;
     background-size: auto 1000px;
     background-repeat: no-repeat;
