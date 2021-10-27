@@ -15,12 +15,36 @@
             $strings.manageRights
           }}</router-link>
         </td>
-        <td>
+        <td
+          v-if="
+            [settings.role_admin, settings.role_guest].indexOf(role.id) === -1
+          "
+        >
           <blog-button
             destroy
-            :action="showDeleteDialog"
+            :action="
+              () => {
+                reqDeleteRole(role.id);
+              }
+            "
             :text="$strings.deleteRole"
           />
+        </td>
+      </tr>
+    </table>
+
+    <table>
+      <tr>
+        <td>
+          <input
+            type="text"
+            :placeholder="$strings.roleName"
+            v-model="newRoleName"
+          />
+        </td>
+
+        <td>
+          <blog-button create :action="reqAddRole" :text="$strings.addRole" />
         </td>
       </tr>
     </table>
@@ -35,7 +59,7 @@
         :text="$strings.yes"
         :action="
           () => {
-            deleteRole({ filterId, id });
+            reqDeleteRole({ id });
           }
         "
       />
@@ -45,7 +69,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
@@ -55,18 +79,31 @@ export default {
 
   data() {
     return {
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      newRoleName: "",
+      roleToDelete: -1,
     };
   },
 
   components: { BlogButton, BlogConfirmationDialog },
 
   computed: {
-    ...mapGetters(["roles", "user"])
+    ...mapGetters(["roles", "user", "settings"]),
   },
 
   methods: {
-    deleteRole() {},
+    ...mapActions(["addRole", "deleteRole", "updateRole"]),
+
+    reqAddRole() {
+      this.addRole({ name: this.newRoleName }).then(() => {
+        this.newRoleName = "";
+      });
+    },
+
+    reqDeleteRole(id) {
+      this.roleToDelete = id;
+      this.showDeleteDialog();
+    },
 
     hideDeleteDialog() {
       this.deleteDialogIsOpen = false;
@@ -74,8 +111,8 @@ export default {
 
     showDeleteDialog() {
       this.deleteDialogIsOpen = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

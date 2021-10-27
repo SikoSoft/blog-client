@@ -88,6 +88,7 @@
   "filterRuleUpdated": "The rule has been updated.",
   "filterRuleDeleted": "The rule has been deleted.",
   "rolesWithTagAccess": "The following roles have access for the tag: {tag}",
+  "addRole": "Add role",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

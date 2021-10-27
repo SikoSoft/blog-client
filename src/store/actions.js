@@ -664,5 +664,33 @@ export default {
           resolve();
         });
     });
+  },
+
+  addRole: ({ state, commit, getters }, { name }) => {
+    return new Promise(resolve => {
+      fetch(state.api.addRole.href, {
+        method: state.api.addRole.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(({ id }) => {
+          commit("addRole", { id, name });
+          resolve();
+        });
+    });
+  },
+
+  deleteRole: ({ state, commit, getters }, { id }) => {
+    return new Promise(resolve => {
+      fetch(state.api.deleteRole.href, {
+        method: state.api.deleteRole.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteRole", { id });
+          resolve();
+        });
+    });
   }
 };
