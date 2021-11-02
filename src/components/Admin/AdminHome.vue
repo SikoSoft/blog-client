@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       rights,
-      available: ["settings", "roles", "rights", "tag_policies"],
+      available: ["settings", "roles", "rights", "tag_policies", "filters"]
     };
   },
 
@@ -29,10 +29,10 @@ export default {
     ...mapGetters(["user"]),
 
     tools() {
-      return this.available.filter((tool) =>
+      return this.available.filter(tool =>
         this.user.rights.includes(`manage_${tool}`)
       );
-    },
+    }
   },
 
   watch: {
@@ -40,8 +40,8 @@ export default {
       if (!this.tools) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
