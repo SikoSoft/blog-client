@@ -32,7 +32,6 @@ export default class imageHandler {
           this.insertToEditor(url);
         }
         if (this.setImage) {
-          console.log(this);
           this.setImage(url);
         }
       }
