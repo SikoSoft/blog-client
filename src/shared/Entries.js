@@ -21,7 +21,9 @@ export default {
     this.setTitle(this.title);
     this.initialize().then(() => {
       this.postInit().then(() => {
-        this.loadEntries();
+        if (!this.list.length) {
+          this.loadEntries();
+        }
       });
     });
     this.setBreadcrumbs([]);
@@ -49,7 +51,7 @@ export default {
         this.$route.name === "entries" &&
         window.scrollY > this.windowYLoadNew &&
         !this.gettingEntries &&
-        !this.list.end &&
+        !this.end &&
         !this.gettingEntriesCoolingDown
       ) {
         this.loadEntries();
@@ -151,6 +153,10 @@ export default {
 
     entryTops() {
       return this.$store.getters.entryTops(this.type);
+    },
+
+    end() {
+      return this.entries[this.type].end;
     }
   },
 
