@@ -5,6 +5,7 @@
       type="text"
       v-model="token"
       :placeholder="$strings.token"
+      ref="input"
     />
     <blog-button
       class="blog-token-handler__activate"
@@ -23,6 +24,12 @@ export default {
   name: "token-handler",
 
   components: { BlogButton },
+
+  mounted() {
+    if (this.$refs.input) {
+      this.$refs.input.focus();
+    }
+  },
 
   data() {
     return {
