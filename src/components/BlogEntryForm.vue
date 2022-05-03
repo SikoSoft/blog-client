@@ -384,6 +384,26 @@ export default {
             };
           }
         }
+      } else if (!this.editorSelectionPosition.top) {
+        const rects = this.editor.root.getClientRects();
+        if (rects.length > 0) {
+          this.editorSelectionPosition = {
+            top:
+              rects[0].top +
+              parseInt(
+                window
+                  .getComputedStyle(this.editor.root)
+                  .getPropertyValue("padding-top")
+              ),
+            left:
+              rects[0].left +
+              parseInt(
+                window
+                  .getComputedStyle(this.editor.root)
+                  .getPropertyValue("padding-left")
+              )
+          };
+        }
       }
     },
 
