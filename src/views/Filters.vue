@@ -24,11 +24,19 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized"])
+    ...mapGetters(["initialized", "user"])
   },
 
   methods: {
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
+  },
+
+  watch: {
+    initialized() {
+      if (!this.user.rights.includes("manage_filters")) {
+        this.$router.push({ path: "/access_denied" });
+      }
+    }
   }
 };
 </script>

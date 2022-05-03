@@ -132,13 +132,11 @@ export default {
     },
 
     showDeleteRightDialog(action) {
-      console.log("deleteRight", action);
       this.action = action;
       this.deleteDialogIsOpen = true;
     },
 
     deleteRight() {
-      console.log("deleteRight", this.role, this.action);
       this.deleteRoleRight({ role: this.role, action: this.action }).then(
         () => {
           this.deleteDialogIsOpen = false;

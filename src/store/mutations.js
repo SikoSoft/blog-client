@@ -296,5 +296,24 @@ export default {
         policy => policy.tag !== tag || policy.role !== role
       )
     ]);
+  },
+
+  addRole: (state, { id, name }) => {
+    Vue.set(state, "roles", [...state.roles, { id, name }]);
+  },
+
+  deleteRole: (state, { id }) => {
+    Vue.set(state, "roles", [...state.roles.filter(role => role.id !== id)]);
+  },
+
+  updateRole: (state, { id, name }) => {
+    Vue.set(state, "roles", [
+      ...state.roles.map(role => {
+        if (role.id === id) {
+          role.name = name;
+        }
+        return role;
+      })
+    ]);
   }
 };

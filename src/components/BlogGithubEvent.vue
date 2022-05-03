@@ -94,6 +94,8 @@ export default {
 
     url() {
       switch (this.type) {
+        case "CreateEvent":
+          return this.repoUrl;
         case "IssuesEvent":
           return this.payload.issue.html_url;
         case "IssueCommentEvent":

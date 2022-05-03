@@ -664,5 +664,49 @@ export default {
           resolve();
         });
     });
+  },
+
+  addRole: ({ state, commit, getters }, { name }) => {
+    return new Promise(resolve => {
+      fetch(state.api.addRole.href, {
+        method: state.api.addRole.method,
+        headers: getters.headers,
+        body: JSON.stringify({ name })
+      })
+        .then(result => result.json())
+        .then(({ id }) => {
+          commit("addRole", { id, name });
+          resolve();
+        });
+    });
+  },
+
+  deleteRole: ({ state, commit, getters }, { id }) => {
+    return new Promise(resolve => {
+      fetch(state.api.deleteRole.href.replace("{role}", id), {
+        method: state.api.deleteRole.method,
+        headers: getters.headers
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("deleteRole", { id });
+          resolve();
+        });
+    });
+  },
+
+  updateRole: ({ state, commit, getters }, { id, name }) => {
+    return new Promise(resolve => {
+      fetch(state.api.updateRole.href.replace("{role}", id), {
+        method: state.api.updateRole.method,
+        headers: getters.headers,
+        body: JSON.stringify({ name })
+      })
+        .then(result => result.json())
+        .then(() => {
+          commit("updateRole", { id });
+          resolve();
+        });
+    });
   }
 };

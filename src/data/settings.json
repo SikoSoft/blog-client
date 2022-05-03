@@ -1,4 +1,18 @@
 {
+  "Roles": [
+    {
+      "id": "role_admin",
+      "label": "Admin role",
+      "type": "list",
+      "listSource": "roles"
+    },
+    {
+      "id": "role_guest",
+      "label": "Guest role",
+      "type": "list",
+      "listSource": "roles"
+    }
+  ],
   "Comments": [
     {
       "id": "enable_comments",

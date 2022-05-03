@@ -67,13 +67,10 @@ export default {
     ...mapActions(["addTagRole", "deleteTagRole"]),
 
     tagChanged({ tag }) {
-      console.log("tagChanged", tag);
       this.$router.push({ path: `/admin/tag_policies/${tag}` });
     },
 
-    tagEntered() {
-      console.log("tagEntered");
-    },
+    tagEntered() {},
 
     addRole() {
       this.addTagRole({ tag: this.tag, role: this.role });

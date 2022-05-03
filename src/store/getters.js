@@ -97,5 +97,19 @@ export default {
 
   entriesFound: state => state.entriesFound,
 
-  entryTops: state => type => state.entries[type].top
+  entryTops: state => type => state.entries[type].top,
+
+  settingListOptions: state => type => {
+    let listOptions;
+    switch (type) {
+      case "roles":
+        listOptions = state.roles.map(role => ({
+          value: role.id,
+          label: role.name
+        }));
+        return listOptions;
+      default:
+        return [];
+    }
+  }
 };

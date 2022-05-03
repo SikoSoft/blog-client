@@ -19,7 +19,12 @@
         type="text"
         class="blog-entry-form__title"
         v-model="title"
-        @keyup="saveFormState"
+        @keyup="
+          e => {
+            updateNewId(e);
+            saveFormState();
+          }
+        "
         :placeholder="$strings.title"
       />
     </div>
@@ -316,6 +321,14 @@ export default {
     setTags(tags) {
       this.tags = tags;
       this.saveFormState();
+    },
+
+    updateNewId(e) {
+      const id = e.target.value
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+      this.newId = id;
     },
 
     saveFormState() {
