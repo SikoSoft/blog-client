@@ -34,7 +34,7 @@ export default {
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
-  api: {},
+  links: {},
   token: "",
   editMode: {},
   toasts: [],

@@ -141,8 +141,8 @@ export default {
     },
 
     getTags() {
-      fetch(`${this.api.getTags.href}?tag=${encodeURIComponent(this.tag)}`, {
-        method: this.api.getTags.method,
+      fetch(`${this.links.getTags.href}?tag=${encodeURIComponent(this.tag)}`, {
+        method: this.links.getTags.method,
         headers: this.headers
       })
         .then(response => response.json())

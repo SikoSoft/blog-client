@@ -13,7 +13,10 @@
           @keydown="handleLabelUpdate"
         />
       </div>
-      <div class="admin-filter__field" :class="{ 'admin-filter__field--gone': !showId }">
+      <div
+        class="admin-filter__field"
+        :class="{ 'admin-filter__field--gone': !showId }"
+      >
         <input
           class="admin-filter__input"
           :class="{
@@ -43,7 +46,11 @@
         <img class="admin-filter__image" :src="image" v-if="image" />
       </div>
       <div class="admin-filter__field admin-filter__delete" v-if="id">
-        <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
+        <blog-button
+          destroy
+          :text="$strings.delete"
+          :action="showDeleteDialog"
+        />
       </div>
     </div>
     <div class="admin-filter__rules">
@@ -100,7 +107,7 @@ export default {
       type: "filter",
       setProgress: this.setProgress,
       setImage: this.setImage,
-      uploadImage: this.api.uploadImage,
+      uploadImage: this.links.uploadImage,
       headers: this.headers
     });
   },

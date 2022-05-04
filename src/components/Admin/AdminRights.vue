@@ -139,7 +139,7 @@ export default {
     },
 
     deleteRight() {
-      this.apiRequest(this.right.api.delete).then(() => {
+      this.apiRequest(this.right.links.delete).then(() => {
         this.deleteDialogIsOpen = false;
         this.setRoleRights({
           roleRights: [

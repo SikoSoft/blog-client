@@ -31,8 +31,8 @@ export default {
     Vue.set(state, "roles", roles);
   },
 
-  setApi: (state, { api }) => {
-    Vue.set(state, "api", api);
+  setLinks: (state, { links }) => {
+    Vue.set(state, "links", links);
   },
 
   setSessToken: (state, { sessToken }) => {

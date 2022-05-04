@@ -30,11 +30,13 @@
         <a
           class="blog-comment-form__captcha-link"
           href="https://policies.google.com/privacy"
-        >{{ $strings.privacyPolicy }}</a>
+          >{{ $strings.privacyPolicy }}</a
+        >
         <a
           class="blog-comment-form__captcha-link"
           href="https://policies.google.com/terms"
-        >{{ $strings.termsOfService }}</a>
+          >{{ $strings.termsOfService }}</a
+        >
       </div>
     </div>
   </form>
@@ -139,8 +141,8 @@ export default {
         });
       } else {
         this.getCaptchaToken().then(captchaToken => {
-          fetch(this.entry.api.postComment.href, {
-            method: this.entry.api.postComment.method,
+          fetch(this.entry.links.postComment.href, {
+            method: this.entry.links.postComment.method,
             headers: this.headers,
             body: JSON.stringify({
               name: this.name,

@@ -115,7 +115,7 @@ export default {
         tags: this.tags,
         created: this.created,
         last_edited: this.last_edited,
-        api: this.api,
+        links: this.links,
         public: this.public
       };
     },

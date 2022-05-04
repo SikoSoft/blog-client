@@ -45,8 +45,8 @@ export default {
     ...mapActions(["initialize", "addToast"]),
 
     useToken(event) {
-      fetch(this.api.useToken.href, {
-        method: this.api.useToken.method,
+      fetch(this.links.useToken.href, {
+        method: this.links.useToken.method,
         headers: this.headers,
         body: JSON.stringify({ token: this.token })
       })

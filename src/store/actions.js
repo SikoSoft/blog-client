@@ -28,7 +28,7 @@ export default {
       .then(json => {
         commit("setUser", { user: { ...json.user } });
         commit("setRoles", { roles: json.roles });
-        commit("setApi", { api: json.api });
+        commit("setLinks", { links: json.links });
         commit("setSettings", { settings: json.settings });
         commit("setInitialized");
         commit("setLoading", { loading: false });
@@ -50,19 +50,19 @@ export default {
     let getUrl, getMethod;
     switch (type) {
       case "tag":
-        getUrl = state.api.getEntriesByTag.href.replace("{tag}", tag);
-        getMethod = state.api.getEntriesByTag.method;
+        getUrl = state.links.getEntriesByTag.href.replace("{tag}", tag);
+        getMethod = state.links.getEntriesByTag.method;
         break;
       case "filter":
-        getUrl = state.api.getEntriesByFilter.href.replace(
+        getUrl = state.links.getEntriesByFilter.href.replace(
           "{filter}",
           filterId
         );
-        getMethod = state.api.getEntriesByFilter.method;
+        getMethod = state.links.getEntriesByFilter.method;
         break;
       default:
-        getUrl = state.api.getEntries.href;
-        getMethod = state.api.getEntries.method;
+        getUrl = state.links.getEntries.href;
+        getMethod = state.links.getEntries.method;
     }
 
     getUrl += start > 0 ? `/${start}` : "";
@@ -105,8 +105,8 @@ export default {
     commit("setLoading", { loading: true });
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getEntry.href.replace("{id}", id), {
-        method: state.api.getEntry.method,
+      fetch(state.links.getEntry.href.replace("{id}", id), {
+        method: state.links.getEntry.method,
         headers: getters.headers
       })
         .then(response => response.json())
@@ -142,8 +142,8 @@ export default {
       return;
     }
 
-    fetch(state.api.getTags.href, {
-      method: state.api.getTags.method,
+    fetch(state.links.getTags.href, {
+      method: state.links.getTags.method,
       headers: getters.headers
     })
       .then(response => response.json())
@@ -197,7 +197,7 @@ export default {
       return Promise.resolve();
     }
 
-    const api = getters.entryById(entryId).api;
+    const api = getters.entryById(entryId).links;
 
     return new Promise((resolve, reject) => {
       fetch(api.getComments.href, {
@@ -228,8 +228,8 @@ export default {
   },
 
   publishComments({ state, commit, getters, dispatch }) {
-    fetch(state.api.publishComments.href, {
-      method: state.api.publishComments.method,
+    fetch(state.links.publishComments.href, {
+      method: state.links.publishComments.method,
       headers: getters.headers,
       body: JSON.stringify({ ids: state.selectedComments })
     })
@@ -246,8 +246,8 @@ export default {
   },
 
   deleteComments({ state, commit, dispatch, getters }) {
-    fetch(state.api.deleteComments.href, {
-      method: state.api.deleteComments.method,
+    fetch(state.links.deleteComments.href, {
+      method: state.links.deleteComments.method,
       headers: getters.headers,
       body: JSON.stringify({ ids: state.selectedComments })
     })
@@ -262,8 +262,8 @@ export default {
   },
 
   setSetting({ commit, state, getters }, { id, value }) {
-    fetch(state.api.saveSetting.href, {
-      method: state.api.saveSetting.method,
+    fetch(state.links.saveSetting.href, {
+      method: state.links.saveSetting.method,
       headers: getters.headers,
       body: JSON.stringify({ id, value })
     })
@@ -281,8 +281,8 @@ export default {
     commit("setLoading", { loading: true });
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getDrafts.href, {
-        method: state.api.getDrafts.method,
+      fetch(state.links.getDrafts.href, {
+        method: state.links.getDrafts.method,
         headers: getters.headers
       })
         .then(response => response.json())
@@ -301,8 +301,8 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getDraft.href.replace("{id}", id), {
-        method: state.api.getDraft.method,
+      fetch(state.links.getDraft.href.replace("{id}", id), {
+        method: state.links.getDraft.method,
         headers: getters.headers
       })
         .then(response => response.json())
@@ -327,7 +327,9 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getFilters.href, { method: state.api.getFilters.method })
+      fetch(state.links.getFilters.href, {
+        method: state.links.getFilters.method
+      })
         .then(response => response.json())
         .then(json => {
           commit("setFilters", { filters: json });
@@ -353,8 +355,8 @@ export default {
 
   deleteEntry: ({ state, commit, getters }, { id }) => {
     const entry = getters.entryById(id);
-    fetch(entry.api.delete.href, {
-      method: entry.api.delete.method,
+    fetch(entry.links.delete.href, {
+      method: entry.links.delete.method,
       headers: getters.headers
     })
       .then(response => response.json())
@@ -369,8 +371,8 @@ export default {
 
   deleteDraft: ({ commit, getters }, { id }) => {
     const draft = getters.draftById(id);
-    fetch(draft.api.delete.href, {
-      method: draft.api.delete.method,
+    fetch(draft.links.delete.href, {
+      method: draft.links.delete.method,
       headers: getters.headers
     })
       .then(response => response.json())
@@ -392,8 +394,8 @@ export default {
   },
 
   findEntries: ({ state, commit, getters }, { title }) => {
-    fetch(`${state.api.findEntry.href}?title=${title}`, {
-      method: state.api.findEntry.method,
+    fetch(`${state.links.findEntry.href}?title=${title}`, {
+      method: state.links.findEntry.method,
       headers: getters.headers
     })
       .then(result => result.json())
@@ -404,8 +406,8 @@ export default {
 
   updateFilter: ({ state, commit, getters, dispatch }, payload) => {
     return new Promise((resolve, reject) => {
-      fetch(state.api.updateFilter.href.replace("{filter}", payload.id), {
-        method: state.api.updateFilter.method,
+      fetch(state.links.updateFilter.href.replace("{filter}", payload.id), {
+        method: state.links.updateFilter.method,
         headers: getters.headers,
         body: JSON.stringify(payload)
       })
@@ -424,8 +426,8 @@ export default {
     { newId, label, image }
   ) => {
     return new Promise((resolve, reject) => {
-      fetch(state.api.newFilter.href, {
-        method: state.api.newFilter.method,
+      fetch(state.links.newFilter.href, {
+        method: state.links.newFilter.method,
         headers: getters.headers,
         body: JSON.stringify({ id: newId, label, image })
       })
@@ -441,8 +443,8 @@ export default {
 
   deleteFilter: ({ state, commit, getters, dispatch }, { id }) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteFilter.href.replace("{filter}", id), {
-        method: state.api.deleteFilter.method,
+      fetch(state.links.deleteFilter.href.replace("{filter}", id), {
+        method: state.links.deleteFilter.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -459,8 +461,8 @@ export default {
     { orderedFilters }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.saveFilterOrder.href, {
-        method: state.api.saveFilterOrder.method,
+      fetch(state.links.saveFilterOrder.href, {
+        method: state.links.saveFilterOrder.method,
         headers: getters.headers,
         body: JSON.stringify({ orderedFilters })
       })
@@ -475,8 +477,8 @@ export default {
 
   getFilterRules: ({ state, commit, getters }) => {
     return new Promise(resolve => {
-      fetch(state.api.getFilterRules.href, {
-        method: state.api.getFilterRules.method,
+      fetch(state.links.getFilterRules.href, {
+        method: state.links.getFilterRules.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -492,8 +494,8 @@ export default {
     { filterId, type, value, operator }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.addFilterRule.href.replace("{filterId}", filterId), {
-        method: state.api.addFilterRule.method,
+      fetch(state.links.addFilterRule.href.replace("{filterId}", filterId), {
+        method: state.links.addFilterRule.method,
         headers: getters.headers,
         body: JSON.stringify({ type, value, operator })
       })
@@ -517,8 +519,8 @@ export default {
     { filterId, id }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteFilterRule.href.replace("{filterId}", filterId), {
-        method: state.api.deleteFilterRule.method,
+      fetch(state.links.deleteFilterRule.href.replace("{filterId}", filterId), {
+        method: state.links.deleteFilterRule.method,
         headers: getters.headers,
         body: JSON.stringify({ id })
       })
@@ -536,8 +538,8 @@ export default {
     { filterId, id, type, value, operator }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.saveFilterRule.href.replace("{filterId}", filterId), {
-        method: state.api.saveFilterRule.method,
+      fetch(state.links.saveFilterRule.href.replace("{filterId}", filterId), {
+        method: state.links.saveFilterRule.method,
         headers: getters.headers,
         body: JSON.stringify({ id, type, value, operator })
       })
@@ -562,8 +564,8 @@ export default {
     }
 
     return new Promise(resolve => {
-      fetch(state.api.getRoleRights.href, {
-        method: state.api.getRoleRights.method,
+      fetch(state.links.getRoleRights.href, {
+        method: state.links.getRoleRights.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -577,11 +579,11 @@ export default {
   addRoleRight: ({ state, commit, getters }, { role, action }) => {
     return new Promise(resolve => {
       fetch(
-        state.api.addRoleRight.href
+        state.links.addRoleRight.href
           .replace("{role}", role)
           .replace("{action}", action),
         {
-          method: state.api.addRoleRight.method,
+          method: state.links.addRoleRight.method,
           headers: getters.headers
         }
       )
@@ -596,11 +598,11 @@ export default {
   deleteRoleRight: ({ state, commit, getters }, { role, action }) => {
     return new Promise(resolve => {
       fetch(
-        state.api.deleteRoleRight.href
+        state.links.deleteRoleRight.href
           .replace("{role}", role)
           .replace("{action}", action),
         {
-          method: state.api.deleteRoleRight.method,
+          method: state.links.deleteRoleRight.method,
           headers: getters.headers
         }
       )
@@ -618,8 +620,8 @@ export default {
     }
 
     return new Promise(resolve => {
-      fetch(state.api.getTagRoles.href, {
-        method: state.api.getTagRoles.method,
+      fetch(state.links.getTagRoles.href, {
+        method: state.links.getTagRoles.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -633,9 +635,11 @@ export default {
   addTagRole: ({ state, commit, getters }, { tag, role }) => {
     return new Promise(resolve => {
       fetch(
-        state.api.addTagRole.href.replace("{tag}", tag).replace("{role}", role),
+        state.links.addTagRole.href
+          .replace("{tag}", tag)
+          .replace("{role}", role),
         {
-          method: state.api.addTagRole.method,
+          method: state.links.addTagRole.method,
           headers: getters.headers
         }
       )
@@ -650,11 +654,11 @@ export default {
   deleteTagRole: ({ state, commit, getters }, { tag, role }) => {
     return new Promise(resolve => {
       fetch(
-        state.api.deleteTagRole.href
+        state.links.deleteTagRole.href
           .replace("{tag}", tag)
           .replace("{role}", role),
         {
-          method: state.api.deleteTagRole.method,
+          method: state.links.deleteTagRole.method,
           headers: getters.headers
         }
       )
@@ -668,8 +672,8 @@ export default {
 
   addRole: ({ state, commit, getters }, { name }) => {
     return new Promise(resolve => {
-      fetch(state.api.addRole.href, {
-        method: state.api.addRole.method,
+      fetch(state.links.addRole.href, {
+        method: state.links.addRole.method,
         headers: getters.headers,
         body: JSON.stringify({ name })
       })
@@ -683,8 +687,8 @@ export default {
 
   deleteRole: ({ state, commit, getters }, { id }) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteRole.href.replace("{role}", id), {
-        method: state.api.deleteRole.method,
+      fetch(state.links.deleteRole.href.replace("{role}", id), {
+        method: state.links.deleteRole.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -697,8 +701,8 @@ export default {
 
   updateRole: ({ state, commit, getters }, { id, name }) => {
     return new Promise(resolve => {
-      fetch(state.api.updateRole.href.replace("{role}", id), {
-        method: state.api.updateRole.method,
+      fetch(state.links.updateRole.href.replace("{role}", id), {
+        method: state.links.updateRole.method,
         headers: getters.headers,
         body: JSON.stringify({ name })
       })

@@ -178,7 +178,7 @@ export default {
     this.imageHandler = new imageHandler({
       setProgress: this.setProgress,
       editor: this.editor,
-      uploadImage: this.api.uploadImage,
+      uploadImage: this.links.uploadImage,
       headers: this.headers
     });
     const toolbar = this.editor.getModule("toolbar");
@@ -278,8 +278,8 @@ export default {
         public: this.public
       };
       this.setLoading({ loading: true });
-      fetch(this.entry.api.save.href, {
-        method: this.entry.api.save.method,
+      fetch(this.entry.links.save.href, {
+        method: this.entry.links.save.method,
         headers: this.headers,
         body: JSON.stringify(entry)
       })

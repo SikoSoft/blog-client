@@ -8,7 +8,7 @@ export default {
 
   isLoading: state => state.isLoading,
 
-  api: state => state.api,
+  links: state => state.links,
 
   title: state => state.title,
 
