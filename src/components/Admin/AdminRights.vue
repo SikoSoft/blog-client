@@ -26,7 +26,7 @@
               destroy
               :action="
                 () => {
-                  showDeleteRightDialog(right.action);
+                  showDeleteRightDialog(right);
                 }
               "
               :text="$strings.deleteRight"
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 import rights from "@/data/rights.json";
 
@@ -99,7 +99,7 @@ export default {
     return {
       rights,
       newAction: "",
-      action: "",
+      right: {},
       deleteDialogIsOpen: false
     };
   },
@@ -123,7 +123,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(["addRoleRight", "deleteRoleRight"]),
+    ...mapActions(["addRoleRight", "deleteRoleRight", "apiRequest"]),
+
+    ...mapMutations(["setRoleRights"]),
 
     changeRole(e) {
       if (parseInt(e.target.value) !== 0) {
@@ -131,17 +133,24 @@ export default {
       }
     },
 
-    showDeleteRightDialog(action) {
-      this.action = action;
+    showDeleteRightDialog(right) {
+      this.right = right;
       this.deleteDialogIsOpen = true;
     },
 
     deleteRight() {
-      this.deleteRoleRight({ role: this.role, action: this.action }).then(
-        () => {
-          this.deleteDialogIsOpen = false;
-        }
-      );
+      this.apiRequest(this.right.api.delete).then(() => {
+        this.deleteDialogIsOpen = false;
+        this.setRoleRights({
+          roleRights: [
+            ...this.$store.state.roleRights.filter(
+              right =>
+                right.role !== this.right.role ||
+                right.action !== this.right.action
+            )
+          ]
+        });
+      });
     },
 
     hideDeleteDialog() {

@@ -270,8 +270,8 @@ export default {
     Vue.set(state, "roleRights", roleRights);
   },
 
-  addRoleRight: (state, { role, action }) => {
-    Vue.set(state, "roleRights", [...state.roleRights, { role, action }]);
+  addRoleRight: (state, { right }) => {
+    Vue.set(state, "roleRights", [...state.roleRights, right]);
   },
 
   deleteRoleRight: (state, { role, action }) => {

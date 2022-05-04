@@ -586,8 +586,8 @@ export default {
         }
       )
         .then(result => result.json())
-        .then(() => {
-          commit("addRoleRight", { role, action });
+        .then(({ right }) => {
+          commit("addRoleRight", { right });
           resolve();
         });
     });
@@ -705,6 +705,19 @@ export default {
         .then(result => result.json())
         .then(() => {
           commit("updateRole", { id });
+          resolve();
+        });
+    });
+  },
+
+  apiRequest: ({ getters }, endpoint) => {
+    return new Promise(resolve => {
+      fetch(endpoint.href, {
+        method: endpoint.method,
+        headers: { ...getters.headers, "x-functions-key": endpoint.key }
+      })
+        .then(result => result.json())
+        .then(() => {
           resolve();
         });
     });
