@@ -3,7 +3,7 @@
     <input
       class="blog-token-handler__token"
       type="text"
-      v-model="token"
+      v-model="code"
       :placeholder="$strings.token"
       ref="input"
     />
@@ -33,7 +33,7 @@ export default {
 
   data() {
     return {
-      token: ""
+      code: ""
     };
   },
 
@@ -48,7 +48,7 @@ export default {
       fetch(this.links.useToken.href, {
         method: this.links.useToken.method,
         headers: this.headers,
-        body: JSON.stringify({ token: this.token })
+        body: JSON.stringify({ code: this.code })
       })
         .then(response => response.json())
         .then(json => {

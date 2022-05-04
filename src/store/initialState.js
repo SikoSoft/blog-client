@@ -35,7 +35,6 @@ export default {
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
   links: {},
-  token: "",
   editMode: {},
   toasts: [],
   comments: {},
