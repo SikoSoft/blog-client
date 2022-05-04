@@ -1,15 +1,6 @@
 <template>
   <div class="admin-rights">
-    <select @change="changeRole">
-      <option value="0">{{ $strings.selectARole }}</option>
-      <option
-        v-for="r in roles"
-        :key="r.id"
-        :value="r.id"
-        :selected="r.id === role"
-        >{{ r.name }}</option
-      >
-    </select>
+    <blog-role-selector @change="changeRole" :role="role" />
 
     <div v-if="role">
       <table>
@@ -84,13 +75,15 @@ import rights from "@/data/rights.json";
 
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogRoleSelector from "../BlogRoleSelector.vue";
 
 export default {
   name: "admin-rights",
 
   components: {
     BlogButton,
-    BlogConfirmationDialog
+    BlogConfirmationDialog,
+    BlogRoleSelector
   },
 
   props: ["role"],
@@ -105,10 +98,6 @@ export default {
   },
 
   computed: {
-    roles() {
-      return this.$store.getters.roles;
-    },
-
     roleRights() {
       return this.$store.state.roleRights.filter(
         right => right.role === this.role
@@ -127,9 +116,9 @@ export default {
 
     ...mapMutations(["setRoleRights"]),
 
-    changeRole(e) {
-      if (parseInt(e.target.value) !== 0) {
-        this.$router.push({ path: `/admin/rights/${e.target.value}` });
+    changeRole(role) {
+      if (role !== 0) {
+        this.$router.push({ path: `/admin/rights/${role}` });
       }
     },
 
