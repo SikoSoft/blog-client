@@ -51,7 +51,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api"])
+    ...mapGetters(["links"])
   },
 
   methods: {

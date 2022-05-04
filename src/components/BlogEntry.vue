@@ -82,7 +82,7 @@ export default {
     "tags",
     "created",
     "last_edited",
-    "api",
+    "links",
     "public",
     "fullMode"
   ],

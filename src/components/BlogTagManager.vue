@@ -43,7 +43,7 @@ export default {
   props: ["tags"],
 
   computed: {
-    ...mapGetters(["api"])
+    ...mapGetters(["links"])
   },
 
   methods: {

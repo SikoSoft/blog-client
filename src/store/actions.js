@@ -197,11 +197,11 @@ export default {
       return Promise.resolve();
     }
 
-    const api = getters.entryById(entryId).links;
+    const links = getters.entryById(entryId).links;
 
     return new Promise((resolve, reject) => {
-      fetch(api.getComments.href, {
-        method: api.getComments.method,
+      fetch(links.getComments.href, {
+        method: links.getComments.method,
         headers: getters.headers
       })
         .then(response => response.json())

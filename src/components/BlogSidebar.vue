@@ -38,7 +38,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["settings", "api", "filters"]),
+    ...mapGetters(["settings", "links", "filters"]),
 
     show() {
       if (this.feed.length) {

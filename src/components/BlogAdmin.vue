@@ -6,8 +6,16 @@
       v-if="!entryFormIsOpen"
       text="+"
     />
-    <blog-button class="blog-admin__entry-button" :action="hideEntryForm" v-else text="-" />
-    <blog-entry-form v-if="entryFormIsOpen" :initialEntry="{ api: { save: api.newEntry } }" />
+    <blog-button
+      class="blog-admin__entry-button"
+      :action="hideEntryForm"
+      v-else
+      text="-"
+    />
+    <blog-entry-form
+      v-if="entryFormIsOpen"
+      :initialEntry="{ links: { save: links.newEntry } }"
+    />
   </div>
 </template>
 
@@ -23,7 +31,7 @@ export default {
   components: { BlogEntryForm, BlogButton },
 
   computed: {
-    ...mapGetters(["entryFormIsOpen", "api"])
+    ...mapGetters(["entryFormIsOpen", "links"])
   },
 
   methods: {

@@ -209,7 +209,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers", "user", "drafts", "entryFormIsOpen"]),
+    ...mapGetters(["links", "headers", "user", "drafts", "entryFormIsOpen"]),
 
     entryId() {
       return this.entry && this.entry.id ? this.entry.id : false;
