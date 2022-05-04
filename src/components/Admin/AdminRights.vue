@@ -1,6 +1,6 @@
 <template>
   <div class="admin-rights">
-    <blog-role-selector @change="changeRole" :role="role" />
+    <blog-role-selector @input="changeRole" :role="role" />
 
     <div v-if="role">
       <table>

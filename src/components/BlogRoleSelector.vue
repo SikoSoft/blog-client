@@ -31,7 +31,7 @@ export default {
 
   methods: {
     change(e) {
-      this.$emit("change", e.target.value);
+      this.$emit("input", e.target.value);
     }
   }
 };
