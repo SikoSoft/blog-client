@@ -21,7 +21,14 @@ export default {
   data() {
     return {
       rights,
-      available: ["settings", "roles", "rights", "tag_policies", "filters"]
+      available: [
+        "settings",
+        "roles",
+        "rights",
+        "tag_policies",
+        "filters",
+        "tokens"
+      ]
     };
   },
 

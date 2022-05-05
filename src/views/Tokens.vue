@@ -1,11 +1,11 @@
 <template>
   <div class="tokens">
-    <admin-tokens v-if="initialized" v-bind="tokens" />
+    <admin-tokens v-if="initialized" :tokens="tokens" :links="tokensLinks" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 import AdminTokens from "@/components/Admin/AdminTokens.vue";
 
@@ -14,26 +14,40 @@ export default {
 
   components: { AdminTokens },
 
-  mounted() {
-    this.initialize().then(() => {
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/tokens", label: this.$strings.tokens }
-      ]);
-      this.setTitle(this.$strings.tokens);
-    });
+  data() {
+    return {
+      tokensLinks: []
+    };
+  },
+
+  async mounted() {
+    await this.initialize();
+    this.setBreadcrumbs([
+      { href: "/admin", label: this.$strings.admin },
+      { href: "/admin/tokens", label: this.$strings.tokens }
+    ]);
+    this.setTitle(this.$strings.tokens);
+    const response = await this.apiRequest(this.links.getTokens);
+    if (response.tokens) {
+      this.setTokens({ tokens: response.tokens });
+    }
+    if (response.links) {
+      this.tokensLinks = response.links;
+    }
   },
 
   computed: {
-    ...mapGetters(["initialized", "user", "tokens"]),
+    ...mapGetters(["initialized", "user", "tokens", "links"]),
 
-    settings() {
-      return this.$store.getters.tokens;
+    tokens() {
+      return this.$store.state.tokens;
     }
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "apiRequest"]),
+
+    ...mapMutations(["setTokens"])
   },
 
   watch: {

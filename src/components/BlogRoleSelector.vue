@@ -1,11 +1,13 @@
 <template>
   <select @change="change">
-    <option value="0">{{ $strings.selectARole }}</option>
+    <option value="0" :selected="0 === value">{{
+      $strings.selectARole
+    }}</option>
     <option
       v-for="r in roles"
       :key="r.id"
       :value="r.id"
-      :selected="r.id === role"
+      :selected="r.id === value"
       >{{ r.name }}</option
     >
   </select>
@@ -15,13 +17,7 @@
 export default {
   name: "blog-role-selector",
 
-  props: ["role"],
-
-  data() {
-    return {
-      value: 0
-    };
-  },
+  props: ["value"],
 
   computed: {
     roles() {

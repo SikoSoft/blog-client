@@ -714,15 +714,16 @@ export default {
     });
   },
 
-  apiRequest: ({ getters }, endpoint) => {
+  apiRequest: ({ getters }, payload) => {
     return new Promise(resolve => {
-      fetch(endpoint.href, {
-        method: endpoint.method,
-        headers: { ...getters.headers, "x-functions-key": endpoint.key }
+      fetch(payload.href, {
+        method: payload.method,
+        headers: { ...getters.headers, "x-functions-key": payload.key },
+        ...(payload.body ? { body: payload.body } : {})
       })
         .then(result => result.json())
-        .then(() => {
-          resolve();
+        .then(json => {
+          resolve(json);
         });
     });
   }

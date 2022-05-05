@@ -315,5 +315,9 @@ export default {
         return role;
       })
     ]);
+  },
+
+  setTokens: (state, { tokens }) => {
+    Vue.set(state, "tokens", [...tokens]);
   }
 };
