@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <blog-admin v-if="initialized" />
     <header>
       <blog-header />
     </header>
@@ -21,6 +22,7 @@
 <script>
 import { mapGetters } from "vuex";
 
+import BlogAdmin from "@/components/BlogAdmin.vue";
 import BlogLoader from "@/components/BlogLoader.vue";
 import BlogHeader from "@/components/BlogHeader.vue";
 import BlogToasts from "@/components/BlogToasts.vue";
@@ -29,6 +31,7 @@ import BlogProgressBar from "@/components/BlogProgressBar.vue";
 
 export default {
   components: {
+    BlogAdmin,
     BlogLoader,
     BlogHeader,
     BlogToasts,

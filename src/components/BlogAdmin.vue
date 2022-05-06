@@ -1,22 +1,24 @@
 <template>
   <div class="blog-admin">
     <div class="blog-admin__inner">
-      <blog-button
-        class="blog-admin__entry-button"
-        :action="showEntryForm"
-        v-if="!entryFormIsOpen"
-        text="+"
-      />
-      <blog-button
-        class="blog-admin__entry-button"
-        :action="hideEntryForm"
-        v-else
-        text="-"
-      />
-      <blog-entry-form
-        v-if="entryFormIsOpen"
-        :initialEntry="{ links: { save: links.newEntry } }"
-      />
+      <template v-if="user.rights.includes('create_entry')">
+        <blog-button
+          class="blog-admin__entry-button"
+          :action="showEntryForm"
+          v-if="!entryFormIsOpen"
+          text="+"
+        />
+        <blog-button
+          class="blog-admin__entry-button"
+          :action="hideEntryForm"
+          v-else
+          text="-"
+        />
+        <blog-entry-form
+          v-if="entryFormIsOpen"
+          :initialEntry="{ links: { save: links.newEntry } }"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -33,7 +35,7 @@ export default {
   components: { BlogEntryForm, BlogButton },
 
   computed: {
-    ...mapGetters(["entryFormIsOpen", "links"])
+    ...mapGetters(["entryFormIsOpen", "links", "user"])
   },
 
   methods: {
