@@ -41,7 +41,7 @@ export default {
     ...mapGetters(["settings", "links", "filters"]),
 
     show() {
-      if (this.feed.length) {
+      if (this.feed.length || this.filters.length) {
         return true;
       }
       return false;
