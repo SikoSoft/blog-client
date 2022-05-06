@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <blog-entries :type="type" :entries="entries" />
+    <blog-entries :type="type" :entries="list" />
   </div>
 </template>
 
@@ -21,10 +21,6 @@ export default {
 
     filterId() {
       return this.$route.params.filter;
-    },
-
-    entries() {
-      return this.$store.getters.entriesByFilter(this.filterId);
     },
 
     title() {

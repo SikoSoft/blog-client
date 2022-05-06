@@ -20,11 +20,9 @@ export default {
     window.addEventListener("scroll", this.scrollHandler);
     this.setTitle(this.title);
     this.initialize().then(() => {
-      this.postInit().then(() => {
-        if (!this.list.length) {
-          this.loadEntries();
-        }
-      });
+      if (!this.list.length) {
+        this.loadEntries();
+      }
     });
     this.setBreadcrumbs([]);
   },
@@ -99,10 +97,6 @@ export default {
           this.gettingEntriesCoolingDown = false;
         }, this.gettingEntriesCoolDown);
       });
-    },
-
-    postInit() {
-      return Promise.resolve();
     }
   },
 
@@ -124,9 +118,12 @@ export default {
             : [];
           break;
         case "filter":
-          entriesList = this.entries[this.type].list[this.filter]
-            ? this.entries[this.type].list[this.filter]
-            : [];
+          entriesList =
+            this.entries[this.type] &&
+            this.entries[this.type].list &&
+            this.entries[this.type].list[this.filterId]
+              ? this.entries[this.type].list[this.filterId]
+              : [];
           break;
         default:
           entriesList = this.entries[this.type].list;
