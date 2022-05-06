@@ -1,19 +1,26 @@
 <template>
   <nav class="blog-breadcrumb">
-    <ul class="blog-breadcrumb__list">
-      <template v-for="(link, index) in links">
-        <li class="blog-breadcrumb__list-item" :key="`${link.label}-item`">
-          <div v-if="index > 0" class="blog-breadcrumb__list-arrow" :key="`${link.label}-arrow`"></div>
-          <router-link
-            class="blog-breadcrumb__list-item-link"
-            :class="{
-              'blog-breadcrumb__list-item-link--disabled': !!!link.href
-            }"
-            :to="link.href"
-          >{{ link.label }}</router-link>
-        </li>
-      </template>
-    </ul>
+    <div class="blog-breadcrumb__inner">
+      <ul class="blog-breadcrumb__list">
+        <template v-for="(link, index) in links">
+          <li class="blog-breadcrumb__list-item" :key="`${link.label}-item`">
+            <div
+              v-if="index > 0"
+              class="blog-breadcrumb__list-arrow"
+              :key="`${link.label}-arrow`"
+            ></div>
+            <router-link
+              class="blog-breadcrumb__list-item-link"
+              :class="{
+                'blog-breadcrumb__list-item-link--disabled': !!!link.href
+              }"
+              :to="link.href"
+              >{{ link.label }}</router-link
+            >
+          </li>
+        </template>
+      </ul>
+    </div>
   </nav>
 </template>
 
@@ -41,6 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/variables";
+@import "@/styles/mixins";
 
 .blog-breadcrumb {
   padding-left: $space-xlarge;
@@ -54,6 +62,10 @@ export default {
   );
   font-size: 2rem;
   white-space: nowrap;
+
+  .blog-breadcrumb__inner {
+    @include container-width;
+  }
 
   .blog-breadcrumb__list {
     list-style: none;

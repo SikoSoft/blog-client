@@ -1,21 +1,23 @@
 <template>
   <div class="blog-admin">
-    <blog-button
-      class="blog-admin__entry-button"
-      :action="showEntryForm"
-      v-if="!entryFormIsOpen"
-      text="+"
-    />
-    <blog-button
-      class="blog-admin__entry-button"
-      :action="hideEntryForm"
-      v-else
-      text="-"
-    />
-    <blog-entry-form
-      v-if="entryFormIsOpen"
-      :initialEntry="{ links: { save: links.newEntry } }"
-    />
+    <div class="blog-admin__inner">
+      <blog-button
+        class="blog-admin__entry-button"
+        :action="showEntryForm"
+        v-if="!entryFormIsOpen"
+        text="+"
+      />
+      <blog-button
+        class="blog-admin__entry-button"
+        :action="hideEntryForm"
+        v-else
+        text="-"
+      />
+      <blog-entry-form
+        v-if="entryFormIsOpen"
+        :initialEntry="{ links: { save: links.newEntry } }"
+      />
+    </div>
   </div>
 </template>
 
@@ -42,16 +44,22 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/variables";
+@import "@/styles/mixins";
 
 .blog-admin {
   position: relative;
-  min-height: 3rem;
-  padding: $space-xsmall $space-xlarge;
   background-color: $color-bg-secondary;
   transition: all 0.3s;
 
   &--open {
     height: auto;
+  }
+
+  &__inner {
+    @include container-width;
+    position: relative;
+    padding: $space-xsmall $space-xlarge;
+    min-height: 3rem;
   }
 
   &__entry-button {

@@ -49,3 +49,8 @@
     cursor: pointer;
   }
 }
+
+@mixin container-width {
+  max-width: 1920px;
+  margin: auto;
+}

@@ -1,5 +1,6 @@
 @import "variables";
 @import "media";
+@import "mixins";
 
 html,
 body {
@@ -22,10 +23,9 @@ header {
 }
 
 .main-container {
+  @include container-width;
   display: flex;
   align-items: flex-start;
-  max-width: 1920px;
-  margin: auto;
   transition: height 0.3s;
 
   &--loading {

@@ -44,8 +44,10 @@ export default {
 
 <style lang="scss">
 @import "@/styles/variables.scss";
+@import "@/styles/mixins";
 
 .blog-hero {
+  @include container-width;
   position: relative;
   height: 400px;
   background: radial-gradient(circle at center, #222 0, #000);
