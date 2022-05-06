@@ -37,14 +37,13 @@ header {
 
 main {
   position: relative;
-  padding: $space-xlarge;
   flex: 7;
   min-height: $loader-height;
 }
 
 aside {
   min-width: 352px;
-  padding: $space-xlarge;
+  padding: $space-xlarge 0 $space-xlarge $space-xlarge;
   flex: 3;
   border-left: 1px #444 solid;
 }

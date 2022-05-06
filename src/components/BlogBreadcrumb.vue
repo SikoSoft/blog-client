@@ -53,7 +53,6 @@ export default {
 @import "@/styles/mixins";
 
 .blog-breadcrumb {
-  padding-left: $space-xlarge;
   background: linear-gradient(
     to bottom,
     $color-bg-secondary-highlight,

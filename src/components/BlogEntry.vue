@@ -313,7 +313,6 @@ export default {
   }
 
   &__comments {
-    margin: 0 -2rem;
     padding: 5rem 2rem;
     background-color: #111;
     border-top: 1rem #1f1f1f solid;

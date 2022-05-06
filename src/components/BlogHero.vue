@@ -67,7 +67,6 @@ export default {
     max-width: 90vw;
     margin: 0;
     top: 20%;
-    left: 2rem;
     font-size: 6rem;
     line-height: 7rem;
     display: -webkit-box;

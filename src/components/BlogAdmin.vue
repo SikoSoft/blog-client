@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-admin">
+  <div class="blog-admin" :class="{ 'blog-admin--open': entryFormIsOpen }">
     <div class="blog-admin__inner">
       <template v-if="user.rights.includes('create_entry')">
         <blog-button
@@ -49,25 +49,26 @@ export default {
 @import "@/styles/mixins";
 
 .blog-admin {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background-color: $color-bg-secondary;
   transition: all 0.3s;
+  border-bottom: 1px $color-border-secondary solid;
 
   &--open {
     height: auto;
+    box-shadow: 0 0 500px rgba(0, 0, 0, 1);
   }
 
   &__inner {
     @include container-width;
     position: relative;
-    padding: $space-xsmall $space-xlarge;
-    min-height: 3rem;
+    padding: $space-xsmall 0;
+    display: flex;
   }
 
   &__entry-button {
-    position: absolute;
-    top: $space;
-    right: $space;
     border-radius: 50%;
     height: $space-xlarge;
     width: $space-xlarge;
