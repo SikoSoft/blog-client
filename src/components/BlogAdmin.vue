@@ -2,6 +2,7 @@
   <div class="blog-admin" :class="{ 'blog-admin--open': entryFormIsOpen }">
     <div class="blog-admin__inner">
       <template v-if="user.rights.includes('create_entry')">
+        <router-link to="/admin">{{ $strings.admin }}</router-link>
         <blog-button
           class="blog-admin__entry-button"
           :action="showEntryForm"
@@ -66,6 +67,11 @@ export default {
     position: relative;
     padding: $space-xsmall 0;
     display: flex;
+    justify-content: space-between;
+
+    & > * {
+      align-self: center;
+    }
   }
 
   &__entry-button {
