@@ -64,8 +64,9 @@ export default {
 
   &__inner {
     @include container-width;
+    height: $admin-pane-height;
     position: relative;
-    padding: $space-xsmall 0;
+    //padding: $space-xsmall 0;
     display: flex;
     justify-content: space-between;
 
@@ -76,16 +77,16 @@ export default {
 
   &__entry-button {
     border-radius: 50%;
-    height: $space-xlarge;
-    width: $space-xlarge;
+    height: $space;
+    width: $space;
     outline: none;
     font-family: impact;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 16px;
     cursor: pointer;
-    line-height: 24px;
+    line-height: 16px;
     background-color: $color-button-bg;
-    border: 2px $color-button-border solid;
+    border: 1px $color-button-border solid;
     padding: 0;
     &:hover {
       background-color: $color-button-over;

@@ -1,9 +1,11 @@
+@import "variables";
+
 @mixin sidebar-block {
   h3 {
     font-size: 1.5rem;
     margin: 0.5rem 0;
     padding-bottom: 1rem;
-    border-bottom: 1rem #333 solid;
+    border-bottom: $space-xsmall #333 solid;
   }
 
   ul {
@@ -51,7 +53,7 @@
 }
 
 @mixin container-width {
-  width: 90%;
+  padding: 0 $space-xlarge;
   max-width: 1920px;
   margin: auto;
 }

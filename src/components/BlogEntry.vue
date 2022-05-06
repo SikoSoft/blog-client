@@ -269,7 +269,7 @@ export default {
   }
 
   &__body {
-    padding: 2rem 1rem 2rem 1rem;
+    padding: $space-xlarge $space $space-xlarge 0;
     font-size: 1.5rem;
     overflow-x: auto;
     overflow-y: hidden;
@@ -314,7 +314,7 @@ export default {
 
   &__comments {
     padding: 5rem 2rem;
-    background-color: #111;
+    background-color: $color-bg-secondary;
     border-top: 1rem #1f1f1f solid;
     border-bottom: 1rem #333 solid;
   }

@@ -2,9 +2,17 @@
   <div class="blog-at-a-glance">
     <h3 class="blog-at-a-glance__head">{{ $strings.atAGlance }}</h3>
     <ul class="blog-at-a-glance__list">
-      <li v-for="filter in filters" :key="filter.id" class="blog-at-a-glance__filter">
+      <li
+        v-for="filter in filters"
+        :key="filter.id"
+        class="blog-at-a-glance__filter"
+      >
         <router-link :to="`/filter/${filter.id}`">
-          <img v-if="filter.image" :src="filter.image" class="blog-at-a-glance__filter-image" />
+          <img
+            v-if="filter.image"
+            :src="filter.image"
+            class="blog-at-a-glance__filter-image"
+          />
           {{ filter.label }}
         </router-link>
       </li>

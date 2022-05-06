@@ -27,6 +27,7 @@ header {
   display: flex;
   align-items: flex-start;
   transition: height 0.3s;
+  gap: 1rem;
 
   &--loading {
     main {
@@ -42,10 +43,13 @@ main {
 }
 
 aside {
+  margin-top: 1rem;
   min-width: 352px;
-  padding: $space-xlarge 0 $space-xlarge $space-xlarge;
+  padding: $space-xlarge;
   flex: 3;
-  border-left: 1px #444 solid;
+  background-color: $color-bg-secondary;
+  position: sticky;
+  top: calc(1rem + $admin-pane-height);
 }
 
 strong {
