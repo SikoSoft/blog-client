@@ -49,6 +49,10 @@ aside {
   flex: 3;
   background-color: $color-bg-secondary;
   position: sticky;
+  top: calc(1rem);
+}
+
+.app--has-admin-pane aside {
   top: calc(1rem + $admin-pane-height);
 }
 

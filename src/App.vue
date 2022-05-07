@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <blog-admin v-if="initialized" />
+  <div id="app" :class="classes">
+    <blog-admin v-if="showAdminPane" />
     <header>
       <blog-header />
     </header>
@@ -109,7 +109,23 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "isLoading", "settings", "showProgressBar"]),
+    ...mapGetters([
+      "initialized",
+      "isLoading",
+      "settings",
+      "showProgressBar",
+      "links"
+    ]),
+
+    classes() {
+      return {
+        "app--has-admin-pane": this.showAdminPane
+      };
+    },
+
+    showAdminPane() {
+      return this.initialized && this.links && this.links.newEntry;
+    },
 
     showSidebar() {
       return (
