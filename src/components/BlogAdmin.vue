@@ -3,7 +3,9 @@
     <div class="blog-admin__inner">
       <div class="blog-admin__bar">
         <template v-if="links.newEntry">
-          <router-link to="/admin">{{ $strings.admin }}</router-link>
+          <router-link class="blog-admin__link" to="/admin">{{
+            $strings.admin
+          }}</router-link>
           <blog-button
             class="blog-admin__entry-button"
             :action="showEntryForm"
@@ -83,6 +85,10 @@ export default {
     @include container-width;
   }
 
+  &__link {
+    font-weight: bold;
+  }
+
   &__entry-button {
     border-radius: 50%;
     height: $space;
@@ -96,8 +102,10 @@ export default {
     background-color: $color-button-bg;
     border: 1px $color-button-border solid;
     padding: 0;
+    transition: all 0.3s;
     &:hover {
       background-color: $color-button-over;
+      transform: scale(1.5);
     }
   }
 }

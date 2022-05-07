@@ -8,7 +8,7 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: $color-bg-primary;
   font-family: $font-family;
   color: #efefef;
 }
@@ -16,6 +16,9 @@ body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -28,6 +31,7 @@ header {
   align-items: flex-start;
   transition: height 0.3s;
   gap: 1rem;
+  width: calc(100% - $space-xlarge * 2);
 
   &--loading {
     main {
@@ -50,6 +54,8 @@ aside {
   background-color: $color-bg-secondary;
   position: sticky;
   top: calc(1rem);
+  border-right: 2px $color-border-primary solid;
+  border-bottom: 2px $color-border-primary solid;
 }
 
 .app--has-admin-pane aside {

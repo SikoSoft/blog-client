@@ -52,6 +52,8 @@ export default {
 @import "@/styles/variables";
 @import "@/styles/mixins";
 
+$height: 6rem;
+
 .blog-breadcrumb {
   background: linear-gradient(
     to bottom,
@@ -63,6 +65,8 @@ export default {
   );
   font-size: 2rem;
   white-space: nowrap;
+  border-top: 2px $color-border-primary solid;
+  border-bottom: 2px $color-border-primary solid;
 
   .blog-breadcrumb__inner {
     @include container-width;
@@ -73,13 +77,13 @@ export default {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    height: 8rem;
+    height: $height;
   }
 
   .blog-breadcrumb__list-item {
     display: inline-block;
-    height: 8rem;
-    line-height: 8rem;
+    height: $height;
+    line-height: $height;
 
     &:not(:first-child) {
       margin-left: $space;
@@ -88,7 +92,7 @@ export default {
 
   .blog-breadcrumb__list-item-link {
     display: inline-block;
-    height: 8rem;
+    height: $height;
     &--disabled {
       color: rgba(255, 255, 255, 0.75);
       cursor: text;
@@ -99,11 +103,12 @@ export default {
     float: left;
     margin-right: 4rem;
     position: relative;
-    top: 1rem;
-    width: 4rem;
-    height: 4rem;
-    border: 1rem solid;
-    border-color: #777 transparent transparent #777;
+    top: 1.5rem;
+    width: ($height * 0.25);
+    height: ($height * 0.25);
+    border: 0.75rem solid;
+    border-color: rgba(119, 119, 119, 0.5) transparent transparent
+      rgba(119, 119, 119, 0.5);
     transform: rotate(135deg);
   }
 }

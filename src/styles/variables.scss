@@ -1,4 +1,4 @@
-$font-family: "Pathway Gothic One", sans-serif;
+$font-family: 'Rajdhani', sans-serif;
 
 $space: 1rem;
 $space-large: $space * 1.5;
@@ -20,11 +20,11 @@ $font-xsmall: $font * 0.8;
 $font-xxsmall: $font * 0.666;
 $font-xxxsmall: $font * 0.571428;
 
-$color-bg-primary: #000;
+$color-bg-primary: #1f1f1f;
 $color-bg-secondary: #181818;
 $color-bg-secondary-highlight: #404040;
-$color-border-primary: #666;
-$color-border-secondary: #454;
+$color-border-primary: #000;
+$color-border-secondary: #333;
 $color-link-primary: rgb(0, 196, 64);
 $color-link-secondary: rgb(16, 212, 80);
 $color-link-hover: rgb(200, 255, 228);
@@ -41,6 +41,8 @@ $color-action-destroy-bg: #822;
 $color-action-destroy-text: #fff;
 $color-action-neutral-bg: #08b;
 $color-action-neutral-text: #fff;
+
+$size-border: 2px;
 
 $loader-height: 10rem;
 $admin-pane-height: 2rem;

@@ -16,4 +16,10 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@import "@/styles/variables";
+
+.blog-header {
+  background-color: #000;
+}
+</style>

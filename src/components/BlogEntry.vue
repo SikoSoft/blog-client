@@ -241,7 +241,7 @@ export default {
     border-top: 1px $color-link-primary solid;
     padding-top: 5px;
     display: inline-block;
-    font-size: 1rem;
+    font-size: $font-large;
   }
 
   &__edit {
