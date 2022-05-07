@@ -68,6 +68,7 @@ import BlogComments from "@/components/BlogComments.vue";
 import BlogCommentForm from "@/components/BlogCommentForm.vue";
 import BlogButton from "@/components/BlogButton.vue";
 import { longDate } from "../util/time.js";
+import { parseVars } from "@/util/strings.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 
 const imgRegExp = new RegExp("<img ", "g");
@@ -125,10 +126,9 @@ export default {
     },
 
     postedTime() {
-      return this.$strings.postedFullDate.replace(
-        "{date}",
-        longDate(this.created * 1000)
-      );
+      return parseVars(this.$strings.postedFullDate, {
+        date: longDate(this.created * 1000)
+      });
     },
 
     renderedBody() {

@@ -9,6 +9,7 @@
 
 <script>
 import octicons from "@primer/octicons";
+import { parseVars } from "@/util/strings.js";
 
 export default {
   name: "blog-github-event",
@@ -68,14 +69,15 @@ export default {
     },
 
     message() {
-      return this.$strings.githubEventTypes[this.type]
-        .replace("{repo}", this.repoName)
-        .replace("{issue}", this.issueName)
-        .replace("{desc}", this.commitDesc)
-        .replace("{refName}", this.refName)
-        .replace("{refType}", this.refType)
-        .replace("{action}", this.action)
-        .replace("{title}", this.title);
+      return parseVars(this.$strings.githubEventTypes[this.type], {
+        repo: this.repoName,
+        issue: this.issueName,
+        desc: this.commitDesc,
+        refName: this.refName,
+        refType: this.refType,
+        action: this.action,
+        title: this.title
+      });
     },
 
     issueName() {

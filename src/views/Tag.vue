@@ -7,7 +7,7 @@
 
 <script>
 import { mapActions } from "vuex";
-
+import { parseVars } from "@/util/strings.js";
 import BlogTag from "@/components/BlogTag.vue";
 import Entries from "@/shared/Entries.js";
 
@@ -25,14 +25,8 @@ export default {
       return this.$route.params.tag;
     },
 
-    /*
-    entries() {
-      return this.$store.getters.entriesByTag(this.tag);
-    },
-    */
-
     title() {
-      return this.$strings.entriesWithTag.replace("{tag}", this.tag);
+      return parseVars(this.$strings.entriesWithTag, { tag: this.tag });
     }
   },
 

@@ -23,6 +23,7 @@
 <script>
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { longDate } from "../util/time.js";
+import { parseVars } from "@/util/strings.js";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
@@ -41,10 +42,9 @@ export default {
     },
 
     postDate() {
-      return this.$strings.postedFullDate.replace(
-        "{date}",
-        longDate(this.time * 1000)
-      );
+      return parseVars(this.$strings.postedFullDate, {
+        date: longDate(this.time * 1000)
+      });
     },
 
     isSelected() {

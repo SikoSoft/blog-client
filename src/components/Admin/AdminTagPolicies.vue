@@ -6,7 +6,7 @@
       :tagsToFilter="[]"
     />
     <div v-if="tag">
-      {{ $strings.rolesWithTagAccess.replace("{tag}", tag) }}
+      {{ tagName }}
       <table>
         <tr v-for="tagRole in tagRoles" :key="tagRole.role">
           <td>{{ roleName(tagRole.role) }}</td>
@@ -39,7 +39,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import { parseVars } from "@/util/strings.js";
 import BlogButton from "@/components/BlogButton.vue";
 import BlogTagInput from "@/components/BlogTagInput.vue";
 
@@ -60,7 +60,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["roles"])
+    ...mapGetters(["roles"]),
+
+    tagName() {
+      return parseVars(this.$strings.rolesWithTagAccess, { tag: this.tag });
+    }
   },
 
   methods: {

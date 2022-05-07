@@ -16,7 +16,6 @@ export default {
   computed: {
     poweredBy() {
       return parseVars(this.$strings.poweredByStatement, { version });
-      //return this.$strings.poweredByStatement.replace("{version}", version);
     }
   }
 };
