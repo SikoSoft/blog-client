@@ -1,25 +1,30 @@
 <template>
   <div class="blog-admin" :class="{ 'blog-admin--open': entryFormIsOpen }">
     <div class="blog-admin__inner">
-      <template v-if="user.rights.includes('create_entry')">
-        <router-link to="/admin">{{ $strings.admin }}</router-link>
-        <blog-button
-          class="blog-admin__entry-button"
-          :action="showEntryForm"
-          v-if="!entryFormIsOpen"
-          text="+"
-        />
-        <blog-button
-          class="blog-admin__entry-button"
-          :action="hideEntryForm"
-          v-else
-          text="-"
-        />
+      <div class="blog-admin__bar">
+        <template v-if="links.newEntry">
+          <router-link to="/admin">{{ $strings.admin }}</router-link>
+          <blog-button
+            class="blog-admin__entry-button"
+            :action="showEntryForm"
+            v-if="!entryFormIsOpen"
+            text="+"
+          />
+          <blog-button
+            class="blog-admin__entry-button"
+            :action="hideEntryForm"
+            v-else
+            text="-"
+          />
+        </template>
+      </div>
+      <div class="blog-admin__tool">
         <blog-entry-form
           v-if="entryFormIsOpen"
+          :links="{ save: links.newEntry }"
           :initialEntry="{ links: { save: links.newEntry } }"
         />
-      </template>
+      </div>
     </div>
   </div>
 </template>
@@ -62,17 +67,20 @@ export default {
     box-shadow: 0 0 500px rgba(0, 0, 0, 1);
   }
 
-  &__inner {
+  &__bar {
     @include container-width;
     height: $admin-pane-height;
     position: relative;
-    //padding: $space-xsmall 0;
     display: flex;
     justify-content: space-between;
 
     & > * {
       align-self: center;
     }
+  }
+
+  &__tool {
+    @include container-width;
   }
 
   &__entry-button {

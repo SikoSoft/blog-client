@@ -16,10 +16,7 @@
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div
-          class="blog-entry__edit"
-          v-if="user.rights.includes('update_entry')"
-        >
+        <div class="blog-entry__edit" v-if="links.save">
           <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
@@ -53,6 +50,7 @@
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
       <blog-entry-form
+        :links="links"
         :initialEntry="entry"
         @idChanged="idChanged"
         @edited="edited"
@@ -116,7 +114,6 @@ export default {
         tags: this.tags,
         created: this.created,
         last_edited: this.last_edited,
-        links: this.links,
         public: this.public
       };
     },

@@ -88,12 +88,13 @@
         <blog-button
           destroy
           type="button"
-          v-if="entry.id && user.rights.includes('delete_entry')"
+          v-if="entry.id && links.delete"
           :action="showConfirmationDialog"
           :text="$strings.deleteDraft"
         />
       </template>
       <blog-confirmation-dialog
+        v-if="links.delete"
         :isOpen="confirmationDialogOpen"
         :title="$strings.deleteEntry"
         :message="$strings.confirmDeleteEntry"
@@ -118,7 +119,7 @@ import imageHandler from "@/util/imageHandler";
 export default {
   name: "blog-entry-form",
 
-  props: ["initialEntry"],
+  props: ["initialEntry", "links"],
 
   components: {
     BlogEntryFinder,
@@ -175,12 +176,9 @@ export default {
     if (this.body) {
       this.editor.setContents(JSON.parse(this.body));
     }
-    this.imageHandler = new imageHandler({
-      setProgress: this.setProgress,
-      editor: this.editor,
-      uploadImage: this.links.uploadImage,
-      headers: this.headers
-    });
+    if (this.links.uploadImage) {
+      this.setupImageUpload();
+    }
     const toolbar = this.editor.getModule("toolbar");
     toolbar.addHandler("image", () => {
       this.imageHandler.selectLocalImage();
@@ -209,7 +207,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["links", "headers", "user", "drafts", "entryFormIsOpen"]),
+    ...mapGetters(["headers", "user", "drafts", "entryFormIsOpen"]),
 
     entryId() {
       return this.entry && this.entry.id ? this.entry.id : false;
@@ -278,8 +276,8 @@ export default {
         public: this.public
       };
       this.setLoading({ loading: true });
-      fetch(this.entry.links.save.href, {
-        method: this.entry.links.save.method,
+      fetch(this.links.save.href, {
+        method: this.links.save.method,
         headers: this.headers,
         body: JSON.stringify(entry)
       })
@@ -457,6 +455,15 @@ export default {
       } else if (window.location.pathname !== "/") {
         this.$router.push({ path: "/" });
       }
+    },
+
+    setupImageUpload() {
+      this.imageHandler = new imageHandler({
+        setProgress: this.setProgress,
+        editor: this.editor,
+        uploadImage: this.links.uploadImage,
+        headers: this.headers
+      });
     }
   }
 };
