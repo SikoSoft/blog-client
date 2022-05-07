@@ -148,5 +148,28 @@
       "November",
       "December"
     ]
+  },
+  "settingsGroups": {
+    "roles": "Roles",
+    "comments": "Comments",
+    "entries": "Entries",
+    "ui": "UI",
+    "sidebar": "Sidebar",
+    "other": "Other"
+  },
+  "settingsLabels": {
+    "role_admin": "Admin role",
+    "role_guest": "Guest role",
+    "enable_comments": "Enable commenting",
+    "use_captcha": "Use CAPTCHA",
+    "min_score_auto_publish": "Minimum score for auto-publish",
+    "toast_life": "Toast duration",
+    "per_load": "Number of entries to load at a time",
+    "teaser_mode": "Show only a small part of each entry in the list",
+    "auto_entry_url": "Automatically update browser URL when scrolling to entry",
+    "further_reading_min_tags": "Minimum matched tags for further reading",
+    "further_reading_max": "Maximum entries for further reading",
+    "show_sidebar": "Show sidebar",
+    "github_feed": "Github feed URL"
   }
 }

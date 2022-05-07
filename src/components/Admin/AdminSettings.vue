@@ -2,15 +2,19 @@
   <div class="admin-settings">
     <div
       class="admin-settings__group"
-      v-for="(groupSettings, groupName) in settingsManifest"
-      :key="groupName"
+      v-for="settingGroup in Object.keys(settingGroups)"
+      :key="settingGroup"
     >
-      <h3>{{ groupName }}</h3>
+      <h3>{{ $strings.settingsGroups[settingGroup] }}</h3>
       <ul class="admin-settings__list">
-        <div class="admin-settings__setting" v-for="setting in groupSettings" :key="setting.id">
+        <div
+          class="admin-settings__setting"
+          v-for="settingId in settingGroups[settingGroup]"
+          :key="settingId"
+        >
           <admin-setting
-            v-bind="setting"
-            :initialValue="settings[setting.id] ? settings[setting.id] : null"
+            v-bind="settingById(settingId)"
+            :initialValue="settings[settingId] ? settings[settingId] : null"
           />
         </div>
       </ul>
@@ -20,10 +24,23 @@
 
 <script>
 import { mapGetters } from "vuex";
-
+import spec from "blog-spec";
 import AdminSetting from "@/components/Admin/AdminSetting.vue";
 
-import settingsManifest from "@/data/settings.json";
+const settingGroups = {
+  roles: ["role_admin", "role_guest"],
+  ui: ["toast_life"],
+  entries: [
+    "per_load",
+    "teaser_mode",
+    "auto_entry_url",
+    "further_reading_min_tags",
+    "further_reading_max"
+  ],
+  comments: ["enable_comments", "use_captcha", "min_score_auto_publish"],
+  sidebar: ["show_sidebar", "github_feed"],
+  other: []
+};
 
 export default {
   name: "admin-settings",
@@ -32,28 +49,27 @@ export default {
 
   data() {
     return {
-      settingsManifest
+      settingGroups,
+      spec
     };
   },
 
   computed: {
     ...mapGetters(["settings"])
+  },
+
+  methods: {
+    settingById(id) {
+      const match = this.spec.settings.filter(setting => setting.id === id);
+      if (match.length) {
+        const setting = match[0];
+        if (this.$strings.settingsLabels[id]) {
+          setting.label = this.$strings.settingsLabels[id];
+        }
+        return setting;
+      }
+      return false;
+    }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.admin-settings {
-  &__group {
-  }
-
-  &__group-name {
-  }
-
-  &__list {
-  }
-
-  &__setting {
-  }
-}
-</style>
