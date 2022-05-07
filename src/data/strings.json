@@ -170,6 +170,8 @@
     "further_reading_min_tags": "Minimum matched tags for further reading",
     "further_reading_max": "Maximum entries for further reading",
     "show_sidebar": "Show sidebar",
-    "github_feed": "Github feed URL"
+    "github_feed": "Github feed URL",
+    "show_powered_by": "Show powered-by statement",
+    "footer_body": "Footer body"
   }
 }

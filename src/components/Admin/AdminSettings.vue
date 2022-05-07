@@ -29,7 +29,7 @@ import AdminSetting from "@/components/Admin/AdminSetting.vue";
 
 const settingGroups = {
   roles: ["role_admin", "role_guest"],
-  ui: ["toast_life"],
+  ui: ["toast_life", "show_powered_by", "footer_body"],
   entries: [
     "per_load",
     "teaser_mode",
