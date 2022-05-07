@@ -38,9 +38,24 @@ const settingGroups = {
     "further_reading_max"
   ],
   comments: ["enable_comments", "use_captcha", "min_score_auto_publish"],
-  sidebar: ["show_sidebar", "github_feed"],
-  other: []
+  sidebar: ["show_sidebar", "github_feed"]
 };
+
+settingGroups.other = spec.settings
+  .filter(setting => {
+    let match = false;
+    for (let group of Object.keys(settingGroups)) {
+      if (
+        settingGroups[group].some(
+          settingsInGroup => settingsInGroup.indexOf(setting.id) > -1
+        )
+      ) {
+        match = true;
+      }
+    }
+    return !match;
+  })
+  .map(setting => setting.id);
 
 export default {
   name: "admin-settings",
