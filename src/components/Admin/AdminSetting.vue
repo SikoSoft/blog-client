@@ -3,21 +3,13 @@
     <div class="admin-setting__label">{{ label }}</div>
     <div class="admin-setting__input">
       <template v-if="type === 'list'">
-        <select v-model="value">
-          <option>{{ $strings.selectARole }}</option>
-          <option
-            v-for="option in listOptions(listSource)"
-            :key="option.value"
-            :value="option.value"
-            :selected="option.value === value"
-            >{{ option.label }}</option
-          >
-        </select>
+        <blog-role-selector v-model="value" />
       </template>
       <template v-if="type === 'number'">
         <input
           type="text"
           class="admin-setting__input-number"
+          :maxlength="maxLength ? maxLength : ''"
           v-model="value"
         />
       </template>
@@ -33,7 +25,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
+import BlogRoleSelector from "@/components/BlogRoleSelector.vue";
 import BlogToggle from "@/components/BlogToggle.vue";
 
 export default {
@@ -51,7 +43,7 @@ export default {
     initialValue: { type: [String, Number, Boolean] }
   },
 
-  components: { BlogToggle },
+  components: { BlogRoleSelector, BlogToggle },
 
   data() {
     return {
