@@ -16,6 +16,7 @@
     </div>
     <blog-toasts />
     <blog-progress-bar v-if="showProgressBar" />
+    <blog-footer />
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { mapGetters } from "vuex";
 import BlogAdmin from "@/components/BlogAdmin.vue";
 import BlogLoader from "@/components/BlogLoader.vue";
 import BlogHeader from "@/components/BlogHeader.vue";
+import BlogFooter from "@/components/BlogFooter.vue";
 import BlogToasts from "@/components/BlogToasts.vue";
 import BlogSidebar from "@/components/BlogSidebar.vue";
 import BlogProgressBar from "@/components/BlogProgressBar.vue";
@@ -34,6 +36,7 @@ export default {
     BlogAdmin,
     BlogLoader,
     BlogHeader,
+    BlogFooter,
     BlogToasts,
     BlogSidebar,
     BlogProgressBar
