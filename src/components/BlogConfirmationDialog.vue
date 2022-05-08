@@ -1,5 +1,8 @@
 <template>
-  <div class="blog-confirmation-dialog" :class="{ 'blog-confirmation-dialog--open': isOpen }">
+  <div
+    class="blog-confirmation-dialog"
+    :class="{ 'blog-confirmation-dialog--open': isOpen }"
+  >
     <h3 class="blog-confirmation-dialog__title">{{ title }}</h3>
     <div class="blog-confirmation-dialog__message">{{ message }}</div>
     <div class="blog-confirmation-dialog__buttons">
@@ -9,10 +12,22 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
 export default {
   name: "blog-confirmation-dialog",
 
-  props: ["title", "message", "isOpen"]
+  props: ["title", "message", "isOpen"],
+
+  methods: {
+    ...mapMutations(["setOverlayIsOpen"])
+  },
+
+  watch: {
+    isOpen(value) {
+      this.setOverlayIsOpen({ isOpen: value });
+    }
+  }
 };
 </script>
 
@@ -20,9 +35,11 @@ export default {
 @import "@/styles/variables.scss";
 
 .blog-confirmation-dialog {
-  display: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0);
   position: fixed;
-  z-index: 1;
+  z-index: 1001;
   top: 20vh;
   left: 20vw;
   width: 60vw;
@@ -31,12 +48,15 @@ export default {
   border-radius: 8px;
   padding: $space-large;
   box-sizing: border-box;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(16, 16, 16, 0.8);
   border: 1px $color-border-primary solid;
   box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s;
 
   &--open {
-    display: block;
+    pointer-events: all;
+    opacity: 1;
+    transform: scale(1);
   }
 
   .blog-confirmation-dialog__title {

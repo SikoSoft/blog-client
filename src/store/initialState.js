@@ -52,5 +52,6 @@ export default {
   sessToken: "",
   authToken: "",
   roleRights: [],
-  tagRoles: []
+  tagRoles: [],
+  overlayIsOpen: false
 };

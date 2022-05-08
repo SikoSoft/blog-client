@@ -319,5 +319,9 @@ export default {
 
   setTokens: (state, { tokens }) => {
     Vue.set(state, "tokens", [...tokens]);
+  },
+
+  setOverlayIsOpen: (state, { isOpen }) => {
+    state.overlayIsOpen = isOpen;
   }
 };

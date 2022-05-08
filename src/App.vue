@@ -17,12 +17,13 @@
     <blog-toasts />
     <blog-progress-bar v-if="showProgressBar" />
     <blog-footer />
+    <blog-overlay />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-
+import BlogOverlay from "@/components/BlogOverlay.vue";
 import BlogAdmin from "@/components/BlogAdmin.vue";
 import BlogLoader from "@/components/BlogLoader.vue";
 import BlogHeader from "@/components/BlogHeader.vue";
@@ -39,7 +40,8 @@ export default {
     BlogFooter,
     BlogToasts,
     BlogSidebar,
-    BlogProgressBar
+    BlogProgressBar,
+    BlogOverlay
   },
 
   data() {
