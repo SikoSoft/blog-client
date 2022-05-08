@@ -1,6 +1,6 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
-    <div v-if="!initialEntry.id && drafts.length">
+    <div v-if="!initial.id && drafts.length">
       <select @change="loadDraft" class="blog-entry-form__draft">
         <option value>{{ $strings.newEntry }}</option>
         <optgroup :label="$strings.unpublishedDrafts">
@@ -49,6 +49,18 @@
     </div>
     <div>
       <blog-tag-manager :tags="tags" />
+    </div>
+    <div class="blog-entry-form__schedule">
+      <v-date-picker v-model="publishAt" mode="dateTime">
+        <template v-slot="{ inputValue, inputEvents }">
+          <input
+            :placeholder="$strings.publishAtScheduledTime"
+            class="bg-white border px-2 py-1 rounded"
+            :value="inputValue"
+            v-on="inputEvents"
+          />
+        </template>
+      </v-date-picker>
     </div>
     <div>
       <template v-if="!entryId || entry.public === 1">
@@ -119,7 +131,7 @@ import imageHandler from "@/util/imageHandler";
 export default {
   name: "blog-entry-form",
 
-  props: ["initialEntry", "links"],
+  props: ["initial"],
 
   components: {
     BlogEntryFinder,
@@ -130,15 +142,19 @@ export default {
 
   data() {
     return {
-      title: this.initialEntry.title ? this.initialEntry.title : "",
-      newId: this.initialEntry.id ? this.initialEntry.id : "",
-      body: this.initialEntry.body ? this.initialEntry.body : "",
-      tags: this.initialEntry.tags ? this.initialEntry.tags : [],
-      entry: this.initialEntry ? this.initialEntry : false,
+      title: this.initial.title ? this.initial.title : "",
+      newId: this.initial.id ? this.initial.id : "",
+      body: this.initial.body ? this.initial.body : "",
+      tags: this.initial.tags ? this.initial.tags : [],
+      links: this.initial.links ? this.initial.links : [],
+      entry: this.initial ? this.initial : false,
       editor: false,
       initialized: false,
       confirmationDialogOpen: false,
-      public: this.initialEntry.public ? this.initialEntry.public : 1,
+      public: this.initial.public ? this.initial.public : 1,
+      publishAt: this.initial.publish_at
+        ? new Date(this.initial.publish_at * 1000)
+        : "",
       entryFinderOpen: false,
       entryFinderRange: null,
       editorSelectionPosition: {}
@@ -273,7 +289,10 @@ export default {
         newId: this.newId,
         body: bodyDelta,
         tags: this.tags,
-        public: this.public
+        public: this.public,
+        publishAt: this.publishAt
+          ? Math.floor(this.publishAt.getTime() / 1000)
+          : 0
       };
       this.setLoading({ loading: true });
       fetch(this.links.save.href, {
@@ -434,6 +453,8 @@ export default {
         this.body = this.entry.body;
         this.tags = this.entry.tags;
         this.public = this.entry.public;
+        this.publishAt = new Date(this.entry.publish_at * 1000);
+        this.links = this.entry.links;
         this.editor.setContents(JSON.parse(this.entry.body));
       } else {
         this.entry = false;

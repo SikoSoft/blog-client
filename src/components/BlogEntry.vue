@@ -50,8 +50,7 @@
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
       <blog-entry-form
-        :links="links"
-        :initialEntry="entry"
+        :initial="entry"
         @idChanged="idChanged"
         @edited="edited"
       />

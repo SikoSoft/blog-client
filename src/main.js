@@ -4,8 +4,10 @@ import router from "./router";
 import store from "./store/";
 import strings from "./data/strings.json";
 import RuntimeTemplateCompiler from "vue-runtime-template-compiler";
+import VCalendar from "v-calendar";
 
 Vue.use(RuntimeTemplateCompiler);
+Vue.use(VCalendar);
 Vue.config.productionTip = false;
 
 Vue.mixin({

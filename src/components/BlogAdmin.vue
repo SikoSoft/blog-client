@@ -23,8 +23,7 @@
       <div class="blog-admin__tool">
         <blog-entry-form
           v-if="entryFormIsOpen"
-          :links="{ save: links.newEntry }"
-          :initialEntry="{ links: { save: links.newEntry } }"
+          :initial="{ links: { save: links.newEntry } }"
         />
       </div>
     </div>
