@@ -79,6 +79,7 @@ export default {
     "body",
     "tags",
     "created",
+    "listed",
     "last_edited",
     "links",
     "public",
@@ -112,8 +113,10 @@ export default {
         body: this.body,
         tags: this.tags,
         created: this.created,
+        listed: this.listed,
         last_edited: this.last_edited,
-        public: this.public
+        public: this.public,
+        links: this.links
       };
     },
 
