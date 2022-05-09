@@ -26,11 +26,11 @@ export default {
 @import "@/styles/mixins";
 
 .blog-footer {
-  border-top: $size-border $color-border-primary solid;
+  border-top: 1px $color-border-secondary solid;
   margin-top: $space;
   font-size: $font-large;
-  padding: 5rem 0;
-  background-color: $color-bg-secondary;
+  padding: 6rem 0;
+  background-color: #000;
 
   &__inner {
     @include container-width;
