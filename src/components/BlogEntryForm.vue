@@ -50,6 +50,10 @@
     <div>
       <blog-tag-manager :tags="tags" />
     </div>
+    <div class="blog-entry-form__listed">
+      <input type="checkbox" v-model="listed" />
+      {{ $strings.includeEntryInListings }}
+    </div>
     <div class="blog-entry-form__schedule">
       <v-date-picker v-model="publishAt" mode="dateTime" :min-date="new Date()">
         <template v-slot="{ inputValue, inputEvents }">
@@ -151,6 +155,7 @@ export default {
       editor: false,
       initialized: false,
       confirmationDialogOpen: false,
+      listed: typeof this.initial.listed === "number" ? this.initial.listed : 1,
       public: this.initial.public ? this.initial.public : 1,
       publishAt: this.initial.publish_at
         ? new Date(this.initial.publish_at * 1000)
@@ -289,6 +294,7 @@ export default {
         newId: this.newId,
         body: bodyDelta,
         tags: this.tags,
+        listed: this.listed ? 1 : 0,
         public: this.public,
         publishAt: this.publishAt
           ? Math.floor(this.publishAt.getTime() / 1000)
