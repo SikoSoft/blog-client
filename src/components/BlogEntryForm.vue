@@ -51,7 +51,7 @@
       <blog-tag-manager :tags="tags" />
     </div>
     <div class="blog-entry-form__schedule">
-      <v-date-picker v-model="publishAt" mode="dateTime">
+      <v-date-picker v-model="publishAt" mode="dateTime" :min-date="new Date()">
         <template v-slot="{ inputValue, inputEvents }">
           <input
             :placeholder="$strings.publishAtScheduledTime"
