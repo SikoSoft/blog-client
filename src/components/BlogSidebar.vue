@@ -1,20 +1,26 @@
 <template>
   <aside class="blog-sidebar" v-if="show">
     <blog-at-a-glance v-if="filters.length" :filters="filters" />
-    <blog-github-feed v-if="feed.length" :feed="feed" />
+    <blog-block
+      :context="[
+        { type: 'setting_is_not', payload: { id: 'github_feed', value: '' } }
+      ]"
+    >
+      <blog-github-feed v-if="feed.length" :feed="feed" />
+    </blog-block>
   </aside>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-
+import BlogBlock from "@/components/BlogBlock.vue";
 import BlogAtAGlance from "@/components/BlogAtAGlance.vue";
 import BlogGithubFeed from "@/components/BlogGithubFeed.vue";
 
 export default {
   name: "blog-sidebar",
 
-  components: { BlogAtAGlance, BlogGithubFeed },
+  components: { BlogAtAGlance, BlogGithubFeed, BlogBlock },
 
   data() {
     return {
