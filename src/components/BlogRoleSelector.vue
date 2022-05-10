@@ -17,7 +17,7 @@
 export default {
   name: "blog-role-selector",
 
-  props: { value: { type: String } },
+  props: { value: { type: Number } },
 
   computed: {
     roles() {
@@ -27,7 +27,7 @@ export default {
 
   methods: {
     change(e) {
-      this.$emit("input", e.target.value);
+      this.$emit("input", parseInt(e.target.value));
     }
   }
 };

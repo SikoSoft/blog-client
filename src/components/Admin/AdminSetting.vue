@@ -47,7 +47,7 @@ export default {
 
   data() {
     return {
-      value: this.initialValue ? this.initialValue : ""
+      value: this.initialValue ? this.initialValue : 0
     };
   },
 
