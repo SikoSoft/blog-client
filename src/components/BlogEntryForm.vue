@@ -50,7 +50,7 @@
           </div>
         </div>
         <div>
-          <blog-tag-manager :tags="tags" />
+          <blog-tag-manager @tagsUpdated="tagsUpdated" :tags="tags" />
         </div>
       </blog-tab>
       <blog-tab :title="$strings.meta">
@@ -219,13 +219,13 @@ export default {
     if (this.body) {
       this.editor.setContents(JSON.parse(this.body));
     }
+    const toolbar = this.editor.getModule("toolbar");
     if (this.links.uploadImage) {
       this.setupImageUpload();
+      toolbar.addHandler("image", () => {
+        this.imageHandler.selectLocalImage();
+      });
     }
-    const toolbar = this.editor.getModule("toolbar");
-    toolbar.addHandler("image", () => {
-      this.imageHandler.selectLocalImage();
-    });
     this.editor.on("text-change", () => {
       this.updateSelectionPosition();
       this.saveFormState();
@@ -521,6 +521,10 @@ export default {
         uploadImage: this.links.uploadImage,
         headers: this.headers
       });
+    },
+
+    tagsUpdated(tags) {
+      this.tags = tags;
     }
   }
 };

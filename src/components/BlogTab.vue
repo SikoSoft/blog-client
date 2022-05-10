@@ -24,12 +24,10 @@ export default {
 
 <style lang="scss">
 .blog-tab {
-  height: 0;
-  overflow: hidden;
-  transition: all 0.3s;
+  display: none;
 
   &--active {
-    height: auto;
+    display: block;
   }
 }
 </style>

@@ -61,12 +61,15 @@ export default {
     },
 
     addTag() {
-      this.$parent.setTags([...this.$parent.tags, this.tag]);
+      this.$emit("tagsUpdated", [...this.tags, this.tag]);
       this.tag = "";
     },
 
     deleteTag(tag) {
-      this.$parent.setTags(this.$parent.tags.filter(t => t != tag));
+      this.$emit(
+        "tagsUpdated",
+        this.tags.filter(t => t != tag)
+      );
     }
   }
 };
