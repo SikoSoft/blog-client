@@ -105,6 +105,8 @@
   "tokenUpdated": "The token has been updated.",
   "tokenDeleted": "The token has been deleted.",
   "includeEntryInListings": "Include entry in listings",
+  "content": "Content",
+  "meta": "Meta",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

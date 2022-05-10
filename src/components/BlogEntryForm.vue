@@ -1,80 +1,87 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
-    <div v-if="!initial.id && drafts.length">
-      <select @change="loadDraft" class="blog-entry-form__draft">
-        <option value>{{ $strings.newEntry }}</option>
-        <optgroup :label="$strings.unpublishedDrafts">
-          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
-            {{ draft.title }}
-          </option>
-        </optgroup>
-      </select>
-    </div>
-    <div>
-      <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
-      <h2 v-else>{{ $strings.editEntry }}</h2>
-    </div>
-    <div>
-      <input
-        type="text"
-        class="blog-entry-form__title"
-        v-model="title"
-        @keyup="
-          e => {
-            updateNewId(e);
-            saveFormState();
-          }
-        "
-        :placeholder="$strings.title"
-      />
-    </div>
-    <div v-if="showNewId">
-      <input
-        type="text"
-        class="blog-entry-form__title"
-        v-model="newId"
-        @keyup="saveFormState"
-        :placeholder="$strings.id"
-      />
-    </div>
-    <div class="blog-entry-form__body">
-      <div :id="editorId"></div>
-      <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
-        <blog-entry-finder
-          v-if="entryFinderOpen"
-          @entryClicked="insertEntryLink"
-          @inputBlurred="hideEntryFinder"
-        />
-      </div>
-    </div>
-    <div>
-      <blog-tag-manager :tags="tags" />
-    </div>
-    <div class="blog-entry-form__listed">
-      <label>
-        <input type="checkbox" v-model="listed" />
-        {{ $strings.includeEntryInListings }}</label
-      >
-    </div>
-    <div class="blog-entry-form__schedule">
-      <div
-        class="blog-entry-form__schedule-calendar"
-        v-if="schedulerIsOpen"
-        @mouseleave="hideScheduler"
-      >
-        <v-date-picker
-          v-if="schedulerIsOpen"
-          v-model="publishAt"
-          mode="dateTime"
-          :min-date="new Date()"
-        />
-      </div>
-      <input
-        :placeholder="$strings.publishAtScheduledTime"
-        @focus="showScheduler"
-        v-model="publishAt"
-      />
-    </div>
+    <blog-tabs>
+      <blog-tab :title="$strings.content">
+        <div v-if="!initial.id && drafts.length">
+          <select @change="loadDraft" class="blog-entry-form__draft">
+            <option value>{{ $strings.newEntry }}</option>
+            <optgroup :label="$strings.unpublishedDrafts">
+              <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
+                {{ draft.title }}
+              </option>
+            </optgroup>
+          </select>
+        </div>
+        <div>
+          <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
+          <h2 v-else>{{ $strings.editEntry }}</h2>
+        </div>
+        <div>
+          <input
+            type="text"
+            class="blog-entry-form__title"
+            v-model="title"
+            @keyup="
+              e => {
+                updateNewId(e);
+                saveFormState();
+              }
+            "
+            :placeholder="$strings.title"
+          />
+        </div>
+        <div v-if="showNewId">
+          <input
+            type="text"
+            class="blog-entry-form__title"
+            v-model="newId"
+            @keyup="saveFormState"
+            :placeholder="$strings.id"
+          />
+        </div>
+        <div class="blog-entry-form__body">
+          <div :id="editorId"></div>
+          <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
+            <blog-entry-finder
+              v-if="entryFinderOpen"
+              @entryClicked="insertEntryLink"
+              @inputBlurred="hideEntryFinder"
+            />
+          </div>
+        </div>
+        <div>
+          <blog-tag-manager :tags="tags" />
+        </div>
+      </blog-tab>
+      <blog-tab :title="$strings.meta">
+        <div class="blog-entry-form__listed">
+          <label>
+            <input type="checkbox" v-model="listed" />
+            {{ $strings.includeEntryInListings }}</label
+          >
+        </div>
+        <div
+          class="blog-entry-form__schedule"
+          v-if="!entryId || entry.public === 0"
+        >
+          {{ $strings.publishAtScheduledTime }}
+          <div class="blog-entry-form__schedule-calendar">
+            <v-date-picker
+              v-if="schedulerIsOpen"
+              v-model="publishAt"
+              mode="dateTime"
+              :min-date="new Date()"
+            />
+          </div>
+          <input
+            type="hidden"
+            :placeholder="$strings.publishAtScheduledTime"
+            @focus="showScheduler"
+            v-model="publishAt"
+          />
+        </div>
+      </blog-tab>
+    </blog-tabs>
     <div>
       <template v-if="!entryId || entry.public === 1">
         <blog-button
@@ -134,7 +141,8 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
-
+import BlogTabs from "@/components/BlogTabs.vue";
+import BlogTab from "@/components/BlogTab.vue";
 import BlogEntryFinder from "@/components/BlogEntryFinder.vue";
 import BlogTagManager from "@/components/BlogTagManager.vue";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
@@ -147,6 +155,8 @@ export default {
   props: ["initial"],
 
   components: {
+    BlogTabs,
+    BlogTab,
     BlogEntryFinder,
     BlogTagManager,
     BlogConfirmationDialog,
@@ -172,7 +182,7 @@ export default {
       entryFinderOpen: false,
       entryFinderRange: null,
       editorSelectionPosition: {},
-      schedulerIsOpen: false
+      schedulerIsOpen: true
     };
   },
 
@@ -525,11 +535,7 @@ export default {
   }
 
   .blog-entry-form__schedule {
-    position: relative;
-
-    &-calendar {
-      position: absolute;
-    }
+    margin-top: $space;
   }
 
   input,
