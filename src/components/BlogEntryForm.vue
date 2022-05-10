@@ -51,20 +51,29 @@
       <blog-tag-manager :tags="tags" />
     </div>
     <div class="blog-entry-form__listed">
-      <input type="checkbox" v-model="listed" />
-      {{ $strings.includeEntryInListings }}
+      <label>
+        <input type="checkbox" v-model="listed" />
+        {{ $strings.includeEntryInListings }}</label
+      >
     </div>
     <div class="blog-entry-form__schedule">
-      <v-date-picker v-model="publishAt" mode="dateTime" :min-date="new Date()">
-        <template v-slot="{ inputValue, inputEvents }">
-          <input
-            :placeholder="$strings.publishAtScheduledTime"
-            class="bg-white border px-2 py-1 rounded"
-            :value="inputValue"
-            v-on="inputEvents"
-          />
-        </template>
-      </v-date-picker>
+      <div
+        class="blog-entry-form__schedule-calendar"
+        v-if="schedulerIsOpen"
+        @mouseleave="hideScheduler"
+      >
+        <v-date-picker
+          v-if="schedulerIsOpen"
+          v-model="publishAt"
+          mode="dateTime"
+          :min-date="new Date()"
+        />
+      </div>
+      <input
+        :placeholder="$strings.publishAtScheduledTime"
+        @focus="showScheduler"
+        v-model="publishAt"
+      />
     </div>
     <div>
       <template v-if="!entryId || entry.public === 1">
@@ -162,7 +171,8 @@ export default {
         : "",
       entryFinderOpen: false,
       entryFinderRange: null,
-      editorSelectionPosition: {}
+      editorSelectionPosition: {},
+      schedulerIsOpen: false
     };
   },
 
@@ -439,6 +449,14 @@ export default {
       this.entryFinderOpen = false;
     },
 
+    showScheduler() {
+      this.schedulerIsOpen = true;
+    },
+
+    hideScheduler() {
+      this.schedulerIsOpen = false;
+    },
+
     insertEntryLink(payload) {
       if (this.entryFinderRange) {
         this.editor.insertText(
@@ -504,6 +522,14 @@ export default {
 
   .blog-entry-form__draft {
     max-width: 90%;
+  }
+
+  .blog-entry-form__schedule {
+    position: relative;
+
+    &-calendar {
+      position: absolute;
+    }
   }
 
   input,
