@@ -23,7 +23,9 @@
       <div class="blog-admin__tool">
         <blog-entry-form
           v-if="entryFormIsOpen"
-          :initial="{ links: { save: links.newEntry } }"
+          :initial="{
+            links: { save: links.newEntry, uploadImage: links.uploadImage }
+          }"
         />
       </div>
     </div>
