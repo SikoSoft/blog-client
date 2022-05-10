@@ -51,7 +51,10 @@ export default {
     BlogTagInput
   },
 
-  props: ["tag", "tagRoles"],
+  props: {
+    tag: { type: String },
+    tagRoles: { type: Array }
+  },
 
   data() {
     return {

@@ -86,7 +86,7 @@ export default {
     BlogRoleSelector
   },
 
-  props: ["role"],
+  props: { role: { type: Number } },
 
   data() {
     return {

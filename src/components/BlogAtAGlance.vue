@@ -24,7 +24,7 @@
 export default {
   name: "blog-at-a-glance",
 
-  props: ["filters"]
+  props: { filters: { type: Array } }
 };
 </script>
 

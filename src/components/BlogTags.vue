@@ -14,7 +14,9 @@
 export default {
   name: "blog-tags",
 
-  props: ["tags"],
+  props: {
+    tags: { type: Array }
+  },
 
   computed: {}
 };

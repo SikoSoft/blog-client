@@ -48,7 +48,10 @@ export default {
     BlogRoleSelector
   },
 
-  props: ["tokens", "links"],
+  props: {
+    tokens: { type: Array },
+    links: { type: Object }
+  },
 
   data() {
     return {

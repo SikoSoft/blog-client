@@ -4,9 +4,7 @@
 
 <script>
 export default {
-  name: "blog-further-reading",
-
-  props: []
+  name: "blog-further-reading"
 };
 </script>
 

@@ -55,7 +55,10 @@ export default {
     BlogConfirmationDialog
   },
 
-  props: ["initial", "links"],
+  props: {
+    initial: { type: Object },
+    links: { type: Object }
+  },
 
   data() {
     return {

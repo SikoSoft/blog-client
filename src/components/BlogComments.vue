@@ -2,7 +2,11 @@
   <div class="blog-comments" v-if="comments.length">
     <h3 class="blog-comments__head">{{ $strings.comments }}</h3>
     <div class="blog-comments__list">
-      <blog-comment v-bind="comment" v-for="comment in comments" :key="comment.id" />
+      <blog-comment
+        v-bind="comment"
+        v-for="comment in comments"
+        :key="comment.id"
+      />
     </div>
     <div
       class="blog-comments__buttons"
@@ -24,7 +28,9 @@ export default {
 
   components: { BlogComment, BlogButton },
 
-  props: ["entry"],
+  props: {
+    entry: { type: Object }
+  },
 
   mounted() {
     this.getComments({ entryId: this.entry.id }).then(() => {

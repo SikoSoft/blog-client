@@ -40,7 +40,9 @@ export default {
     };
   },
 
-  props: ["tags"],
+  props: {
+    tags: { type: Array }
+  },
 
   computed: {
     ...mapGetters(["links"])

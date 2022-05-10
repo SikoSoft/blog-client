@@ -73,18 +73,18 @@ const imgRegExp = new RegExp("<img ", "g");
 export default {
   name: "blog-entry",
 
-  props: [
-    "id",
-    "title",
-    "body",
-    "tags",
-    "created",
-    "listed",
-    "last_edited",
-    "links",
-    "public",
-    "fullMode"
-  ],
+  props: {
+    id: { type: String },
+    title: { type: String },
+    body: { type: String },
+    tags: { type: Array },
+    created: { type: Number },
+    listed: { type: Number },
+    last_edited: { type: Number },
+    links: { type: Object },
+    public: { type: Number },
+    fullMode: { type: Boolean }
+  },
 
   components: {
     BlogEntryForm,

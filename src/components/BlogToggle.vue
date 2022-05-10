@@ -8,7 +8,9 @@
 export default {
   name: "blog-toggle",
 
-  props: ["value"],
+  props: {
+    value: { type: Number }
+  },
 
   computed: {
     classes() {

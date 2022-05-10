@@ -22,7 +22,10 @@ import BlogEntry from "@/components/BlogEntry.vue";
 export default {
   name: "blog-entries",
 
-  props: ["type", "entries"],
+  props: {
+    type: { type: String },
+    entries: { type: Array }
+  },
 
   components: { BlogEntry },
 

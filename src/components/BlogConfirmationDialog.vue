@@ -17,7 +17,11 @@ import { mapMutations } from "vuex";
 export default {
   name: "blog-confirmation-dialog",
 
-  props: ["title", "message", "isOpen"],
+  props: {
+    title: { type: String },
+    message: { type: String },
+    isOpen: { type: Boolean }
+  },
 
   methods: {
     ...mapMutations(["setOverlayIsOpen"])

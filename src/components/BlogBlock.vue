@@ -13,7 +13,9 @@ import BlogContext from "@/components/BlogContext.vue";
 export default {
   name: "blog-block",
 
-  props: ["context"],
+  props: {
+    context: { type: Array }
+  },
 
   components: { BlogContext }
 };

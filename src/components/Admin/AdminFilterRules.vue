@@ -19,7 +19,10 @@ export default {
 
   components: { AdminFilterRule },
 
-  props: ["rules", "filterId"]
+  props: {
+    rules: { type: Array },
+    filterId: { type: String }
+  }
 };
 </script>
 

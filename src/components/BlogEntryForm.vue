@@ -152,7 +152,9 @@ import imageHandler from "@/util/imageHandler";
 export default {
   name: "blog-entry-form",
 
-  props: ["initial"],
+  props: {
+    initial: { type: Object }
+  },
 
   components: {
     BlogTabs,

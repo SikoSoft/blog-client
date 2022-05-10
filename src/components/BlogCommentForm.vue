@@ -62,7 +62,9 @@ export default {
     };
   },
 
-  props: ["entry"],
+  props: {
+    entry: { type: Object }
+  },
 
   mounted() {
     this.editor = new Quill(`#${this.editorId}`, {

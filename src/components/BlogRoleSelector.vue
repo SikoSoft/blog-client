@@ -17,7 +17,7 @@
 export default {
   name: "blog-role-selector",
 
-  props: ["value"],
+  props: { value: { type: String } },
 
   computed: {
     roles() {

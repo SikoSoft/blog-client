@@ -89,7 +89,11 @@ export default {
 
   components: { BlogButton, BlogConfirmationDialog, AdminFilterRules },
 
-  props: ["initial", "rules", "showId"],
+  props: {
+    initial: { type: Object },
+    rules: { type: Array },
+    showId: { type: Boolean }
+  },
 
   data() {
     return {

@@ -36,7 +36,9 @@ import { mapGetters } from "vuex";
 export default {
   name: "blog-tag-input",
 
-  props: ["tagsToFilter"],
+  props: {
+    tagsToFilter: { type: Array }
+  },
 
   data() {
     return {

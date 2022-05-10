@@ -10,7 +10,9 @@ import { mapState } from "vuex";
 export default {
   name: "blog-context",
 
-  props: ["rules"],
+  props: {
+    rules: { type: Array }
+  },
 
   computed: {
     ...mapState(["settings"]),

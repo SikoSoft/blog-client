@@ -14,7 +14,12 @@ import { parseVars } from "@/util/strings.js";
 export default {
   name: "blog-github-event",
 
-  props: ["id", "type", "repo", "payload"],
+  props: {
+    id: { type: String },
+    type: { type: String },
+    repo: { type: Object },
+    payload: { type: Object }
+  },
 
   computed: {
     octicon() {

@@ -10,7 +10,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "blog-tag",
 
-  props: ["tag"],
+  props: { tag: { type: String } },
 
   computed: mapGetters(["title"])
 };

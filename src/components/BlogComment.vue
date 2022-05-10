@@ -29,7 +29,14 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "blog-comment",
 
-  props: ["entry_id", "id", "message", "name", "time", "public"],
+  props: {
+    entry_id: { type: String },
+    id: { type: Number },
+    message: { type: String },
+    name: { type: String },
+    time: { type: Number },
+    public: { type: Number }
+  },
 
   computed: {
     ...mapGetters(["user"]),

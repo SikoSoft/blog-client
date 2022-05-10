@@ -59,7 +59,10 @@ export default {
     BlogConfirmationDialog
   },
 
-  props: ["id", "initialName"],
+  props: {
+    id: { type: Number },
+    initialName: { type: String }
+  },
 
   data() {
     return {
