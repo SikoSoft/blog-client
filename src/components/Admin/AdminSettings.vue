@@ -1,30 +1,35 @@
 <template>
   <div class="admin-settings">
-    <div
-      class="admin-settings__group"
-      v-for="settingGroup in Object.keys(settingGroups)"
-      :key="settingGroup"
-    >
-      <h3>{{ $strings.settingsGroups[settingGroup] }}</h3>
-      <ul class="admin-settings__list">
-        <div
-          class="admin-settings__setting"
-          v-for="settingId in settingGroups[settingGroup]"
-          :key="settingId"
-        >
-          <admin-setting
-            v-bind="settingById(settingId)"
-            :initialValue="settings[settingId] ? settings[settingId] : null"
-          />
-        </div>
-      </ul>
-    </div>
+    <blog-tabs>
+      <blog-tab
+        v-for="settingGroup in Object.keys(settingGroups).filter(
+          settingGroup => settingGroups[settingGroup].length > 0
+        )"
+        :key="settingGroup"
+        :title="$strings.settingsGroups[settingGroup]"
+      >
+        <ul class="admin-settings__list">
+          <div
+            class="admin-settings__setting"
+            v-for="settingId in settingGroups[settingGroup]"
+            :key="settingId"
+          >
+            <admin-setting
+              v-bind="settingById(settingId)"
+              :initialValue="settings[settingId] ? settings[settingId] : null"
+            />
+          </div>
+        </ul>
+      </blog-tab>
+    </blog-tabs>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import spec from "blog-spec";
+import BlogTabs from "@/components/BlogTabs.vue";
+import BlogTab from "@/components/BlogTab.vue";
 import AdminSetting from "@/components/Admin/AdminSetting.vue";
 
 const settingGroups = {
@@ -60,7 +65,7 @@ settingGroups.other = spec.settings
 export default {
   name: "admin-settings",
 
-  components: { AdminSetting },
+  components: { AdminSetting, BlogTabs, BlogTab },
 
   data() {
     return {
