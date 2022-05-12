@@ -40,10 +40,7 @@
         </div>
       </div>
       <div class="blog-entry__comments" v-if="showComments">
-        <blog-comment-form
-          :entry="entry"
-          v-if="user.rights.includes('post_comment')"
-        />
+        <blog-comment-form :entry="entry" v-if="links.postComment" />
         <blog-comments @commentsLoaded="commentsLoaded" :entry="entry" />
       </div>
     </template>
@@ -100,7 +97,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user", "settings"]),
+    ...mapGetters(["settings"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);
