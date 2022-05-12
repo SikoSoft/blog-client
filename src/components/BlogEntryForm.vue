@@ -105,7 +105,7 @@
         <blog-button
           destroy
           type="button"
-          v-if="entry.id && user.rights.includes('delete_entry')"
+          v-if="links.delete"
           :action="showConfirmationDialog"
           :text="$strings.deleteEntry"
         />

@@ -35,7 +35,8 @@ export default {
     message: { type: String },
     name: { type: String },
     time: { type: Number },
-    public: { type: Number }
+    public: { type: Number },
+    links: { type: Object }
   },
 
   computed: {
@@ -66,10 +67,7 @@ export default {
     },
 
     showCheckBox() {
-      if (
-        (this.user.rights.includes("publish_comment") && this.public === 0) ||
-        this.user.rights.includes("delete_comment")
-      ) {
+      if ((this.links.publish && this.public === 0) || this.links.delete) {
         return true;
       }
       return false;

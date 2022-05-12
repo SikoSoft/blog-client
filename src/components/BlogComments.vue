@@ -12,8 +12,18 @@
       class="blog-comments__buttons"
       :class="{ 'blog-comments__buttons--active': selectedComments.length }"
     >
-      <blog-button create :action="publishComments" :text="$strings.publish" />
-      <blog-button destroy :action="deleteComments" :text="$strings.delete" />
+      <blog-button
+        v-if="entry.links.publishComments"
+        create
+        :action="publishComments"
+        :text="$strings.publish"
+      />
+      <blog-button
+        v-if="entry.links.deleteComments"
+        destroy
+        :action="deleteComments"
+        :text="$strings.delete"
+      />
     </div>
   </div>
 </template>
