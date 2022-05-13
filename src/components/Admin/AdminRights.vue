@@ -7,8 +7,8 @@
         <tr v-for="right in roleRights" :key="right.action">
           <td>
             {{
-              rightsNames[right.action]
-                ? rightsNames[right.action]
+              $strings.rightsLabels[right.action]
+                ? $strings.rightsLabels[right.action]
                 : right.action
             }}
           </td>
@@ -31,18 +31,22 @@
           $strings.selectARight
         }}</option>
         <optgroup
-          v-for="groupName in Object.keys(rights)"
+          v-for="groupName in Object.keys(rightsGroups)"
           :key="groupName"
           :label="groupName"
         >
           <option
-            v-for="action in Object.keys(rights[groupName])"
+            v-for="action in rightsGroups[groupName]"
             :key="action"
             :value="action"
             :disabled="
               roleRights.filter(right => right.action === action).length > 0
             "
-            >{{ rights[groupName][action] }}</option
+            >{{
+              $strings.rightsLabels[action]
+                ? $strings.rightsLabels[action]
+                : action
+            }}</option
           >
         </optgroup>
       </select>
@@ -70,12 +74,44 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-
-import rights from "@/data/rights.json";
-
+import spec from "blog-spec";
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import BlogRoleSelector from "../BlogRoleSelector.vue";
+
+const rightsGroups = {
+  entries: ["create_entry", "update_entry", "delete_entry", "view_draft"],
+  comments: [
+    "view_unpublished_comment",
+    "publish_comment",
+    "delete_comment",
+    "post_comment"
+  ],
+  admin: [
+    "manage_settings",
+    "manage_roles",
+    "manage_rights",
+    "manage_tokens",
+    "manage_tag_policies",
+    "manage_filters"
+  ]
+};
+
+rightsGroups.other = spec.rights
+  .filter(right => {
+    let match = false;
+    for (let group of Object.keys(rightsGroups)) {
+      if (
+        rightsGroups[group].some(
+          rightsInGroup => rightsInGroup.indexOf(right.id) > -1
+        )
+      ) {
+        match = true;
+      }
+    }
+    return !match;
+  })
+  .map(right => right.id);
 
 export default {
   name: "admin-rights",
@@ -90,7 +126,8 @@ export default {
 
   data() {
     return {
-      rights,
+      rightsGroups,
+      spec,
       newAction: "",
       right: {},
       deleteDialogIsOpen: false
@@ -102,12 +139,6 @@ export default {
       return this.$store.state.roleRights.filter(
         right => right.role === this.role
       );
-    },
-
-    rightsNames() {
-      return Object.keys(rights)
-        .map(rightGroup => rights[rightGroup])
-        .reduce((prev, next) => ({ ...prev, ...next }), {});
     }
   },
 
