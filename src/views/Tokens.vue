@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapState, mapMutations } from "vuex";
 
 import AdminTokens from "@/components/Admin/AdminTokens.vue";
 
@@ -37,7 +37,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "user", "tokens", "links"]),
+    ...mapState(["initialized", "user", "tokens", "links"]),
 
     tokens() {
       return this.$store.state.tokens;

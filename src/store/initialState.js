@@ -53,5 +53,6 @@ export default {
   authToken: "",
   roleRights: [],
   tagRoles: [],
-  overlayIsOpen: false
+  overlayIsOpen: false,
+  imageSizes: []
 };

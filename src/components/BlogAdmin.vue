@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
@@ -44,7 +44,7 @@ export default {
   components: { BlogEntryForm, BlogButton },
 
   computed: {
-    ...mapGetters(["entryFormIsOpen", "links", "user"])
+    ...mapState(["entryFormIsOpen", "links", "user"])
   },
 
   methods: {

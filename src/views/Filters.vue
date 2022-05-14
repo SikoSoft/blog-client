@@ -6,7 +6,7 @@
 
 <script>
 import AdminFilters from "@/components/Admin/AdminFilters.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "filters",
@@ -24,7 +24,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "user"])
+    ...mapState(["initialized", "user"])
   },
 
   methods: {

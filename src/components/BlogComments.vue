@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import BlogComment from "@/components/BlogComment.vue";
 import BlogButton from "@/components/BlogButton.vue";
 
@@ -49,7 +49,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["selectedComments"]),
+    ...mapState(["selectedComments"]),
 
     comments() {
       return this.$store.getters.commentsByEntry(this.entry.id);

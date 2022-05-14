@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import AdminSettings from "@/components/Admin/AdminSettings.vue";
 
 export default {
@@ -22,11 +22,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "user"]),
-
-    settings() {
-      return this.$store.getters.settings;
-    }
+    ...mapState(["initialized", "user", "settings"])
   },
 
   methods: {

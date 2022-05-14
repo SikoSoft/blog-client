@@ -49,7 +49,7 @@
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "admin-role",
@@ -73,7 +73,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user", "settings"]),
+    ...mapState(["user", "settings"]),
 
     isProtected() {
       return (

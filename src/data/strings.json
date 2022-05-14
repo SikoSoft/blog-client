@@ -107,6 +107,7 @@
   "includeEntryInListings": "Include entry in listings",
   "content": "Content",
   "meta": "Meta",
+  "imageSizes": "Image sizes",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import AdminRights from "@/components/Admin/AdminRights.vue";
 
 export default {
@@ -22,13 +22,11 @@ export default {
   },
 
   computed: {
-    ...mapState(["roleRights"]),
-
-    ...mapGetters(["initialized", "user"]),
+    ...mapState(["roleRights", "initialized", "user"]),
 
     role() {
       return parseInt(this.$route.params.role);
-    },
+    }
   },
 
   methods: {
@@ -36,19 +34,19 @@ export default {
       "initialize",
       "setBreadcrumbs",
       "setTitle",
-      "getRoleRights",
+      "getRoleRights"
     ]),
 
     update() {
       this.initialize().then(() => {
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/rights", label: this.$strings.rights },
+          { href: "/admin/rights", label: this.$strings.rights }
         ]);
         this.setTitle(this.$strings.rights);
         this.getRoleRights();
       });
-    },
+    }
   },
 
   watch: {
@@ -56,7 +54,7 @@ export default {
       if (!this.user.rights.includes("manage_rights")) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>

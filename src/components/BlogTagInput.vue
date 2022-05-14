@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "blog-tag-input",
@@ -53,7 +53,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["links"])
+    ...mapState(["links"])
   },
 
   methods: {

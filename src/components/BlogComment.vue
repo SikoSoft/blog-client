@@ -24,7 +24,7 @@
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { longDate } from "../util/time.js";
 import { parseVars } from "@/util/strings.js";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "blog-comment",
@@ -40,7 +40,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user"]),
+    ...mapState(["user"]),
 
     renderedMessage() {
       return new QuillDeltaToHtmlConverter(

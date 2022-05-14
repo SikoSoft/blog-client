@@ -3,13 +3,13 @@
     <admin-tag-policies
       v-if="initialized && tagRolesFetched"
       :tag="tag"
-      :tagRoles="tagRoles.filter((tagRole) => tagRole.tag === tag)"
+      :tagRoles="tagRoles.filter(tagRole => tagRole.tag === tag)"
     />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import AdminTagPolicies from "@/components/Admin/AdminTagPolicies.vue";
 
 export default {
@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       tagRolesFetching: false,
-      tagRolesFetched: false,
+      tagRolesFetched: false
     };
   },
 
@@ -33,13 +33,11 @@ export default {
   },
 
   computed: {
-    ...mapState(["tagRoles"]),
-
-    ...mapGetters(["initialized", "user"]),
+    ...mapState(["tagRoles", "initialized", "user"]),
 
     tag() {
       return this.$route.params.tag;
-    },
+    }
   },
 
   methods: {
@@ -49,7 +47,7 @@ export default {
       this.initialize().then(() => {
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/tag_policies", label: this.$strings.tagPolicies },
+          { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
         ]);
         this.setTitle(this.$strings.tagPolicies);
         if (!this.tagRolesFetching) {
@@ -59,7 +57,7 @@ export default {
           });
         }
       });
-    },
+    }
   },
 
   watch: {
@@ -67,7 +65,7 @@ export default {
       if (!this.user.rights.includes("manage_roles")) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>

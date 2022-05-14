@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import BlogOverlay from "@/components/BlogOverlay.vue";
 import BlogAdmin from "@/components/BlogAdmin.vue";
 import BlogLoader from "@/components/BlogLoader.vue";
@@ -111,7 +111,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapState([
       "initialized",
       "isLoading",
       "settings",

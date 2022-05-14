@@ -1,4 +1,4 @@
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 import BlogEntries from "@/components/BlogEntries.vue";
 
@@ -101,9 +101,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["entries"]),
-
-    ...mapGetters(["initialized", "entryFormIsOpen", "settings"]),
+    ...mapState(["entries", "initialized", "entryFormIsOpen", "settings"]),
 
     title() {
       return process.env.VUE_APP_SITE_NAME;

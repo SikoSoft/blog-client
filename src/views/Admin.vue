@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 import AdminHome from "@/components/Admin/AdminHome.vue";
 
@@ -15,7 +15,7 @@ export default {
   components: { AdminHome },
 
   computed: {
-    ...mapGetters(["initialized"])
+    ...mapState(["initialized"])
   },
 
   mounted() {

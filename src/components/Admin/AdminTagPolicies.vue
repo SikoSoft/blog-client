@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { parseVars } from "@/util/strings.js";
 import BlogButton from "@/components/BlogButton.vue";
 import BlogTagInput from "@/components/BlogTagInput.vue";
@@ -63,7 +63,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["roles"]),
+    ...mapState(["roles"]),
 
     tagName() {
       return parseVars(this.$strings.rolesWithTagAccess, { tag: this.tag });

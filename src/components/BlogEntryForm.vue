@@ -139,7 +139,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapState, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
 import BlogTabs from "@/components/BlogTabs.vue";
 import BlogTab from "@/components/BlogTab.vue";
@@ -250,7 +250,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["headers", "user", "drafts", "entryFormIsOpen"]),
+    ...mapState(["user", "drafts", "entryFormIsOpen"]),
+
+    ...mapGetters(["headers"]),
 
     entryId() {
       return this.entry && this.entry.id ? this.entry.id : false;

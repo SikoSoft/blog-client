@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import BlogEntry from "@/components/BlogEntry.vue";
 
 export default {
@@ -22,7 +22,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized"]),
+    ...mapState(["initialized"]),
 
     entry: function() {
       return this.$store.getters[

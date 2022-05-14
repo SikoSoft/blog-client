@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 import BlogTagInput from "@/components/BlogTagInput.vue";
 import BlogButton from "@/components/BlogButton.vue";
@@ -45,7 +45,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["links"])
+    ...mapState(["links"])
   },
 
   methods: {

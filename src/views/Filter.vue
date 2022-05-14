@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 import Entries from "@/shared/Entries.js";
 
@@ -17,17 +17,15 @@ export default {
   computed: {
     ...Entries.computed,
 
-    ...mapGetters(["filters"]),
+    ...mapState(["filters"]),
 
     filterId() {
       return this.$route.params.filter;
     },
 
     title() {
-      return this.$store.getters.filters.length
-        ? this.$store.getters.filters.filter(
-            filter => filter.id === this.filterId
-          )[0].label
+      return this.filters.length
+        ? this.filters.filter(filter => filter.id === this.filterId)[0].label
         : "";
     }
   },

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
 
@@ -38,7 +38,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["links", "headers"])
+    ...mapState(["links"]),
+
+    ...mapGetters(["headers"])
   },
 
   methods: {

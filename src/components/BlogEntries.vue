@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 import BlogEntry from "@/components/BlogEntry.vue";
 
@@ -36,7 +36,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "settings"])
+    ...mapState(["initialized", "settings"])
   },
 
   methods: {

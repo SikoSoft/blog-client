@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
@@ -117,7 +117,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["headers", "links"])
+    ...mapState(["links"]),
+
+    ...mapGetters(["headers"])
   },
 
   methods: {

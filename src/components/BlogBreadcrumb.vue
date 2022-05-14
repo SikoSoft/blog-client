@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "blog-breadcrumb",
 
   computed: {
-    ...mapGetters(["breadcrumbs"]),
+    ...mapState(["breadcrumbs"]),
 
     links() {
       return [

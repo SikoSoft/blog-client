@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import BlogBlock from "@/components/BlogBlock.vue";
 import BlogAtAGlance from "@/components/BlogAtAGlance.vue";
 import BlogGithubFeed from "@/components/BlogGithubFeed.vue";
@@ -44,7 +44,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["settings", "links", "filters"]),
+    ...mapState(["settings", "links", "filters"]),
 
     show() {
       if (this.feed.length || this.filters.length) {

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 import BlogButton from "@/components/BlogButton";
 import AdminRole from "@/components/Admin/AdminRole";
@@ -43,7 +43,7 @@ export default {
   components: { BlogButton, AdminRole },
 
   computed: {
-    ...mapGetters(["roles", "user", "settings"])
+    ...mapState(["roles", "user", "settings"])
   },
 
   methods: {

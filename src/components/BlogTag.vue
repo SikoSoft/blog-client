@@ -5,13 +5,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "blog-tag",
 
   props: { tag: { type: String } },
 
-  computed: mapGetters(["title"])
+  computed: mapState(["title"])
 };
 </script>

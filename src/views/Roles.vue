@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import AdminRoles from "@/components/Admin/AdminRoles.vue";
 
 export default {
@@ -22,7 +22,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "user"]),
+    ...mapState(["initialized", "user"]),
 
     roles() {
       return this.$store.getters.roles;

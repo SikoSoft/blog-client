@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 import spec from "blog-spec";
 import BlogTabs from "@/components/BlogTabs.vue";
 import BlogTab from "@/components/BlogTab.vue";
@@ -75,7 +75,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["settings"])
+    ...mapState(["settings"])
   },
 
   methods: {

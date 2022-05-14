@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
 import BlogComments from "@/components/BlogComments.vue";
 import BlogCommentForm from "@/components/BlogCommentForm.vue";
@@ -97,7 +97,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["settings"]),
+    ...mapState(["settings"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapState } from "vuex";
 import BlogTags from "@/components/BlogTags.vue";
 
 export default {
@@ -22,7 +22,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["tags"])
+    ...mapState(["tags"])
   },
 
   methods: {

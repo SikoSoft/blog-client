@@ -8,7 +8,10 @@
     </div>
     <fieldset class="admin-filters__saved">
       <legend></legend>
-      <ul class="admin-filters__list" :class="{ 'admin-filters__list--dragging': isDragging }">
+      <ul
+        class="admin-filters__list"
+        :class="{ 'admin-filters__list--dragging': isDragging }"
+      >
         <li
           :data-id="filter.id"
           class="admin-filters__list-item"
@@ -22,7 +25,11 @@
           @dragend="dragEnd"
           @drop="drop"
         >
-          <admin-filter :initial="{ ...filter }" :rules="rules(filter.id)" :showId="showId" />
+          <admin-filter
+            :initial="{ ...filter }"
+            :rules="rules(filter.id)"
+            :showId="showId"
+          />
         </li>
       </ul>
     </fieldset>
@@ -34,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 import AdminFilter from "@/components/Admin/AdminFilter.vue";
 import BlogToggle from "@/components/BlogToggle.vue";
@@ -56,7 +63,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["filters", "filterRules"])
+    ...mapState(["filters", "filterRules"])
   },
 
   methods: {
