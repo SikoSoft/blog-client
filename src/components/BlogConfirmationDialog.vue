@@ -31,6 +31,10 @@ export default {
     isOpen(value) {
       this.setOverlayIsOpen({ isOpen: value });
     }
+  },
+
+  destroyed() {
+    this.setOverlayIsOpen({ isOpen: false });
   }
 };
 </script>
