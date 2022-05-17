@@ -323,5 +323,9 @@ export default {
 
   setOverlayIsOpen: (state, { isOpen }) => {
     state.overlayIsOpen = isOpen;
+  },
+
+  setImageSizes: (state, { imageSizes }) => {
+    state.imageSizes = imageSizes;
   }
 };

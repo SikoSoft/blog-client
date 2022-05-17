@@ -24,7 +24,8 @@ export default {
         "rights",
         "tag_policies",
         "filters",
-        "tokens"
+        "tokens",
+        "images"
       ]
     };
   },

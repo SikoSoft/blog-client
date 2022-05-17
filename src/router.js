@@ -14,6 +14,7 @@ import AccessDenied from "./views/AccessDenied.vue";
 import Admin from "./views/Admin.vue";
 import Filters from "./views/Filters.vue";
 import Filter from "./views/Filter.vue";
+import Images from "./views/Images.vue";
 
 Vue.use(Router);
 
@@ -62,6 +63,11 @@ export default new Router({
       path: "/admin",
       name: "admin",
       component: Admin
+    },
+    {
+      path: "/admin/images",
+      name: "images",
+      component: Images
     },
     {
       path: "/admin/settings",
