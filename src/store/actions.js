@@ -227,40 +227,6 @@ export default {
     commit("setSelectedComments", { comments });
   },
 
-  publishComments({ state, commit, getters, dispatch }) {
-    fetch(state.links.publishComments.href, {
-      method: state.links.publishComments.method,
-      headers: getters.headers,
-      body: JSON.stringify({ ids: state.selectedComments })
-    })
-      .then(response => response.json())
-      .then(() => {
-        state.selectedComments.forEach(commentId => {
-          if (state.comments[commentId]) {
-            state.comments[commentId].public = 1;
-          }
-        });
-        commit("setSelectedComments", { comments: [] });
-        dispatch("addToast", strings.commentsPublished);
-      });
-  },
-
-  deleteComments({ state, commit, dispatch, getters }) {
-    fetch(state.links.deleteComments.href, {
-      method: state.links.deleteComments.method,
-      headers: getters.headers,
-      body: JSON.stringify({ ids: state.selectedComments })
-    })
-      .then(response => response.json())
-      .then(() => {
-        state.selectedComments.forEach(commentId => {
-          commit("deleteComment", { id: commentId });
-        });
-        commit("setSelectedComments", { comments: [] });
-        dispatch("addToast", strings.commentsDeleted);
-      });
-  },
-
   setSetting({ commit, state, getters }, { id, value }) {
     fetch(state.links.saveSetting.href, {
       method: state.links.saveSetting.method,
