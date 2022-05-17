@@ -8,30 +8,12 @@ To see it in action just check out
 
 The code is free to use however you want, but it contains no back-end. For the back-end API my blog communicates with, I have [another repository](https://github.com/SikoSoft/blog-server) that serves endpoints this client handles. My back-end is an Azure function app, running MariaDB, but I deliberately decoupled the client from the back-end so this application could be running against a completely different setup.
 
-## Project setup
-```
-npm install
-```
+# Conventions
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+All props should be explicitly defined by their expected type.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+All includes/requires should omit the file extension when possible.
 
-### Run your tests
-```
-npm run test
-```
+Use "isOpen" when referring to the state of something, not just "open". Verbs should be reserved for actions, not states.
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Use affirmative terminology in all cases. isOpen rather than closed.
