@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { version } from "blog-spec";
+import { version, displayName } from "blog-spec";
 import { parseVars } from "@/util/strings.js";
 
 export default {
@@ -15,7 +15,10 @@ export default {
 
   computed: {
     poweredBy() {
-      return parseVars(this.$strings.poweredByStatement, { version });
+      return parseVars(this.$strings.poweredByStatement, {
+        version,
+        displayName
+      });
     }
   }
 };

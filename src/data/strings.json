@@ -1,5 +1,5 @@
 {
-  "poweredByStatement": "Powered by v{version}.",
+  "poweredByStatement": "Powered by {displayName} v{version}.",
   "postedFullDate": "posted {date}",
   "readMore": "Read more...",
   "entriesWithTag": "Entries tagged with {tag}",
@@ -201,6 +201,7 @@
     "manage_tokens": "Manage tokens",
     "manage_tag_policies": "Manage tag policies",
     "manage_filters": "Manage filters",
-    "manage_images": "Manage images"
+    "manage_images": "Manage images",
+    "upload_image": "Upload image"
   }
 }
