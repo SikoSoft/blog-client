@@ -92,7 +92,7 @@ export default {
   props: {
     initial: { type: Object },
     rules: { type: Array },
-    showId: { type: Boolean }
+    showId: { type: Number }
   },
 
   data() {

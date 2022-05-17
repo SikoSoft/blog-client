@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       initialized: false,
-      showId: false,
+      showId: 0,
       isDragging: false,
       draggedFilter: null,
       droppedFilter: null,
