@@ -32,11 +32,10 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-
-import AdminToken from "@/components/Admin/AdminToken.vue";
-import BlogButton from "@/components/BlogButton.vue";
-import BlogToggle from "@/components/BlogToggle.vue";
-import BlogRoleSelector from "../BlogRoleSelector.vue";
+import AdminToken from "@/components/Admin/AdminToken";
+import BlogButton from "@/components/BlogButton";
+import BlogToggle from "@/components/BlogToggle";
+import BlogRoleSelector from "@/components/BlogRoleSelector";
 
 export default {
   name: "admin-tokens",

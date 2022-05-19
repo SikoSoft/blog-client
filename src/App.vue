@@ -23,15 +23,14 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import BlogOverlay from "@/components/BlogOverlay.vue";
-import BlogAdmin from "@/components/BlogAdmin.vue";
-import BlogLoader from "@/components/BlogLoader.vue";
-import BlogHeader from "@/components/BlogHeader.vue";
-import BlogFooter from "@/components/BlogFooter.vue";
-import BlogToasts from "@/components/BlogToasts.vue";
-import BlogSidebar from "@/components/BlogSidebar.vue";
-import BlogProgressBar from "@/components/BlogProgressBar.vue";
-
+import BlogOverlay from "@/components/BlogOverlay";
+import BlogAdmin from "@/components/BlogAdmin";
+import BlogLoader from "@/components/BlogLoader";
+import BlogHeader from "@/components/BlogHeader";
+import BlogFooter from "@/components/BlogFooter";
+import BlogToasts from "@/components/BlogToasts";
+import BlogSidebar from "@/components/BlogSidebar";
+import BlogProgressBar from "@/components/BlogProgressBar";
 import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {

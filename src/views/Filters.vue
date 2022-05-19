@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import AdminFilters from "@/components/Admin/AdminFilters.vue";
 import { mapState, mapActions } from "vuex";
+import AdminFilters from "@/components/Admin/AdminFilters";
 
 export default {
   name: "filters",

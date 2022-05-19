@@ -34,9 +34,8 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-
-import BlogButton from "@/components/BlogButton.vue";
-import BlogEntryForm from "@/components/BlogEntryForm.vue";
+import BlogButton from "@/components/BlogButton";
+import BlogEntryForm from "@/components/BlogEntryForm";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

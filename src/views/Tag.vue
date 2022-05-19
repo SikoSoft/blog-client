@@ -7,9 +7,9 @@
 
 <script>
 import { mapActions } from "vuex";
-import { parseVars } from "@/util/strings.js";
-import BlogTag from "@/components/BlogTag.vue";
-import Entries from "@/shared/Entries.js";
+import { parseVars } from "@/util/strings";
+import BlogTag from "@/components/BlogTag";
+import Entries from "@/shared/Entries";
 
 export default {
   ...Entries,

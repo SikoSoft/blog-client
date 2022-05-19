@@ -1,20 +1,20 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Entries from "./views/Entries.vue";
-import Entry from "./views/Entry.vue";
-import Tags from "./views/Tags.vue";
-import Tag from "./views/Tag.vue";
-import Token from "./views/Token.vue";
-import Settings from "./views/Settings.vue";
-import Roles from "./views/Roles.vue";
-import Rights from "./views/Rights.vue";
-import TagPolicies from "./views/TagPolicies.vue";
-import Tokens from "./views/Tokens.vue";
-import AccessDenied from "./views/AccessDenied.vue";
-import Admin from "./views/Admin.vue";
-import Filters from "./views/Filters.vue";
-import Filter from "./views/Filter.vue";
-import Images from "./views/Images.vue";
+import Entries from "./views/Entries";
+import Entry from "./views/Entry";
+import Tags from "./views/Tags";
+import Tag from "./views/Tag";
+import Token from "./views/Token";
+import Settings from "./views/Settings";
+import Roles from "./views/Roles";
+import Rights from "./views/Rights";
+import TagPolicies from "./views/TagPolicies";
+import Tokens from "./views/Tokens";
+import AccessDenied from "./views/AccessDenied";
+import Admin from "./views/Admin";
+import Filters from "./views/Filters";
+import Filter from "./views/Filter";
+import Images from "./views/Images";
 
 Vue.use(Router);
 

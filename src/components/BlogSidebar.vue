@@ -13,9 +13,9 @@
 
 <script>
 import { mapState } from "vuex";
-import BlogBlock from "@/components/BlogBlock.vue";
-import BlogAtAGlance from "@/components/BlogAtAGlance.vue";
-import BlogGithubFeed from "@/components/BlogGithubFeed.vue";
+import BlogBlock from "@/components/BlogBlock";
+import BlogAtAGlance from "@/components/BlogAtAGlance";
+import BlogGithubFeed from "@/components/BlogGithubFeed";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

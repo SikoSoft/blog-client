@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
 import state from "./initialState";
 import actions from "./actions";
 import mutations from "./mutations";

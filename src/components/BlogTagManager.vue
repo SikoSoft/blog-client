@@ -19,9 +19,8 @@
 
 <script>
 import { mapState } from "vuex";
-
-import BlogTagInput from "@/components/BlogTagInput.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogTagInput from "@/components/BlogTagInput";
+import BlogButton from "@/components/BlogButton";
 
 export default {
   name: "blog-tag-manager",

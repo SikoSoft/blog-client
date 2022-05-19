@@ -77,7 +77,7 @@ import { mapActions, mapMutations } from "vuex";
 import spec from "blog-spec";
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
-import BlogRoleSelector from "../BlogRoleSelector.vue";
+import BlogRoleSelector from "@/components/BlogRoleSelector";
 
 const rightsGroups = {
   entries: ["create_entry", "update_entry", "delete_entry", "view_draft"],

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Entries from "@/shared/Entries.js";
+import Entries from "@/shared/Entries";
 
 export default { ...Entries, name: "entries-default" };
 </script>

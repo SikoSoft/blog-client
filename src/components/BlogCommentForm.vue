@@ -43,11 +43,10 @@
 </template>
 
 <script>
-import BlogButton from "@/components/BlogButton.vue";
-import linkHandlers from "@/shared/linkHandlers";
 import { mapMutations, mapActions, mapState } from "vuex";
-
 import Quill from "quill";
+import BlogButton from "@/components/BlogButton";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-comment-form",

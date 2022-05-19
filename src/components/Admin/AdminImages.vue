@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import AdminImageSize from "@/components/Admin/AdminImageSize.vue";
+import AdminImageSize from "@/components/Admin/AdminImageSize";
 
 export default {
   name: "admin-images",

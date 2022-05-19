@@ -6,8 +6,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-
-import Entries from "@/shared/Entries.js";
+import Entries from "@/shared/Entries";
 
 export default {
   ...Entries,

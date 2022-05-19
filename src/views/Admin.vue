@@ -6,8 +6,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-
-import AdminHome from "@/components/Admin/AdminHome.vue";
+import AdminHome from "@/components/Admin/AdminHome";
 
 export default {
   name: "admin",

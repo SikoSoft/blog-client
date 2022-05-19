@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import AdminRoles from "@/components/Admin/AdminRoles.vue";
+import AdminRoles from "@/components/Admin/AdminRoles";
 
 export default {
   name: "roles",

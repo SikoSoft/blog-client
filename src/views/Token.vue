@@ -6,8 +6,7 @@
 
 <script>
 import { mapActions } from "vuex";
-
-import BlogTokenHandler from "@/components/BlogTokenHandler.vue";
+import BlogTokenHandler from "@/components/BlogTokenHandler";
 
 export default {
   name: "tag",

@@ -33,8 +33,8 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import BlogComment from "@/components/BlogComment.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogComment from "@/components/BlogComment";
+import BlogButton from "@/components/BlogButton";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

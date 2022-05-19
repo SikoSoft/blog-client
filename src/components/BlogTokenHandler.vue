@@ -17,8 +17,7 @@
 
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
-
-import BlogButton from "@/components/BlogButton.vue";
+import BlogButton from "@/components/BlogButton";
 
 export default {
   name: "token-handler",

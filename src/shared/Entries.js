@@ -1,6 +1,6 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 
-import BlogEntries from "@/components/BlogEntries.vue";
+import BlogEntries from "@/components/BlogEntries";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

@@ -25,8 +25,8 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import BlogRoleSelector from "@/components/BlogRoleSelector.vue";
-import BlogToggle from "@/components/BlogToggle.vue";
+import BlogRoleSelector from "@/components/BlogRoleSelector";
+import BlogToggle from "@/components/BlogToggle";
 
 export default {
   name: "admin-setting",

@@ -11,7 +11,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import BlogEntry from "@/components/BlogEntry.vue";
+import BlogEntry from "@/components/BlogEntry";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

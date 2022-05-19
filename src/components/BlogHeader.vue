@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import BlogHero from "@/components/BlogHero.vue";
-import BlogBreadcrumb from "@/components/BlogBreadcrumb.vue";
+import BlogHero from "@/components/BlogHero";
+import BlogBreadcrumb from "@/components/BlogBreadcrumb";
 
 export default {
   name: "blog-header",

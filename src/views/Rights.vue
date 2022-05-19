@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import AdminRights from "@/components/Admin/AdminRights.vue";
+import AdminRights from "@/components/Admin/AdminRights";
 
 export default {
   name: "rights",

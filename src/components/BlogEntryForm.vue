@@ -141,12 +141,12 @@
 <script>
 import { mapActions, mapState, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
-import BlogTabs from "@/components/BlogTabs.vue";
-import BlogTab from "@/components/BlogTab.vue";
-import BlogEntryFinder from "@/components/BlogEntryFinder.vue";
-import BlogTagManager from "@/components/BlogTagManager.vue";
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogTabs from "@/components/BlogTabs";
+import BlogTab from "@/components/BlogTab";
+import BlogEntryFinder from "@/components/BlogEntryFinder";
+import BlogTagManager from "@/components/BlogTagManager";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogButton from "@/components/BlogButton";
 import imageHandler from "@/util/imageHandler";
 
 export default {

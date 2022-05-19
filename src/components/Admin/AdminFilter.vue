@@ -77,10 +77,9 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-
-import BlogButton from "@/components/BlogButton.vue";
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import AdminFilterRules from "@/components/Admin/AdminFilterRules.vue";
+import BlogButton from "@/components/BlogButton";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import AdminFilterRules from "@/components/Admin/AdminFilterRules";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
 import imageHandler from "@/util/imageHandler";
 

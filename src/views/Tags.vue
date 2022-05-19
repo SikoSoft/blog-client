@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import BlogTags from "@/components/BlogTags.vue";
+import BlogTags from "@/components/BlogTags";
 
 export default {
   name: "tags",

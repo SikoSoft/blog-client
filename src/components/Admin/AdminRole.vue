@@ -46,10 +46,9 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
-
-import { mapState, mapActions } from "vuex";
 
 export default {
   name: "admin-role",

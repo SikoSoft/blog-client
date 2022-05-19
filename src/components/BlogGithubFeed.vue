@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import BlogGithubEvent from "@/components/BlogGithubEvent.vue";
+import BlogGithubEvent from "@/components/BlogGithubEvent";
 
 export default {
   name: "blog-github-feed",

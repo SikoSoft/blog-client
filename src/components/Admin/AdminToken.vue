@@ -40,10 +40,10 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-import BlogRoleSelector from "@/components/BlogRoleSelector.vue";
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import BlogToggle from "@/components/BlogToggle.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogRoleSelector from "@/components/BlogRoleSelector";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogToggle from "@/components/BlogToggle";
+import BlogButton from "@/components/BlogButton";
 
 export default {
   name: "admin-token",

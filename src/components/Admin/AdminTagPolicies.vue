@@ -39,9 +39,9 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import BlogButton from "@/components/BlogButton";
+import BlogTagInput from "@/components/BlogTagInput";
 import { parseVars } from "@/util/strings.js";
-import BlogButton from "@/components/BlogButton.vue";
-import BlogTagInput from "@/components/BlogTagInput.vue";
 
 export default {
   name: "admin-tag-policies",

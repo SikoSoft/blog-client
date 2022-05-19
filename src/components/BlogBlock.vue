@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import BlogContext from "@/components/BlogContext.vue";
+import BlogContext from "@/components/BlogContext";
 
 export default {
   name: "blog-block",

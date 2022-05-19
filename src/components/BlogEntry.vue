@@ -58,13 +58,13 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from "vuex";
-import BlogEntryForm from "@/components/BlogEntryForm.vue";
-import BlogComments from "@/components/BlogComments.vue";
-import BlogCommentForm from "@/components/BlogCommentForm.vue";
-import BlogButton from "@/components/BlogButton.vue";
-import { longDate } from "../util/time.js";
-import { parseVars } from "@/util/strings.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import BlogEntryForm from "@/components/BlogEntryForm";
+import BlogComments from "@/components/BlogComments";
+import BlogCommentForm from "@/components/BlogCommentForm";
+import BlogButton from "@/components/BlogButton";
+import { longDate } from "@/util/time.js";
+import { parseVars } from "@/util/strings.js";
 import linkHandlers from "@/shared/linkHandlers.js";
 
 const imgRegExp = new RegExp("<img ", "g");

@@ -17,7 +17,7 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 
-import BlogEntry from "@/components/BlogEntry.vue";
+import BlogEntry from "@/components/BlogEntry";
 
 export default {
   name: "blog-entries",

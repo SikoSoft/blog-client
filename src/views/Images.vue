@@ -10,7 +10,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import AdminImages from "@/components/Admin/AdminImages.vue";
+import AdminImages from "@/components/Admin/AdminImages";
 
 export default {
   name: "image-sizes",

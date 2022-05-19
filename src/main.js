@@ -1,10 +1,10 @@
 import Vue from "vue";
-import App from "./App.vue";
+import RuntimeTemplateCompiler from "vue-runtime-template-compiler";
+import VCalendar from "v-calendar";
+import App from "./App";
 import router from "./router";
 import store from "./store/";
 import strings from "./data/strings.json";
-import RuntimeTemplateCompiler from "vue-runtime-template-compiler";
-import VCalendar from "v-calendar";
 
 Vue.use(RuntimeTemplateCompiler);
 Vue.use(VCalendar);

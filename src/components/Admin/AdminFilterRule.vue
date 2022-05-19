@@ -57,9 +57,8 @@
 
 <script>
 import { mapActions } from "vuex";
-
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogButton from "@/components/BlogButton";
 
 export default {
   name: "admin-filter-rule",

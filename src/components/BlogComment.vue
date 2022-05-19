@@ -22,9 +22,9 @@
 
 <script>
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import { mapActions, mapState } from "vuex";
 import { longDate } from "../util/time.js";
 import { parseVars } from "@/util/strings.js";
-import { mapActions, mapState } from "vuex";
 import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {

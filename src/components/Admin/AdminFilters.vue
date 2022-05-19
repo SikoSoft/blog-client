@@ -42,9 +42,8 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-
-import AdminFilter from "@/components/Admin/AdminFilter.vue";
-import BlogToggle from "@/components/BlogToggle.vue";
+import AdminFilter from "@/components/Admin/AdminFilter";
+import BlogToggle from "@/components/BlogToggle";
 
 export default {
   name: "admin-filters",

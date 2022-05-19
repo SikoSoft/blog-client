@@ -10,7 +10,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import AdminTagPolicies from "@/components/Admin/AdminTagPolicies.vue";
+import AdminTagPolicies from "@/components/Admin/AdminTagPolicies";
 
 export default {
   name: "tag-policies",
