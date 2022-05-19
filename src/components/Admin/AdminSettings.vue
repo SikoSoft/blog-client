@@ -67,6 +67,10 @@ export default {
 
   components: { AdminSetting, BlogTabs, BlogTab },
 
+  props: {
+    settingsConfig: Array
+  },
+
   data() {
     return {
       settingGroups,
@@ -86,9 +90,12 @@ export default {
     ...mapActions(["addContext"]),
 
     settingById(id) {
-      const match = this.spec.settings.filter(setting => setting.id === id);
-      if (match.length) {
-        const setting = match[0];
+      const matchConfig = this.settingsConfig.filter(
+        setting => setting.id === id
+      );
+      const matchSpec = this.spec.settings.filter(setting => setting.id === id);
+      if (matchSpec.length) {
+        const setting = { ...matchSpec[0], ...matchConfig[0] };
         setting.label = this.$strings.settingsLabels[id]
           ? (setting.label = this.$strings.settingsLabels[id])
           : id;

@@ -55,5 +55,6 @@ export default {
   tagRoles: [],
   overlayIsOpen: false,
   imageSizes: [],
-  context: []
+  context: [],
+  settingsConfig: []
 };

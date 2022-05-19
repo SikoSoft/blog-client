@@ -212,8 +212,8 @@ export default {
 
   async setSetting({ commit, dispatch }, { links, id, value }) {
     await dispatch("apiRequest", {
-      ...link("POST", "setting", links),
-      body: { id, value }
+      ...link("PUT", "setting", links),
+      body: { value }
     });
     commit("setSetting", { id, value });
   },
@@ -676,9 +676,13 @@ export default {
   addContext: async ({ commit }, context) => {
     console.log("addContext", context);
     commit("setContext", context);
-  }
+  },
 
-  //getSettings: async ({ commit }, { links }) => {
-  //  await dispatch("apiRequest", link("GET", "settings", links));
-  //}
+  getSettings: async ({ commit, dispatch }, { links }) => {
+    const { settings } = await dispatch(
+      "apiRequest",
+      link("GET", "settings", links)
+    );
+    commit("setSettingsConfig", { settings });
+  }
 };

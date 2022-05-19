@@ -334,5 +334,9 @@ export default {
       ...state.context.filter(context => context.id !== id),
       { id, ...context }
     ]);
+  },
+
+  setSettingsConfig: (state, { settings }) => {
+    Vue.set(state, "settingsConfig", settings);
   }
 };
