@@ -1,5 +1,8 @@
 <template>
-  <div class="blog-comments" v-if="entryComments.length">
+  <div
+    class="blog-comments"
+    v-if="entryComments[entry.id] && entryComments[entry.id].length"
+  >
     <h3 class="blog-comments__head">{{ $strings.comments }}</h3>
     <div class="blog-comments__list">
       <blog-comment
@@ -13,13 +16,13 @@
       :class="{ 'blog-comments__buttons--active': selectedComments.length }"
     >
       <blog-button
-        v-if="entry.links.publishComments"
+        v-if="canPublish"
         create
         :action="publishComments"
         :text="$strings.publish"
       />
       <blog-button
-        v-if="entry.links.deleteComments"
+        v-if="canDelete"
         destroy
         :action="deleteComments"
         :text="$strings.delete"
@@ -32,6 +35,7 @@
 import { mapActions, mapState, mapMutations } from "vuex";
 import BlogComment from "@/components/BlogComment.vue";
 import BlogButton from "@/components/BlogButton.vue";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-comments",
@@ -42,53 +46,82 @@ export default {
     entry: { type: Object }
   },
 
+  data() {
+    return {
+      firstUpdate: true
+    };
+  },
+
   mounted() {
-    this.getComments({ entryId: this.entry.id }).then(() => {
-      this.$emit("commentsLoaded");
-    });
+    if (this.firstUpdate) {
+      this.getComments({
+        links: this.entry.links,
+        entryId: this.entry.id
+      }).then(() => {
+        this.$emit("commentsLoaded");
+      });
+      this.firstUpdate = false;
+    }
   },
 
   computed: {
-    ...mapState(["selectedComments", "comments"]),
+    ...mapState(["selectedComments", "comments", "entryComments"]),
 
-    entryComments() {
-      return this.$store.getters.commentsByEntry(this.entry.id);
+    canPublish() {
+      return (
+        this.entryComments[this.entry.id] &&
+        this.entryComments[this.entry.id].some(comment =>
+          this.link("PUT", "comment", comment.links)
+        )
+      );
+    },
+
+    canDelete() {
+      return (
+        this.entryComments[this.entry.id] &&
+        this.entryComments[this.entry.id].some(comment =>
+          this.link("DELETE", "comment", comment.links)
+        )
+      );
+    },
+
+    commentsToProcess() {
+      return this.entryComments[this.entry.id].filter(
+        comment => this.selectedComments.indexOf(comment.id) > -1
+      );
     }
   },
 
   methods: {
-    ...mapActions(["getComments", "apiRequest", "addToast"]),
+    ...linkHandlers,
+
+    ...mapActions(["apiRequest", "getComments", "addToast"]),
 
     ...mapMutations(["setSelectedComments", "setComment", "deleteComment"]),
 
     async publishComments() {
-      await this.apiRequest({
-        ...this.entry.links.publishComments,
-        body: JSON.stringify({ ids: this.selectedComments })
-      });
-      this.selectedComments.forEach(commentId => {
-        if (this.comments[commentId]) {
-          this.setComment({
-            id: commentId,
-            comment: {
-              ...this.comments[commentId],
-              public: 1
-            }
-          });
-        }
-      });
+      for (const comment of this.commentsToProcess) {
+        await this.apiRequest({
+          ...this.link("PUT", "comment", comment.links),
+          body: { public: 1 }
+        });
+        this.setComment({
+          id: comment.id,
+          comment: {
+            ...this.comments[comment.id],
+            public: 1
+          }
+        });
+      }
       this.setSelectedComments({ comments: [] });
       this.addToast(this.$strings.commentsPublished);
     },
 
     async deleteComments() {
-      await this.apiRequest({
-        ...this.entry.links.deleteComments,
-        body: JSON.stringify({ ids: this.selectedComments })
-      });
-      this.selectedComments.forEach(commentId => {
-        this.deleteComment({ id: commentId });
-      });
+      for (const comment of this.commentsToProcess) {
+        await this.apiRequest(this.link("DELETE", "comment", comment.links));
+        this.deleteComment({ id: comment.id });
+      }
       this.setSelectedComments({ comments: [] });
       this.addToast(this.$strings.commentsDeleted);
     }

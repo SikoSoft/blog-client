@@ -34,7 +34,7 @@ export default {
   tags: [],
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
-  links: {},
+  links: [],
   editMode: {},
   toasts: [],
   comments: {},
@@ -54,5 +54,6 @@ export default {
   roleRights: [],
   tagRoles: [],
   overlayIsOpen: false,
-  imageSizes: []
+  imageSizes: [],
+  context: []
 };

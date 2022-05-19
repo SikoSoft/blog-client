@@ -25,6 +25,7 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import { longDate } from "../util/time.js";
 import { parseVars } from "@/util/strings.js";
 import { mapActions, mapState } from "vuex";
+import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {
   name: "blog-comment",
@@ -36,7 +37,7 @@ export default {
     name: { type: String },
     time: { type: Number },
     public: { type: Number },
-    links: { type: Object }
+    links: { type: Array }
   },
 
   computed: {
@@ -67,7 +68,7 @@ export default {
     },
 
     showCheckBox() {
-      if ((this.links.publish && this.public === 0) || this.links.delete) {
+      if ((this.link("PUT") && this.public === 0) || this.link("DELETE")) {
         return true;
       }
       return false;
@@ -75,6 +76,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["toggleComment"]),
 
     select() {

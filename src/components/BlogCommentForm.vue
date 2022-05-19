@@ -44,8 +44,8 @@
 
 <script>
 import BlogButton from "@/components/BlogButton.vue";
-
-import { mapGetters, mapActions } from "vuex";
+import linkHandlers from "@/shared/linkHandlers";
+import { mapMutations, mapActions, mapState } from "vuex";
 
 import Quill from "quill";
 
@@ -89,7 +89,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["headers"]),
+    ...mapState(["entryComments"]),
 
     editorId() {
       return `quilljs-comment-editor${this.entry.id}`;
@@ -100,12 +100,17 @@ export default {
     },
 
     comments() {
-      return this.$store.getters.commentsByEntry(this.entry.id);
+      return this.entryComments[this.entry.id] || [];
+      //this.$store.getters.commentsByEntry(this.entry.id);
     }
   },
 
   methods: {
-    ...mapActions(["addToast"]),
+    ...linkHandlers,
+
+    ...mapActions(["addToast", "apiRequest"]),
+
+    ...mapMutations(["setEntryComments", "setComment"]),
 
     async getCaptchaToken() {
       if (!process.env.VUE_APP_RECAPTCHA_CODE) {
@@ -142,30 +147,28 @@ export default {
           this.addToast(error);
         });
       } else {
-        this.getCaptchaToken().then(captchaToken => {
-          fetch(this.entry.links.postComment.href, {
-            method: this.entry.links.postComment.method,
-            headers: this.headers,
-            body: JSON.stringify({
-              name: this.name,
-              message: this.editor.getContents().ops,
-              captchaToken
-            })
-          })
-            .then(response => response.json())
-            .then(json => {
-              if (!json.errorCode) {
-                localStorage.removeItem(this.formId);
-              } else {
-                this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
-              }
-              this.$store.commit("setEntryComments", {
-                entryId: this.entry.id,
-                comments: [{ ...json }, ...this.comments]
-              });
-              this.open = false;
-            });
+        const captchaToken = await this.getCaptchaToken();
+        const link = this.link("POST", "comment", this.entry.links);
+        const response = await this.apiRequest({
+          ...link,
+          body: {
+            entryId: this.entry.id,
+            name: this.name,
+            message: this.editor.getContents().ops,
+            captchaToken
+          }
         });
+        if (!response.errorCode) {
+          localStorage.removeItem(this.formId);
+        } else {
+          this.addToast(this.$strings.errors[`CODE_${response.errorCode}`]);
+        }
+        this.setEntryComments({
+          entryId: this.entry.id,
+          comments: [response.comment, ...this.comments]
+        });
+        this.setComment({ id: response.comment.id, comment: response.comment });
+        this.open = false;
       }
       e.preventDefault();
     },

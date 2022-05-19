@@ -10,9 +10,9 @@
     >
       <main>
         <blog-loader v-if="isLoading" />
-        <router-view />
+        <router-view :links="routeLinks" />
       </main>
-      <blog-sidebar v-if="showSidebar" />
+      <blog-sidebar v-if="showSidebar" :filters="filters" />
     </div>
     <blog-toasts />
     <blog-progress-bar v-if="showProgressBar" />
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 import BlogOverlay from "@/components/BlogOverlay.vue";
 import BlogAdmin from "@/components/BlogAdmin.vue";
 import BlogLoader from "@/components/BlogLoader.vue";
@@ -31,6 +31,8 @@ import BlogFooter from "@/components/BlogFooter.vue";
 import BlogToasts from "@/components/BlogToasts.vue";
 import BlogSidebar from "@/components/BlogSidebar.vue";
 import BlogProgressBar from "@/components/BlogProgressBar.vue";
+
+import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {
   components: {
@@ -46,11 +48,13 @@ export default {
 
   data() {
     return {
+      fetched: false,
       viewsWithSidebar: ["entry", "entries", "draft", "tag", "entries-filter"]
     };
   },
 
   mounted() {
+    console.log("mounted route", this.$route);
     this.$router.afterEach(to => {
       if (!to.hash.match("#comment-")) {
         window.scroll({
@@ -108,6 +112,11 @@ export default {
         }
       }
     });
+    this.update();
+  },
+
+  updated() {
+    this.update();
   },
 
   computed: {
@@ -116,7 +125,8 @@ export default {
       "isLoading",
       "settings",
       "showProgressBar",
-      "links"
+      "links",
+      "filters"
     ]),
 
     classes() {
@@ -135,6 +145,33 @@ export default {
         this.settings.show_sidebar &&
         this.viewsWithSidebar.includes(this.$route.name)
       );
+    },
+
+    routeLinks() {
+      return this.linksByEntity(this.$route.name);
+    }
+  },
+
+  methods: {
+    ...linkHandlers,
+
+    ...mapActions(["apiRequest"]),
+
+    ...mapMutations(["setFilters"]),
+
+    async getFilters() {
+      const link = this.link("GET", "filters");
+      if (link) {
+        const { filters } = await this.apiRequest(link);
+        this.setFilters({ filters });
+      }
+    },
+
+    update() {
+      if (!this.fetched && this.links) {
+        this.getFilters();
+        this.fetched = true;
+      }
     }
   }
 };

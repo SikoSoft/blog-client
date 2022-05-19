@@ -1,7 +1,8 @@
 export default {
   headers: state => ({
     "x-functions-key": state.authToken,
-    "sess-token": state.sessToken
+    "sess-token": state.sessToken,
+    context: JSON.stringify(state.context)
   }),
 
   entries: state => state.entries.default.list,

@@ -1,5 +1,6 @@
 import { uuid } from "@/util/uuid";
 import strings from "@/data/strings.json";
+import { link } from "@/shared/linkHandlers";
 
 export default {
   initialize({ state, commit, getters }, force) {
@@ -192,28 +193,18 @@ export default {
     });
   },
 
-  getComments({ state, commit, getters }, { entryId, force }) {
+  async getComments({ state, commit, dispatch }, { links, entryId, force }) {
     if (state.comments[entryId] && !force) {
       return Promise.resolve();
     }
-
-    const links = getters.entryById(entryId).links;
-
-    return new Promise((resolve, reject) => {
-      fetch(links.getComments.href, {
-        method: links.getComments.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          json.comments.forEach(comment => {
-            commit("setComment", { id: comment.id, comment });
-          });
-          commit("setEntryComments", { entryId, comments: json.comments });
-          resolve();
-        })
-        .catch(e => reject(e));
+    const { comments } = await dispatch(
+      "apiRequest",
+      link("GET", "comments", links)
+    );
+    comments.forEach(comment => {
+      commit("setComment", { id: comment.id, comment });
     });
+    commit("setEntryComments", { entryId, comments });
   },
 
   toggleComment({ state, commit }, id) {
@@ -685,7 +676,7 @@ export default {
       fetch(payload.href, {
         method: payload.method,
         headers: { ...getters.headers, "x-functions-key": payload.key },
-        ...(payload.body ? { body: payload.body } : {})
+        ...(payload.body ? { body: JSON.stringify(payload.body) } : {})
       })
         .then(result => result.json())
         .then(json => {
