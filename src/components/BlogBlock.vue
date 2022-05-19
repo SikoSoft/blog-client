@@ -20,8 +20,3 @@ export default {
   components: { BlogContext }
 };
 </script>
-
-<style lang="scss" scoped>
-.blog-block {
-}
-</style>

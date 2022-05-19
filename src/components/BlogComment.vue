@@ -94,9 +94,6 @@ export default {
   margin: $space-xlarge 0;
   display: flex;
 
-  &--selected {
-  }
-
   &--needs-approval {
     opacity: 0.5;
   }

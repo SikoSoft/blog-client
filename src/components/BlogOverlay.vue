@@ -28,6 +28,7 @@ export default {
   background-color: rgba(64, 64, 64, 0.75);
   pointer-events: none;
   transition: all 0.3s;
+
   &--open {
     pointer-events: unset;
     opacity: 1;
