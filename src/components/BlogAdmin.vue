@@ -2,7 +2,7 @@
   <div class="blog-admin" :class="{ 'blog-admin--open': entryFormIsOpen }">
     <div class="blog-admin__inner">
       <div class="blog-admin__bar">
-        <template v-if="links.newEntry">
+        <template v-if="link('POST', 'entry')">
           <router-link class="blog-admin__link" to="/admin">{{
             $strings.admin
           }}</router-link>
@@ -37,17 +37,24 @@ import { mapActions, mapState } from "vuex";
 
 import BlogButton from "@/components/BlogButton.vue";
 import BlogEntryForm from "@/components/BlogEntryForm.vue";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-admin",
 
+  props: {
+    links: Array
+  },
+
   components: { BlogEntryForm, BlogButton },
 
   computed: {
-    ...mapState(["entryFormIsOpen", "links", "user"])
+    ...mapState(["entryFormIsOpen", "user"])
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["showAdminPane", "showEntryForm", "hideEntryForm"])
   }
 };

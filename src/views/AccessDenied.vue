@@ -8,7 +8,7 @@
 import { mapActions } from "vuex";
 
 export default {
-  name: "tag",
+  name: "access-denied",
 
   mounted() {
     this.initialize().then(() => {

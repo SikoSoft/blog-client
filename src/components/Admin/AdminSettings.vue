@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import spec from "blog-spec";
 import BlogTabs from "@/components/BlogTabs.vue";
 import BlogTab from "@/components/BlogTab.vue";
@@ -74,18 +74,24 @@ export default {
     };
   },
 
+  mounted() {
+    this.addContext({ id: "view", props: ["setting"] });
+  },
+
   computed: {
     ...mapState(["settings"])
   },
 
   methods: {
+    ...mapActions(["addContext"]),
+
     settingById(id) {
       const match = this.spec.settings.filter(setting => setting.id === id);
       if (match.length) {
         const setting = match[0];
-        if (this.$strings.settingsLabels[id]) {
-          setting.label = this.$strings.settingsLabels[id];
-        }
+        setting.label = this.$strings.settingsLabels[id]
+          ? (setting.label = this.$strings.settingsLabels[id])
+          : id;
         return setting;
       }
       return false;

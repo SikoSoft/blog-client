@@ -55,7 +55,7 @@ export default {
 
   props: {
     initial: Object,
-    links: Object
+    links: Array
   },
 
   data() {
@@ -74,7 +74,7 @@ export default {
     async addSize() {
       await this.apiRequest({
         ...this.links.add,
-        body: JSON.stringify({ width: this.width, height: this.height })
+        body: { width: this.width, height: this.height }
       });
       this.addToast(this.$strings.imageSizeAdded);
     },
@@ -82,7 +82,7 @@ export default {
     async updateSize() {
       await this.apiRequest({
         ...this.links.update,
-        body: JSON.stringify({ width: this.width, height: this.height })
+        body: { width: this.width, height: this.height }
       });
       this.addToast(this.$strings.imageSizeUpdated);
     },

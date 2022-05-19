@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="classes">
-    <blog-admin v-if="showAdminPane" />
+    <blog-admin v-if="showAdminPane" :links="[link('POST', 'entry')]" />
     <header>
       <blog-header />
     </header>
@@ -54,7 +54,6 @@ export default {
   },
 
   mounted() {
-    console.log("mounted route", this.$route);
     this.$router.afterEach(to => {
       if (!to.hash.match("#comment-")) {
         window.scroll({
@@ -136,7 +135,7 @@ export default {
     },
 
     showAdminPane() {
-      return this.initialized && this.links && this.links.newEntry;
+      return this.initialized && this.links && this.link("POST", "entry");
     },
 
     showSidebar() {
@@ -148,6 +147,7 @@ export default {
     },
 
     routeLinks() {
+      console.log("name", this.$route.name);
       return this.linksByEntity(this.$route.name);
     }
   },

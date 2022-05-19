@@ -57,7 +57,7 @@ export default {
 
   props: {
     initial: { type: Object },
-    links: { type: Object }
+    links: { type: Array }
   },
 
   data() {
@@ -86,11 +86,11 @@ export default {
     async updateToken() {
       const { token } = await this.apiRequest({
         ...this.links.update,
-        body: JSON.stringify({
+        body: {
           code: this.code,
           one_time: this.oneTime,
           role: this.role
-        })
+        }
       });
       this.setTokens({
         tokens: [

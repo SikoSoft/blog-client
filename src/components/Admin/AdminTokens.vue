@@ -50,7 +50,7 @@ export default {
 
   props: {
     tokens: { type: Array },
-    links: { type: Object }
+    links: { type: Array }
   },
 
   data() {
@@ -69,11 +69,11 @@ export default {
     async addToken() {
       const { token } = await this.apiRequest({
         ...this.links.create,
-        body: JSON.stringify({
+        body: {
           code: this.code,
           one_time: this.oneTime,
           role: this.role
-        })
+        }
       });
       this.setTokens({
         tokens: [...this.$store.state.tokens, token].sort((a, b) =>

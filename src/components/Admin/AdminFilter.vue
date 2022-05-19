@@ -135,7 +135,6 @@ export default {
     },
 
     setImage(url) {
-      console.log(this);
       this.image = url;
       this.handleUpdate();
     },

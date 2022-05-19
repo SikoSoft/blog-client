@@ -40,7 +40,8 @@ export default {
     },
     listSource: { type: String, default: "" },
     maxLength: { type: Number, default: 3 },
-    initialValue: { type: [String, Number, Boolean] }
+    initialValue: { type: [String, Number, Boolean] },
+    links: Array
   },
 
   components: { BlogRoleSelector, BlogToggle },
@@ -59,7 +60,7 @@ export default {
     ...mapActions(["setSetting"]),
 
     handleChange() {
-      this.setSetting({ id: this.id, value: this.value });
+      this.setSetting({ links: this.links, id: this.id, value: this.value });
     }
   },
 

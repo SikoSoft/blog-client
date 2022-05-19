@@ -329,10 +329,10 @@ export default {
     state.imageSizes = imageSizes;
   },
 
-  setContext: (state, { id, ...payload }) => {
+  setContext: (state, { id, ...context }) => {
     Vue.set(state, "context", [
       ...state.context.filter(context => context.id !== id),
-      { id, ...payload }
+      { id, ...context }
     ]);
   }
 };

@@ -14,6 +14,7 @@ export default {
   components: { AdminSettings },
 
   mounted() {
+    this.addContext({ id: "view", props: ["settings"] });
     this.update();
   },
 
@@ -26,7 +27,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
 
     update() {
       this.initialize().then(() => {

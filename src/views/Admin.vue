@@ -18,18 +18,18 @@ export default {
     ...mapState(["initialized"])
   },
 
-  mounted() {
+  async mounted() {
+    await this.addContext({ id: "view", props: ["admin"] });
     this.update();
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([{ href: "/admin", label: this.$strings.admin }]);
-        this.setTitle(this.$strings.admin);
-      });
+    async update() {
+      //await this.initialize();
+      this.setBreadcrumbs([{ href: "/admin", label: this.$strings.admin }]);
+      this.setTitle(this.$strings.admin);
     }
   }
 };

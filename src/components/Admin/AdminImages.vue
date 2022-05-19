@@ -23,7 +23,7 @@ export default {
 
   props: {
     imageSizes: Array,
-    links: Object
+    links: Array
   }
 };
 </script>

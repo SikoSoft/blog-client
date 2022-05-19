@@ -1,11 +1,16 @@
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
 import BlogEntries from "@/components/BlogEntries.vue";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "entries",
 
   components: { BlogEntries },
+
+  props: {
+    links: Array
+  },
 
   data() {
     return {
@@ -17,6 +22,7 @@ export default {
   },
 
   mounted() {
+    this.addContext({ id: "view", props: ["entries"] });
     window.addEventListener("scroll", this.scrollHandler);
     this.setTitle(this.title);
     this.initialize().then(() => {
@@ -32,13 +38,42 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions([
       "initialize",
-      "getEntries",
-      "getMoreEntries",
+      //"getEntries",
+      //"getMoreEntries",
       "setBreadcrumbs",
-      "setTitle"
+      "setNextEntriesBatch",
+      "setTitle",
+      "apiRequest",
+      "addContext"
     ]),
+
+    ...mapMutations(["setEntries", "setEntryById", "setEndOfEntries"]),
+
+    async getEntries() {
+      const link = this.link("GET", "entries");
+      if (link) {
+        const { entries, end } = await this.apiRequest(link);
+        this.setEntries({
+          entries,
+          ...(this.tag && { tag: this.tag }),
+          ...(this.filterId && { filterId: this.filterId }),
+          type: this.type
+        });
+        entries.forEach(entry => {
+          this.setEntryById({ id: entry.id, entry });
+        });
+        this.setEndOfEntries({ type: this.type, end });
+      }
+    },
+
+    async getMoreEntries() {
+      this.setNextEntriesBatch({ type: this.type });
+      this.getEntries();
+    },
 
     scrollHandler() {
       if (this.entryFormIsOpen) {

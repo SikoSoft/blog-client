@@ -12,15 +12,20 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
 import BlogBlock from "@/components/BlogBlock.vue";
 import BlogAtAGlance from "@/components/BlogAtAGlance.vue";
 import BlogGithubFeed from "@/components/BlogGithubFeed.vue";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-sidebar",
 
   components: { BlogAtAGlance, BlogGithubFeed, BlogBlock },
+
+  props: {
+    filters: Array
+  },
 
   data() {
     return {
@@ -29,7 +34,6 @@ export default {
   },
 
   mounted() {
-    this.getFilters();
     if (this.settings.github_feed) {
       fetch(this.settings.github_feed)
         .then(response => response.json())
@@ -40,11 +44,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getFilters"])
+    ...linkHandlers
   },
 
   computed: {
-    ...mapState(["settings", "links", "filters"]),
+    ...mapState(["settings"]),
 
     show() {
       if (this.feed.length || this.filters.length) {

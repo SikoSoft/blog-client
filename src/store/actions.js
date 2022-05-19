@@ -4,6 +4,7 @@ import { link } from "@/shared/linkHandlers";
 
 export default {
   initialize({ state, commit, getters }, force) {
+    console.log("initialize");
     if (state.initialized && !force) {
       return Promise.resolve();
     }
@@ -98,36 +99,27 @@ export default {
     dispatch("getEntries", { type, filterId, tag, force: true });
   },
 
-  async getEntry({ state, commit, getters }, { id, force, addToList }) {
+  async getEntry(
+    { state, commit, getters, dispatch },
+    { links, id, force, addToList }
+  ) {
     if (getters.entryById(id) && !force) {
       return Promise.resolve();
     }
-
     commit("setLoading", { loading: true });
-
-    return new Promise((resolve, reject) => {
-      fetch(state.links.getEntry.href.replace("{id}", id), {
-        method: state.links.getEntry.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setEntryById", { id, entry: json });
-          if (addToList) {
-            commit("setEntries", {
-              type: "default",
-              entries: [json, ...state.entries.default.list]
-            });
-            commit("setEntriesStart", {
-              type: "default",
-              start: state.getEntriesStart + 1
-            });
-          }
-          commit("setLoading", { loading: false });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    const { entry } = await dispatch("apiRequest", link("GET", "entry", links));
+    commit("setEntryById", { id, entry });
+    if (addToList) {
+      commit("setEntries", {
+        type: "default",
+        entries: [entry, ...state.entries.default.list]
+      });
+      commit("setEntriesStart", {
+        type: "default",
+        start: state.getEntriesStart + 1
+      });
+    }
+    commit("setLoading", { loading: false });
   },
 
   setTitle({ commit }, title) {
@@ -218,16 +210,12 @@ export default {
     commit("setSelectedComments", { comments });
   },
 
-  setSetting({ commit, state, getters }, { id, value }) {
-    fetch(state.links.saveSetting.href, {
-      method: state.links.saveSetting.method,
-      headers: getters.headers,
-      body: JSON.stringify({ id, value })
-    })
-      .then(response => response.json())
-      .then(() => {
-        commit("setSetting", { id, value });
-      });
+  async setSetting({ commit, dispatch }, { links, id, value }) {
+    await dispatch("apiRequest", {
+      ...link("POST", "setting", links),
+      body: { id, value }
+    });
+    commit("setSetting", { id, value });
   },
 
   getDrafts({ commit, state, getters }, force) {
@@ -683,5 +671,14 @@ export default {
           resolve(json);
         });
     });
+  },
+
+  addContext: async ({ commit }, context) => {
+    console.log("addContext", context);
+    commit("setContext", context);
   }
+
+  //getSettings: async ({ commit }, { links }) => {
+  //  await dispatch("apiRequest", link("GET", "settings", links));
+  //}
 };

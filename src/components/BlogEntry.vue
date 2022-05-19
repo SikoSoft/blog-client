@@ -16,7 +16,7 @@
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div class="blog-entry__edit" v-if="links.save">
+        <div class="blog-entry__edit" v-if="link('PUT', 'entry')">
           <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
@@ -40,7 +40,7 @@
         </div>
       </div>
       <div class="blog-entry__comments" v-if="showComments">
-        <blog-comment-form :entry="entry" v-if="links.postComment" />
+        <blog-comment-form :entry="entry" v-if="link('POST', 'comment')" />
         <blog-comments @commentsLoaded="commentsLoaded" :entry="entry" />
       </div>
     </template>
@@ -50,6 +50,7 @@
         :initial="entry"
         @idChanged="idChanged"
         @edited="edited"
+        :links="formLinks"
       />
     </template>
   </div>
@@ -64,6 +65,7 @@ import BlogButton from "@/components/BlogButton.vue";
 import { longDate } from "../util/time.js";
 import { parseVars } from "@/util/strings.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import linkHandlers from "@/shared/linkHandlers.js";
 
 const imgRegExp = new RegExp("<img ", "g");
 
@@ -78,7 +80,7 @@ export default {
     created: { type: Number },
     listed: { type: Number },
     last_edited: { type: Number },
-    links: { type: Object },
+    links: { type: Array },
     public: { type: Number },
     fullMode: { type: Boolean }
   },
@@ -154,10 +156,16 @@ export default {
 
     imagesLoaded() {
       return this.$store.getters.imagesLoaded(this.id);
+    },
+
+    formLinks() {
+      return this.linksByEntity("entry");
     }
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["setEditMode"]),
 
     ...mapMutations(["imageLoaded"]),
