@@ -1,3 +1,4 @@
+import axios from "axios";
 import { uuid } from "@/util/uuid";
 import strings from "@/data/strings.json";
 import { link } from "@/shared/linkHandlers";
@@ -626,18 +627,15 @@ export default {
     });
   },
 
-  apiRequest: ({ getters }, payload) => {
-    return new Promise(resolve => {
-      fetch(payload.href, {
-        method: payload.method,
-        headers: { ...getters.headers, "x-functions-key": payload.key },
-        ...(payload.body ? { body: JSON.stringify(payload.body) } : {})
-      })
-        .then(result => result.json())
-        .then(json => {
-          resolve(json);
-        });
+  apiRequest: async ({ getters }, payload) => {
+    const { data } = await axios({
+      url: payload.href,
+      method: payload.method,
+      headers: { ...getters.headers, "x-functions-key": payload.key },
+      ...(payload.body ? { data: payload.body } : {}),
+      ...(payload.query ? { params: payload.query } : {})
     });
+    return data;
   },
 
   addContext: async ({ commit }, context) => {
