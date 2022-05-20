@@ -544,22 +544,16 @@ export default {
     });
   },
 
-  getTagRoles: ({ state, commit, getters }) => {
+  getTagRoles: async ({ state, commit, dispatch }, { links }) => {
     if (state.tagRoles.length) {
       return Promise.resolve();
     }
 
-    return new Promise(resolve => {
-      fetch(state.links.getTagRoles.href, {
-        method: state.links.getTagRoles.method,
-        headers: getters.headers
-      })
-        .then(result => result.json())
-        .then(tagRoles => {
-          commit("setTagRoles", { tagRoles });
-          resolve();
-        });
-    });
+    const { tagRoles } = await dispatch(
+      "apiRequest",
+      link("GET", "tagRoles", links)
+    );
+    commit("setTagRoles", { tagRoles });
   },
 
   addTagRole: ({ state, commit, getters }, { tag, role }) => {
@@ -581,23 +575,11 @@ export default {
     });
   },
 
-  deleteTagRole: ({ state, commit, getters }, { tag, role }) => {
-    return new Promise(resolve => {
-      fetch(
-        state.links.deleteTagRole.href
-          .replace("{tag}", tag)
-          .replace("{role}", role),
-        {
-          method: state.links.deleteTagRole.method,
-          headers: getters.headers
-        }
-      )
-        .then(result => result.json())
-        .then(() => {
-          commit("deleteTagRole", { tag, role });
-          resolve();
-        });
-    });
+  deleteTagRole: async ({ commit, dispatch }, { tag, role, links }) => {
+    console.log(JSON.stringify(link("DELETE", "tagRole", links)));
+    await dispatch("apiRequest", link("DELETE", "tagRole", links));
+
+    commit("deleteTagRole", { tag, role });
   },
 
   addRole: ({ state, commit, getters }, { name }) => {

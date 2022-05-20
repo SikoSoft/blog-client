@@ -37,7 +37,8 @@ export default {
   name: "blog-tag-input",
 
   props: {
-    tagsToFilter: { type: Array }
+    tagsToFilter: Array,
+    initialValue: String
   },
 
   data() {
@@ -45,7 +46,7 @@ export default {
       tagsCoolDown: 200,
       tagsTimeout: 0,
       minTagLength: 2,
-      tag: "",
+      tag: this.initialValue || "",
       autoTags: [],
       autoTagSelected: "",
       tagsFocused: false

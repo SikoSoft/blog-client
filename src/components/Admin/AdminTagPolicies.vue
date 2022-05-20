@@ -3,27 +3,29 @@
     <blog-tag-input
       @tagChanged="tagChanged"
       @tagEntered="tagEntered"
+      :initialValue="tag"
       :tagsToFilter="[]"
     />
     <div v-if="tag">
-      {{ tagName }}
-      <table>
-        <tr v-for="tagRole in tagRoles" :key="tagRole.role">
-          <td>{{ roleName(tagRole.role) }}</td>
-          <td>
-            <blog-button
-              destroy
-              :action="
-                () => {
-                  deleteRole(tagRole.role);
-                }
-              "
-              :text="$strings.delete"
-            />
-          </td>
-        </tr>
-      </table>
-
+      <template v-if="tagRoles.length">
+        {{ tagName }}
+        <table>
+          <tr v-for="tagRole in tagRoles" :key="tagRole.role">
+            <td>{{ roleName(tagRole.role) }}</td>
+            <td>
+              <blog-button
+                destroy
+                :action="
+                  () => {
+                    deleteRole(tagRole);
+                  }
+                "
+                :text="$strings.delete"
+              />
+            </td>
+          </tr>
+        </table>
+      </template>
       <div>
         <select v-model="role">
           <option value="0">{{ $strings.selectOption }}</option>
@@ -83,8 +85,13 @@ export default {
       this.addTagRole({ tag: this.tag, role: this.role });
     },
 
-    deleteRole(role) {
-      this.deleteTagRole({ tag: this.tag, role });
+    deleteRole(tagRole) {
+      console.log("deleteRole", tagRole.links);
+      this.deleteTagRole({
+        tag: this.tag,
+        role: tagRole.role,
+        links: tagRole.links
+      });
     },
 
     roleName(id) {

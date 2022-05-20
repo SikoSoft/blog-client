@@ -96,7 +96,7 @@ export default new Router({
     },
     {
       path: "/admin/tag_policies/:tag?",
-      name: "tag-policies",
+      name: "tagRoles",
       component: TagPolicies
     },
     {

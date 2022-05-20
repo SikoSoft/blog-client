@@ -59,8 +59,9 @@ export default {
   },
 
   props: {
-    id: { type: Number },
-    initialName: { type: String }
+    id: Number,
+    initialName: String,
+    links: Array
   },
 
   data() {

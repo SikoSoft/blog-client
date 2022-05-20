@@ -17,6 +17,10 @@ export default {
 
   components: { AdminTagPolicies },
 
+  props: {
+    links: Array
+  },
+
   data() {
     return {
       tagRolesFetching: false,
@@ -25,6 +29,7 @@ export default {
   },
 
   mounted() {
+    this.addContext({ id: "view", props: ["tagRoles"] });
     this.update();
   },
 
@@ -41,22 +46,26 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "getTagRoles"]),
+    ...mapActions([
+      "initialize",
+      "setBreadcrumbs",
+      "setTitle",
+      "getTagRoles",
+      "addContext"
+    ]),
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([
-          { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
-        ]);
-        this.setTitle(this.$strings.tagPolicies);
-        if (!this.tagRolesFetching) {
-          this.tagRolesFetching = true;
-          this.getTagRoles().then(() => {
-            this.tagRolesFetched = true;
-          });
-        }
-      });
+    async update() {
+      await this.initialize();
+      this.setBreadcrumbs([
+        { href: "/admin", label: this.$strings.admin },
+        { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
+      ]);
+      this.setTitle(this.$strings.tagPolicies);
+      if (!this.tagRolesFetching) {
+        this.tagRolesFetching = true;
+        await this.getTagRoles({ links: this.links });
+        this.tagRolesFetched = true;
+      }
     }
   },
 
