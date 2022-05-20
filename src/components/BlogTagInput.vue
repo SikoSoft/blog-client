@@ -31,14 +31,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions } from "vuex";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-tag-input",
 
   props: {
     tagsToFilter: Array,
-    initialValue: String
+    initialValue: String,
+    links: Array
   },
 
   data() {
@@ -53,11 +55,15 @@ export default {
     };
   },
 
-  computed: {
-    ...mapState(["links"])
+  mounted() {
+    this.getTags();
   },
 
   methods: {
+    ...linkHandlers,
+
+    ...mapActions(["apiRequest"]),
+
     tagsKeyDown(e) {
       switch (e.which) {
         case 13:
@@ -143,17 +149,15 @@ export default {
       this.$parent.setTags(this.$parent.tags.filter(t => t != tag));
     },
 
-    getTags() {
-      fetch(`${this.links.getTags.href}?tag=${encodeURIComponent(this.tag)}`, {
-        method: this.links.getTags.method,
-        headers: this.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          this.autoTags = json.tags.filter(
-            tag => !this.tagsToFilter.includes(tag)
-          );
-        });
+    async getTags() {
+      const response = await this.apiRequest({
+        ...this.link("GET", "tags"),
+        query: { tag: this.tag }
+      });
+      this.$emit("newLinks", response.links);
+      this.autoTags = response.tags.filter(
+        tag => !this.tagsToFilter.includes(tag)
+      );
     }
   },
 

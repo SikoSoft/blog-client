@@ -61,7 +61,6 @@ export default {
         const { settings } = await this.apiRequest(
           this.link("GET", "settings")
         );
-        console.log("settingsConfig", settings);
         this.setSettingsConfig({ settings });
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },

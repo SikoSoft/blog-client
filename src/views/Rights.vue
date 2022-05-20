@@ -60,7 +60,6 @@ export default {
         ]);
         this.setTitle(this.$strings.rights);
         const response = await this.getRoleRights({ links: this.links });
-        console.log("response", response);
         this.rightsLinks = response.links;
         this.firstUpdate = false;
       }

@@ -146,7 +146,6 @@ export default {
     },
 
     routeLinks() {
-      console.log("name", this.$route.name);
       return this.linksByEntity(this.$route.name);
     }
   },

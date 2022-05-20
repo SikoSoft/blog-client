@@ -4,6 +4,7 @@
       v-if="initialized && tagRolesFetched"
       :tag="tag"
       :tagRoles="tagRoles.filter(tagRole => tagRole.tag === tag)"
+      :links="tagRolesLinks"
     />
   </div>
 </template>
@@ -24,7 +25,8 @@ export default {
   data() {
     return {
       tagRolesFetching: false,
-      tagRolesFetched: false
+      tagRolesFetched: false,
+      tagRolesLinks: []
     };
   },
 
@@ -63,7 +65,8 @@ export default {
       this.setTitle(this.$strings.tagPolicies);
       if (!this.tagRolesFetching) {
         this.tagRolesFetching = true;
-        await this.getTagRoles({ links: this.links });
+        const response = await this.getTagRoles({ links: this.links });
+        this.tagRolesLinks = response.links;
         this.tagRolesFetched = true;
       }
     }

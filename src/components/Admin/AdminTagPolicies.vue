@@ -3,8 +3,10 @@
     <blog-tag-input
       @tagChanged="tagChanged"
       @tagEntered="tagEntered"
+      @newLinks="setAddLinks"
       :initialValue="tag"
       :tagsToFilter="[]"
+      :links="links"
     />
     <div v-if="tag">
       <template v-if="tagRoles.length">
@@ -29,9 +31,13 @@
       <div>
         <select v-model="role">
           <option value="0">{{ $strings.selectOption }}</option>
-          <option v-for="role in roles" :key="role.id" :value="role.id">{{
-            role.name
-          }}</option>
+          <option
+            v-for="role in roles"
+            :key="role.id"
+            :value="role.id"
+            :disabled="tagRoleExists(role.id)"
+            >{{ role.name }}</option
+          >
         </select>
         <blog-button create :action="addRole" :text="$strings.add" />
       </div>
@@ -54,13 +60,15 @@ export default {
   },
 
   props: {
-    tag: { type: String },
-    tagRoles: { type: Array }
+    tag: String,
+    tagRoles: Array,
+    links: Array
   },
 
   data() {
     return {
-      role: 0
+      role: 0,
+      addLinks: []
     };
   },
 
@@ -75,6 +83,10 @@ export default {
   methods: {
     ...mapActions(["addTagRole", "deleteTagRole"]),
 
+    setAddLinks(links) {
+      this.addLinks = links;
+    },
+
     tagChanged({ tag }) {
       this.$router.push({ path: `/admin/tag_policies/${tag}` });
     },
@@ -82,16 +94,23 @@ export default {
     tagEntered() {},
 
     addRole() {
-      this.addTagRole({ tag: this.tag, role: this.role });
+      this.addTagRole({ tag: this.tag, role: this.role, links: this.addLinks });
     },
 
     deleteRole(tagRole) {
-      console.log("deleteRole", tagRole.links);
       this.deleteTagRole({
         tag: this.tag,
         role: tagRole.role,
         links: tagRole.links
       });
+    },
+
+    tagRoleExists(roleId) {
+      return (
+        this.tagRoles.filter(
+          tagRole => tagRole.tag === this.tag && tagRole.role === roleId
+        ).length > 0
+      );
     },
 
     roleName(id) {

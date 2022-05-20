@@ -286,8 +286,8 @@ export default {
     Vue.set(state, "tagRoles", tagRoles);
   },
 
-  addTagRole: (state, { tag, role }) => {
-    Vue.set(state, "tagRoles", [...state.tagRoles, { tag, role }]);
+  addTagRole: (state, { tagRole }) => {
+    Vue.set(state, "tagRoles", [...state.tagRoles, tagRole]);
   },
 
   deleteTagRole: (state, { tag, role }) => {
