@@ -24,7 +24,7 @@
     <div class="blog-comment-form__buttons">
       <blog-button :action="submitForm" :text="$strings.postComment" />
     </div>
-    <div class="blog-comment-form__captcha">
+    <div class="blog-comment-form__captcha" v-if="settings.use_captcha">
       {{ $strings.captchaNotice }}
       <div class="blog-comment-form__captcha-links">
         <a
@@ -88,7 +88,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["entryComments"]),
+    ...mapState(["entryComments", "settings"]),
 
     editorId() {
       return `quilljs-comment-editor${this.entry.id}`;
@@ -112,7 +112,7 @@ export default {
     ...mapMutations(["setEntryComments", "setComment"]),
 
     async getCaptchaToken() {
-      if (!process.env.VUE_APP_RECAPTCHA_CODE) {
+      if (!this.settings.use_captcha || !process.env.VUE_APP_RECAPTCHA_CODE) {
         return Promise.resolve();
       }
       return new Promise(resolve => {
