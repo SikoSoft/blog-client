@@ -1,6 +1,6 @@
 <template>
   <div class="rights">
-    <admin-rights v-if="initialized && roleRights" :role="role" />
+    <admin-rights v-if="initialized" :role="role" :links="rightsLinks" />
   </div>
 </template>
 
@@ -13,12 +13,25 @@ export default {
 
   components: { AdminRights },
 
+  props: {
+    links: Array
+  },
+
+  data() {
+    return {
+      isUpdating: false,
+      firstUpdate: true,
+      rightsLinks: []
+    };
+  },
+
   mounted() {
+    this.addContext({ id: "view", props: ["roleRights"] });
     this.update();
   },
 
   updated() {
-    this.update();
+    //this.update();
   },
 
   computed: {
@@ -34,18 +47,23 @@ export default {
       "initialize",
       "setBreadcrumbs",
       "setTitle",
-      "getRoleRights"
+      "getRoleRights",
+      "addContext"
     ]),
 
-    update() {
-      this.initialize().then(() => {
+    async update() {
+      if (this.firstUpdate) {
+        await this.initialize();
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
           { href: "/admin/rights", label: this.$strings.rights }
         ]);
         this.setTitle(this.$strings.rights);
-        this.getRoleRights();
-      });
+        const response = await this.getRoleRights({ links: this.links });
+        console.log("response", response);
+        this.rightsLinks = response.links;
+        this.firstUpdate = false;
+      }
     }
   },
 

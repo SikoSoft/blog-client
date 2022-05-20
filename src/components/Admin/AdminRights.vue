@@ -1,30 +1,13 @@
 <template>
   <div class="admin-rights">
-    <blog-role-selector @input="changeRole" :role="role" />
+    <blog-role-selector @input="changeRole" :value="role" />
 
     <div v-if="role">
-      <table>
-        <tr v-for="right in roleRights" :key="right.action">
-          <td>
-            {{
-              $strings.rightsLabels[right.action]
-                ? $strings.rightsLabels[right.action]
-                : right.action
-            }}
-          </td>
-          <td>
-            <blog-button
-              destroy
-              :action="
-                () => {
-                  showDeleteRightDialog(right);
-                }
-              "
-              :text="$strings.deleteRight"
-            />
-          </td>
-        </tr>
-      </table>
+      <admin-right
+        v-for="right in roleRights"
+        :key="right.action"
+        v-bind="right"
+      />
 
       <select v-model="newAction">
         <option :selected="!newAction" value="">{{
@@ -51,23 +34,6 @@
         </optgroup>
       </select>
       <blog-button create :action="addRight" :text="$strings.addRight" />
-
-      <blog-confirmation-dialog
-        :title="$strings.deleteRight"
-        :message="$strings.confirmDeleteRight"
-        :isOpen="deleteDialogIsOpen"
-      >
-        <blog-button
-          destroy
-          :text="$strings.yes"
-          :action="
-            () => {
-              deleteRight();
-            }
-          "
-        />
-        <blog-button :text="$strings.no" :action="hideDeleteDialog" />
-      </blog-confirmation-dialog>
     </div>
   </div>
 </template>
@@ -76,8 +42,9 @@
 import { mapActions, mapMutations } from "vuex";
 import spec from "blog-spec";
 import BlogButton from "@/components/BlogButton";
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import BlogRoleSelector from "@/components/BlogRoleSelector";
+import AdminRight from "@/components/Admin/AdminRight";
+import linkHandlers from "@/shared/linkHandlers";
 
 const rightsGroups = {
   entries: ["create_entry", "update_entry", "delete_entry", "view_draft"],
@@ -118,23 +85,28 @@ export default {
 
   components: {
     BlogButton,
-    BlogConfirmationDialog,
-    BlogRoleSelector
+    BlogRoleSelector,
+    AdminRight
   },
 
-  props: { role: { type: Number } },
+  props: {
+    role: Number,
+    links: Array
+  },
 
   data() {
     return {
       rightsGroups,
       spec,
-      newAction: "",
-      right: {},
-      deleteDialogIsOpen: false
+      newAction: ""
     };
   },
 
   computed: {
+    addLink() {
+      return this.link("POST", "roleRight");
+    },
+
     roleRights() {
       return this.$store.state.roleRights.filter(
         right => right.role === this.role
@@ -143,6 +115,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["addRoleRight", "deleteRoleRight", "apiRequest"]),
 
     ...mapMutations(["setRoleRights"]),
@@ -153,37 +127,12 @@ export default {
       }
     },
 
-    showDeleteRightDialog(right) {
-      this.right = right;
-      this.deleteDialogIsOpen = true;
-    },
-
-    deleteRight() {
-      this.apiRequest(this.right.links.delete).then(() => {
-        this.deleteDialogIsOpen = false;
-        this.setRoleRights({
-          roleRights: [
-            ...this.$store.state.roleRights.filter(
-              right =>
-                right.role !== this.right.role ||
-                right.action !== this.right.action
-            )
-          ]
-        });
-      });
-    },
-
-    hideDeleteDialog() {
-      this.deleteDialogIsOpen = false;
-    },
-
-    addRight() {
-      this.addRoleRight({
-        role: this.role,
+    async addRight() {
+      await this.addRoleRight({
+        links: this.linksByRel(this.role),
         action: this.newAction
-      }).then(() => {
-        this.newAction = "";
       });
+      this.newAction = "";
     }
   }
 };

@@ -81,7 +81,7 @@ export default new Router({
     },
     {
       path: "/admin/rights/:role?",
-      name: "rights",
+      name: "roleRights",
       component: Rights
     },
     {

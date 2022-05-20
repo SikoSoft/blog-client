@@ -34,7 +34,7 @@ export default {
   },
 
   updated() {
-    this.update();
+    //this.update();
   },
 
   computed: {

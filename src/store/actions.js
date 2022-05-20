@@ -503,41 +503,26 @@ export default {
     });
   },
 
-  getRoleRights: ({ state, commit, getters }) => {
+  getRoleRights: async ({ state, commit, dispatch }, { links }) => {
+    console.log("getRoleRights", state.roleRights.length, links);
     if (state.roleRights.length) {
       return Promise.resolve();
     }
 
-    return new Promise(resolve => {
-      fetch(state.links.getRoleRights.href, {
-        method: state.links.getRoleRights.method,
-        headers: getters.headers
-      })
-        .then(result => result.json())
-        .then(roleRights => {
-          commit("setRoleRights", { roleRights });
-          resolve();
-        });
-    });
+    const response = await dispatch(
+      "apiRequest",
+      link("GET", "roleRights", links)
+    );
+    commit("setRoleRights", { roleRights: response.roleRights });
+    return response;
   },
 
-  addRoleRight: ({ state, commit, getters }, { role, action }) => {
-    return new Promise(resolve => {
-      fetch(
-        state.links.addRoleRight.href
-          .replace("{role}", role)
-          .replace("{action}", action),
-        {
-          method: state.links.addRoleRight.method,
-          headers: getters.headers
-        }
-      )
-        .then(result => result.json())
-        .then(({ right }) => {
-          commit("addRoleRight", { right });
-          resolve();
-        });
+  addRoleRight: async ({ commit, dispatch }, { links, action }) => {
+    const { right } = await dispatch("apiRequest", {
+      ...link("POST", "roleRight", links),
+      body: { action }
     });
+    commit("addRoleRight", { right });
   },
 
   deleteRoleRight: ({ state, commit, getters }, { role, action }) => {
