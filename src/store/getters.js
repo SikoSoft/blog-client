@@ -5,6 +5,8 @@ export default {
     context: JSON.stringify(state.context)
   }),
 
+  ready: state => state.initialized && state.contextInitialized,
+
   entries: state => state.entries.default.list,
 
   entriesByTag: state => tag =>

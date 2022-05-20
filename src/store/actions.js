@@ -1,5 +1,6 @@
 import axios from "axios";
 import { uuid } from "@/util/uuid";
+import { arrayUnique, arrayHasObject } from "@/util/array";
 import strings from "@/data/strings.json";
 import { link } from "@/shared/linkHandlers";
 
@@ -614,6 +615,9 @@ export default {
   },
 
   apiRequest: async ({ getters }, payload) => {
+    if (!payload) {
+      return;
+    }
     const { data } = await axios({
       url: payload.href,
       method: payload.method,
@@ -624,8 +628,28 @@ export default {
     return data;
   },
 
-  addContext: async ({ commit }, context) => {
+  addContext: async ({ state, commit, dispatch }, context) => {
+    commit("setContextInitialized", { status: false });
     commit("setContext", context);
+
+    if (state.initialized && !arrayHasObject(state.contextHistory, context)) {
+      await dispatch("getContextLinks");
+    } else {
+      commit("setContextInitialized", { status: true });
+    }
+
+    commit("setContextHistory", {
+      contextHistory: arrayUnique([...state.contextHistory, context])
+    });
+  },
+
+  getContextLinks: async ({ state, dispatch, commit }) => {
+    const { links } = await dispatch(
+      "apiRequest",
+      link("GET", "contextLinks", state.links)
+    );
+    commit("setLinks", { links: arrayUnique([...state.links, ...links]) });
+    commit("setContextInitialized", { status: true });
   },
 
   getSettings: async ({ commit, dispatch }, { links }) => {

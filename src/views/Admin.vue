@@ -26,7 +26,7 @@ export default {
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
 
     async update() {
-      //await this.initialize();
+      await this.initialize();
       this.setBreadcrumbs([{ href: "/admin", label: this.$strings.admin }]);
       this.setTitle(this.$strings.admin);
     }

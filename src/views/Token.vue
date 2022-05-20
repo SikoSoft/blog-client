@@ -22,13 +22,12 @@ export default {
   methods: {
     ...mapActions(["initialize", "useToken", "setBreadcrumbs", "setTitle"]),
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([
-          { href: "/token/", label: this.$strings.authenticator }
-        ]);
-        this.setTitle(this.$strings.authenticator);
-      });
+    async update() {
+      await this.initialize();
+      this.setBreadcrumbs([
+        { href: "/token/", label: this.$strings.authenticator }
+      ]);
+      this.setTitle(this.$strings.authenticator);
     }
   }
 };

@@ -1,5 +1,6 @@
 export default {
   initialized: false,
+  contextInitialized: false,
   isLoading: true,
   config: {},
   title: "",
@@ -56,5 +57,6 @@ export default {
   overlayIsOpen: false,
   imageSizes: [],
   context: [],
+  contextHistory: [],
   settingsConfig: []
 };

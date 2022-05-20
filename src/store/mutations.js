@@ -336,7 +336,15 @@ export default {
     ]);
   },
 
+  setContextHistory: (state, { contextHistory }) => {
+    Vue.set(state, "contextHistory", [...contextHistory]);
+  },
+
   setSettingsConfig: (state, { settings }) => {
     Vue.set(state, "settingsConfig", settings);
+  },
+
+  setContextInitialized: (state, { status }) => {
+    state.contextInitialized = status;
   }
 };

@@ -32,14 +32,13 @@ export default {
   methods: {
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([
-          { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/roles", label: this.$strings.roles }
-        ]);
-        this.setTitle(this.$strings.roles);
-      });
+    async update() {
+      await this.initialize();
+      this.setBreadcrumbs([
+        { href: "/admin", label: this.$strings.admin },
+        { href: "/admin/roles", label: this.$strings.roles }
+      ]);
+      this.setTitle(this.$strings.roles);
     }
   },
 

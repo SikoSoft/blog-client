@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-settings">
+  <div class="admin-settings" v-if="ready">
     <blog-tabs>
       <blog-tab
         v-for="settingGroup in Object.keys(settingGroups).filter(
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 import spec from "blog-spec";
 import BlogTabs from "@/components/BlogTabs";
 import BlogTab from "@/components/BlogTab";
@@ -78,12 +78,14 @@ export default {
     };
   },
 
-  mounted() {
-    this.addContext({ id: "view", props: ["setting"] });
+  async created() {
+    await this.addContext({ id: "view", props: ["setting"] });
   },
 
   computed: {
-    ...mapState(["settings"])
+    ...mapState(["settings"]),
+
+    ...mapGetters(["ready"])
   },
 
   methods: {

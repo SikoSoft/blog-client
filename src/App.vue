@@ -155,7 +155,7 @@ export default {
 
     ...mapActions(["apiRequest"]),
 
-    ...mapMutations(["setFilters"]),
+    ...mapMutations(["setFilters", "setContextInitialized"]),
 
     async getFilters() {
       const link = this.link("GET", "filters");

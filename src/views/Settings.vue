@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <admin-settings
-      v-if="initialized"
+      v-if="ready"
       v-bind="settings"
       :settingsConfig="settingsConfig"
     />
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
 import AdminSettings from "@/components/Admin/AdminSettings";
 import linkHandlers from "@/shared/linkHandlers";
 
@@ -28,17 +28,15 @@ export default {
     };
   },
 
-  mounted() {
-    this.addContext({ id: "view", props: ["settings"] });
+  async created() {
+    await this.addContext({ id: "view", props: ["settings"] });
     this.update();
   },
 
-  updated() {
-    //this.update();
-  },
-
   computed: {
-    ...mapState(["initialized", "user", "settings", "settingsConfig"])
+    ...mapState(["initialized", "user", "settings", "settingsConfig"]),
+
+    ...mapGetters(["ready"])
   },
 
   methods: {

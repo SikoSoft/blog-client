@@ -13,14 +13,14 @@ export default {
 
   components: { AdminFilters },
 
-  mounted() {
-    this.initialize().then(() => {
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/filters", label: this.$strings.filters }
-      ]);
-      this.setTitle(this.$strings.filters);
-    });
+  async mounted() {
+    this.addContext({ id: "view", props: ["filters"] });
+    await this.initialize();
+    this.setBreadcrumbs([
+      { href: "/admin", label: this.$strings.admin },
+      { href: "/admin/filters", label: this.$strings.filters }
+    ]);
+    this.setTitle(this.$strings.filters);
   },
 
   computed: {
@@ -28,7 +28,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"])
   },
 
   watch: {

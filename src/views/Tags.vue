@@ -13,12 +13,11 @@ export default {
 
   components: { BlogTags },
 
-  mounted() {
-    this.initialize().then(() => {
-      this.getTags();
-      this.setTitle(this.$strings.tags);
-      this.setBreadcrumbs([{ href: "/tags", label: this.$strings.tags }]);
-    });
+  async mounted() {
+    await this.initialize();
+    this.getTags();
+    this.setTitle(this.$strings.tags);
+    this.setBreadcrumbs([{ href: "/tags", label: this.$strings.tags }]);
   },
 
   computed: {
