@@ -101,7 +101,7 @@ export default {
   },
 
   async getEntry(
-    { state, commit, getters, dispatch },
+    { commit, getters, dispatch },
     { links, id, force, addToList }
   ) {
     if (getters.entryById(id) && !force) {
@@ -111,16 +111,20 @@ export default {
     const { entry } = await dispatch("apiRequest", link("GET", "entry", links));
     commit("setEntryById", { id, entry });
     if (addToList) {
-      commit("setEntries", {
-        type: "default",
-        entries: [entry, ...state.entries.default.list]
-      });
-      commit("setEntriesStart", {
-        type: "default",
-        start: state.getEntriesStart + 1
-      });
+      dispatch("addEntryToList", { entry });
     }
     commit("setLoading", { loading: false });
+  },
+
+  async addEntryToList({ commit, state }, { entry }) {
+    commit("setEntries", {
+      type: "default",
+      entries: [entry, ...state.entries.default.list]
+    });
+    commit("setEntriesStart", {
+      type: "default",
+      start: state.getEntriesStart + 1
+    });
   },
 
   setTitle({ commit }, title) {
@@ -131,19 +135,13 @@ export default {
     commit("setBreadcrumbs", { breadcrumbs });
   },
 
-  getTags({ state, commit, getters }) {
-    if (state.tags.length > 0) {
-      return;
-    }
-
-    fetch(state.links.getTags.href, {
-      method: state.links.getTags.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(json => {
-        commit("setTags", { tags: json.tags });
-      });
+  async getTags({ state, commit, dispatch }, { tag = "" }) {
+    const response = await dispatch("apiRequest", {
+      ...link("GET", "tags", state.links),
+      query: { tag }
+    });
+    commit("setTags", { tags: response.tags });
+    return response;
   },
 
   showAdminPane({ commit }) {
@@ -219,26 +217,18 @@ export default {
     commit("setSetting", { id, value });
   },
 
-  getDrafts({ commit, state, getters }, force) {
+  async getDrafts({ commit, state, dispatch }, { force = false }) {
     if (state.drafts.length && !force) {
       return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });
-
-    return new Promise((resolve, reject) => {
-      fetch(state.links.getDrafts.href, {
-        method: state.links.getDrafts.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(({ drafts }) => {
-          commit("setDrafts", { drafts });
-          commit("setLoading", { loading: false });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    const { drafts } = await dispatch(
+      "apiRequest",
+      link("GET", "drafts", state.links)
+    );
+    commit("setDrafts", { drafts });
+    commit("setLoading", { loading: false });
   },
 
   async getDraft({ state, commit, getters }, { id, force }) {
@@ -299,32 +289,18 @@ export default {
     });
   },
 
-  deleteEntry: ({ state, commit, getters }, { id }) => {
-    const entry = getters.entryById(id);
-    fetch(entry.links.delete.href, {
-      method: entry.links.delete.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(() => {
-        commit("deleteEntry", { id });
-        commit("setEntriesStart", {
-          type: "default",
-          start: state.getEntriesStart - 1
-        });
-      });
+  deleteEntry: async ({ state, commit, dispatch }, { links, id }) => {
+    await dispatch("apiRequest", link("DELETE", "entry", links));
+    commit("deleteEntry", { id });
+    commit("setEntriesStart", {
+      type: "default",
+      start: state.getEntriesStart - 1
+    });
   },
 
-  deleteDraft: ({ commit, getters }, { id }) => {
-    const draft = getters.draftById(id);
-    fetch(draft.links.delete.href, {
-      method: draft.links.delete.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(() => {
-        commit("deleteDraft", { id });
-      });
+  deleteDraft: async ({ commit, dispatch }, { links, id }) => {
+    await dispatch("apiRequest", link("DELETE", "draft", links));
+    commit("deleteDraft", { id });
   },
 
   setProgress: ({ state, commit }, { progress }) => {
@@ -618,6 +594,7 @@ export default {
     if (!payload) {
       return;
     }
+    console.log("apiRequest", JSON.stringify(payload));
     const { data } = await axios({
       url: payload.href,
       method: payload.method,

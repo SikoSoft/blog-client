@@ -24,7 +24,7 @@
         <blog-entry-form
           v-if="entryFormIsOpen"
           :initial="{
-            links: { save: links.newEntry, uploadImage: links.uploadImage }
+            links
           }"
         />
       </div>
@@ -39,7 +39,7 @@ import BlogEntryForm from "@/components/BlogEntryForm";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
-  name: "blog-admin",
+  name: "blog-admin-pane",
 
   props: {
     links: Array

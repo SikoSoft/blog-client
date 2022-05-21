@@ -33,6 +33,7 @@ export default {
   entriesById: {},
   entriesFound: [],
   tags: [],
+  tagsByMatch: {},
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
   links: [],

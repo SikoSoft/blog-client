@@ -105,7 +105,7 @@
         <blog-button
           destroy
           type="button"
-          v-if="links.delete"
+          v-if="deleteLink"
           :action="showConfirmationDialog"
           :text="$strings.deleteEntry"
         />
@@ -120,13 +120,13 @@
         <blog-button
           destroy
           type="button"
-          v-if="entry.id && links.delete"
+          v-if="deleteLink"
           :action="showConfirmationDialog"
           :text="$strings.deleteDraft"
         />
       </template>
       <blog-confirmation-dialog
-        v-if="links.delete"
+        v-if="deleteLink"
         :isOpen="confirmationDialogOpen"
         :title="$strings.deleteEntry"
         :message="$strings.confirmDeleteEntry"
@@ -148,6 +148,7 @@ import BlogTagManager from "@/components/BlogTagManager";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import BlogButton from "@/components/BlogButton";
 import imageHandler from "@/util/imageHandler";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-entry-form",
@@ -188,8 +189,8 @@ export default {
     };
   },
 
-  mounted() {
-    this.getDrafts();
+  async mounted() {
+    await this.getDrafts({ links: this.links });
     this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
@@ -274,6 +275,10 @@ export default {
       return this.public === 1;
     },
 
+    deleteLink() {
+      return this.link("DELETE", "entry");
+    },
+
     entryFinderStyle() {
       return {
         top: `calc(${this.editorSelectionPosition.top}px + 2rem)`,
@@ -283,6 +288,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapMutations(["setLoading", "hideEntryForm"]),
 
     ...mapActions([
@@ -298,7 +305,9 @@ export default {
       "deleteEntry",
       "deleteDraft",
       "setProgress",
-      "addToast"
+      "addToast",
+      "apiRequest",
+      "addEntryToList"
     ]),
 
     publishDraft(e) {
@@ -311,7 +320,7 @@ export default {
       this.submitForm(e);
     },
 
-    submitForm(e) {
+    async submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
       const entry = {
         title: this.title,
@@ -325,43 +334,35 @@ export default {
           : 0
       };
       this.setLoading({ loading: true });
-      fetch(this.links.save.href, {
-        method: this.links.save.method,
-        headers: this.headers,
-        body: JSON.stringify(entry)
-      })
-        .then(response => response.json())
-        .then(json => {
-          if (!json.errorCode) {
-            this[this.public === 1 ? "getEntry" : "getDraft"]({
-              id: json.id,
-              force: true,
-              addToList: !this.entryId ? true : false
-            }).then(() => {
-              this.setLoading({ loading: false });
-              this.hideEntryForm();
-              this.setEditMode({ id: json.id, mode: false });
-              localStorage.removeItem(this.formId);
-              const routeType = this.public === 1 ? "entry" : "draft";
-              if (this.entryId && this.entryId !== json.id) {
-                this.$emit("idChanged", json.id);
-                this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
-                  id: this.entryId,
-                  newId: json.id
-                });
-              }
-              if (window.location.pathname !== `/${routeType}/${json.id}`) {
-                if (!this.entryId) {
-                  this.$router.push({ path: `/${routeType}/${json.id}` });
-                } else {
-                  this.$emit("edited", json.id);
-                }
-              }
-            });
+      const response = await this.apiRequest({
+        ...this.link(this.initial.id ? "PUT" : "POST", "entry"),
+        body: entry
+      });
+      if (!response.errorCode) {
+        this.setEntryById({ id: response.entry.id, entry: response.entry });
+        this.entryId || (await this.addEntryToList({ entry: response.entry }));
+        this.setLoading({ loading: false });
+        this.hideEntryForm();
+        this.setEditMode({ id: response.entry.id, mode: false });
+        localStorage.removeItem(this.formId);
+        const routeType = this.public === 1 ? "entry" : "draft";
+        if (this.entryId && this.entryId !== response.entry.id) {
+          this.$emit("idChanged", response.entry.id);
+          this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
+            id: this.entryId,
+            newId: response.entry.id
+          });
+        }
+        if (window.location.pathname !== `/${routeType}/${response.entry.id}`) {
+          if (!this.entryId) {
+            this.$router.push({ path: `/${routeType}/${response.entry.id}` });
           } else {
-            this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
+            this.$emit("edited", response.entry.id);
           }
-        });
+        }
+      } else {
+        this.addToast(this.$strings.errors[`CODE_${response.errorCode}`]);
+      }
       e.preventDefault();
     },
 
@@ -503,9 +504,9 @@ export default {
 
     handleDelete() {
       if (this.isPublic) {
-        this.deleteEntry({ id: this.entry.id });
+        this.deleteEntry({ links: this.links, id: this.entry.id });
       } else {
-        this.deleteDraft({ id: this.entry.id });
+        this.deleteDraft({ links: this.links, id: this.entry.id });
         this.loadDraft();
         this.hideConfirmationDialog();
       }

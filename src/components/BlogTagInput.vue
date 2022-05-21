@@ -57,14 +57,14 @@ export default {
 
   mounted() {
     if (this.tag) {
-      this.getTags();
+      this.getTagsMatched();
     }
   },
 
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["apiRequest"]),
+    ...mapActions(["apiRequest", "getTags"]),
 
     tagsKeyDown(e) {
       switch (e.which) {
@@ -87,7 +87,7 @@ export default {
             clearTimeout(this.tagsTimeout);
           }
           this.tagsTimeout = setTimeout(() => {
-            this.getTags();
+            this.getTagsMatched();
           }, this.tagsCoolDown);
       }
     },
@@ -151,12 +151,10 @@ export default {
       this.$parent.setTags(this.$parent.tags.filter(t => t != tag));
     },
 
-    async getTags() {
+    async getTagsMatched() {
       console.log("getTags", JSON.stringify(this.link("GET", "tags")));
-      const response = await this.apiRequest({
-        ...this.link("GET", "tags"),
-        query: { tag: this.tag }
-      });
+      const response = await this.getTags({ tag: this.tag });
+      console.log("response", response);
       this.$emit("newLinks", response.links);
       this.autoTags = response.tags.filter(
         tag => !this.tagsToFilter.includes(tag)
