@@ -56,7 +56,9 @@ export default {
   },
 
   mounted() {
-    this.getTags();
+    if (this.tag) {
+      this.getTags();
+    }
   },
 
   methods: {
@@ -150,6 +152,7 @@ export default {
     },
 
     async getTags() {
+      console.log("getTags", JSON.stringify(this.link("GET", "tags")));
       const response = await this.apiRequest({
         ...this.link("GET", "tags"),
         query: { tag: this.tag }

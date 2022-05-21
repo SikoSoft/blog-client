@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="classes">
-    <blog-admin v-if="showAdminPane" :links="[link('POST', 'entry')]" />
+    <blog-admin-pane v-if="showAdminPane" :links="[link('POST', 'entry')]" />
     <header>
       <blog-header />
     </header>
@@ -24,7 +24,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import BlogOverlay from "@/components/BlogOverlay";
-import BlogAdmin from "@/components/BlogAdmin";
+import BlogAdminPane from "@/components/BlogAdminPane";
 import BlogLoader from "@/components/BlogLoader";
 import BlogHeader from "@/components/BlogHeader";
 import BlogFooter from "@/components/BlogFooter";
@@ -35,7 +35,7 @@ import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {
   components: {
-    BlogAdmin,
+    BlogAdminPane,
     BlogLoader,
     BlogHeader,
     BlogFooter,
