@@ -10,6 +10,7 @@ import { mapActions } from "vuex";
 import { parseVars } from "@/util/strings";
 import BlogTag from "@/components/BlogTag";
 import Entries from "@/shared/Entries";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   ...Entries,
@@ -32,6 +33,8 @@ export default {
 
   methods: {
     ...Entries.methods,
+
+    ...linkHandlers,
 
     ...mapActions(["getFilters"]),
 

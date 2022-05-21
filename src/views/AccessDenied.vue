@@ -6,6 +6,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "access-denied",
@@ -18,6 +19,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
   }
 };

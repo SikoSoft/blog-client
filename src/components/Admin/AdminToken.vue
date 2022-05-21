@@ -15,10 +15,19 @@
         <td>{{ consumed }}</td>
         <td>
           <blog-button
+            v-if="addLink"
+            :text="$strings.addToken"
+            :action="addToken"
+            create
+          />
+          <blog-button
+            v-if="updateLink"
             :text="$strings.updateToken"
             :action="updateToken"
             create
-          /><blog-button
+          />
+          <blog-button
+            v-if="deleteLink"
             :text="$strings.deleteToken"
             :action="showDeleteDialog"
             destroy
@@ -39,11 +48,12 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import BlogRoleSelector from "@/components/BlogRoleSelector";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import BlogToggle from "@/components/BlogToggle";
 import BlogButton from "@/components/BlogButton";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-token",
@@ -66,11 +76,29 @@ export default {
       code: this.initial ? this.initial.code : "",
       oneTime: this.initial ? this.initial.one_time : 0,
       role: this.initial ? this.initial.role : 0,
-      consumed: this.initial.consumed ? this.initial.consumed : 0
+      consumed: this.initial ? this.initial.consumed : 0
     };
   },
 
+  computed: {
+    ...mapState(["tokens"]),
+
+    addLink() {
+      return this.link("POST", "token");
+    },
+
+    updateLink() {
+      return this.link("PUT", "token");
+    },
+
+    deleteLink() {
+      return this.link("DELETE", "token");
+    }
+  },
+
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["apiRequest", "addToast"]),
 
     ...mapMutations(["setTokens"]),
@@ -83,9 +111,29 @@ export default {
       this.deleteDialogIsOpen = false;
     },
 
+    async addToken() {
+      const { token } = await this.apiRequest({
+        ...this.addLink,
+        body: {
+          code: this.code,
+          one_time: this.oneTime,
+          role: this.role
+        }
+      });
+      this.setTokens({
+        tokens: [...this.tokens, token].sort((a, b) =>
+          a.code < b.code ? -1 : a.code > b.code ? 1 : 0
+        )
+      });
+      this.addToast(this.$strings.tokenAdded);
+      this.code = "";
+      this.oneTime = 0;
+      this.role = 0;
+    },
+
     async updateToken() {
       const { token } = await this.apiRequest({
-        ...this.links.update,
+        ...this.updateLink,
         body: {
           code: this.code,
           one_time: this.oneTime,
@@ -104,7 +152,7 @@ export default {
     },
 
     async deleteToken() {
-      await this.apiRequest(this.links.delete);
+      await this.apiRequest(this.deleteLink);
       this.setTokens({
         tokens: this.$store.state.tokens.filter(
           token => token.code !== this.code

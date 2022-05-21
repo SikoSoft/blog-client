@@ -7,6 +7,7 @@
 <script>
 import { mapActions } from "vuex";
 import BlogTokenHandler from "@/components/BlogTokenHandler";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tag",
@@ -20,6 +21,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "useToken", "setBreadcrumbs", "setTitle"]),
 
     async update() {

@@ -10,22 +10,7 @@
       <legend>
         {{ $strings.newToken }}
       </legend>
-      <table>
-        <tr>
-          <td>{{ $strings.code }}</td>
-          <td>{{ $strings.oneTime }}</td>
-          <td>{{ $strings.role }}</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><input type="text" v-model="code" /></td>
-          <td><blog-toggle v-model="oneTime" /></td>
-          <td><blog-role-selector v-model="role" /></td>
-          <td>
-            <blog-button create :text="$strings.addToken" :action="addToken" />
-          </td>
-        </tr>
-      </table>
+      <admin-token :links="links" />
     </fieldset>
   </div>
 </template>
@@ -33,23 +18,17 @@
 <script>
 import { mapActions, mapMutations } from "vuex";
 import AdminToken from "@/components/Admin/AdminToken";
-import BlogButton from "@/components/BlogButton";
-import BlogToggle from "@/components/BlogToggle";
-import BlogRoleSelector from "@/components/BlogRoleSelector";
 
 export default {
   name: "admin-tokens",
 
   components: {
-    AdminToken,
-    BlogButton,
-    BlogToggle,
-    BlogRoleSelector
+    AdminToken
   },
 
   props: {
-    tokens: { type: Array },
-    links: { type: Array }
+    tokens: Array,
+    links: Array
   },
 
   data() {

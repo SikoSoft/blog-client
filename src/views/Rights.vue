@@ -7,6 +7,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import AdminRights from "@/components/Admin/AdminRights";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "rights",
@@ -43,6 +44,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions([
       "initialize",
       "setBreadcrumbs",

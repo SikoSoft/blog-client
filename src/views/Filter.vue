@@ -7,6 +7,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import Entries from "@/shared/Entries";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   ...Entries,
@@ -31,6 +32,8 @@ export default {
 
   methods: {
     ...Entries.methods,
+
+    ...linkHandlers,
 
     ...mapActions(["getFilters"]),
 

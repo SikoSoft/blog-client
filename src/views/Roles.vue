@@ -7,6 +7,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import AdminRoles from "@/components/Admin/AdminRoles";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "roles",
@@ -30,6 +31,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
 
     async update() {

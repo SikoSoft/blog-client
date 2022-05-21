@@ -7,6 +7,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import AdminHome from "@/components/Admin/AdminHome";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin",
@@ -23,6 +24,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
 
     async update() {

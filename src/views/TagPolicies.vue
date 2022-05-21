@@ -1,7 +1,7 @@
 <template>
   <div class="tag-policies">
     <admin-tag-policies
-      v-if="initialized && tagRolesFetched"
+      v-if="initialized && tagRolesLinks.length"
       :tag="tag"
       :tagRoles="tagRoles.filter(tagRole => tagRole.tag === tag)"
       :links="tagRolesLinks"
@@ -12,6 +12,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import AdminTagPolicies from "@/components/Admin/AdminTagPolicies";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tag-policies",
@@ -24,8 +25,7 @@ export default {
 
   data() {
     return {
-      tagRolesFetching: false,
-      tagRolesFetched: false,
+      firstUpdate: true,
       tagRolesLinks: []
     };
   },
@@ -36,7 +36,7 @@ export default {
   },
 
   updated() {
-    this.update();
+    //this.update();
   },
 
   computed: {
@@ -48,6 +48,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions([
       "initialize",
       "setBreadcrumbs",
@@ -57,17 +59,17 @@ export default {
     ]),
 
     async update() {
-      await this.initialize();
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
-      ]);
-      this.setTitle(this.$strings.tagPolicies);
-      if (!this.tagRolesFetching) {
+      if (this.firstUpdate) {
+        await this.initialize();
+        this.setBreadcrumbs([
+          { href: "/admin", label: this.$strings.admin },
+          { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
+        ]);
+        this.setTitle(this.$strings.tagPolicies);
         this.tagRolesFetching = true;
         const response = await this.getTagRoles({ links: this.links });
         this.tagRolesLinks = response.links;
-        this.tagRolesFetched = true;
+        this.firstUpdate = false;
       }
     }
   },

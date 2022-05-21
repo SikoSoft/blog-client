@@ -11,6 +11,7 @@
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
 import AdminImages from "@/components/Admin/AdminImages";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "image-sizes",
@@ -36,6 +37,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions([
       "initialize",
       "setBreadcrumbs",

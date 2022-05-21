@@ -7,6 +7,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import BlogTags from "@/components/BlogTags";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tags",
@@ -25,6 +26,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "getTags"])
   }
 };

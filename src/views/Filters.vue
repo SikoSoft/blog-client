@@ -7,6 +7,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import AdminFilters from "@/components/Admin/AdminFilters";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "filters",
@@ -28,6 +29,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"])
   },
 
