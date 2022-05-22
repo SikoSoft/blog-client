@@ -32,6 +32,7 @@ export default {
   },
 
   setLinks: (state, { links }) => {
+    console.log("setLinks", JSON.parse(JSON.stringify(links)));
     Vue.set(state, "links", links);
   },
 
@@ -329,11 +330,9 @@ export default {
     state.imageSizes = imageSizes;
   },
 
-  setContext: (state, { id, ...context }) => {
-    Vue.set(state, "context", [
-      ...state.context.filter(context => context.id !== id),
-      { id, ...context }
-    ]);
+  setContext: (state, { context }) => {
+    console.log("setContext", context);
+    Vue.set(state, "context", context);
   },
 
   setContextHistory: (state, { contextHistory }) => {
@@ -345,6 +344,20 @@ export default {
   },
 
   setContextInitialized: (state, { status }) => {
+    console.log("setContextInitialized", status);
     state.contextInitialized = status;
+  },
+
+  setContextSynced: (state, { contextSynced }) => {
+    Vue.set(state, "contextSynced", contextSynced);
+  },
+
+  setBanners: (state, { banners }) => {
+    console.log("setBanners");
+    Vue.set(state, "banners", banners);
+  },
+
+  setHeader: (state, { header }) => {
+    state.header = header;
   }
 };

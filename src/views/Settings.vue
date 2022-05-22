@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <admin-settings
-      v-if="ready"
+      v-if="contextIsReady(context)"
       v-bind="settings"
       :settingsConfig="settingsConfig"
     />
@@ -24,19 +24,29 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["settings"] },
       firstUpdate: true
     };
   },
 
-  async created() {
-    await this.addContext({ id: "view", props: ["settings"] });
+  created() {
+    console.log("created", this.context);
+    this.addContext(this.context);
+  },
+
+  async mounted() {
+    //await this.addContext();
     this.update();
+  },
+
+  async unmounted() {
+    this.removeContext(this.context);
   },
 
   computed: {
     ...mapState(["initialized", "user", "settings", "settingsConfig"]),
 
-    ...mapGetters(["ready"])
+    ...mapGetters(["contextIsReady"])
   },
 
   methods: {

@@ -1,13 +1,18 @@
 <template>
-  <div class="blog-hero">
+  <div class="blog-banner">
     <div
-      class="blog-hero__image"
-      :style="{ 'background-size': `auto ${imgSize}px` }"
+      class="blog-banner__image"
+      :style="{
+        'background-size': `auto ${imgSize}px`,
+        'background-image': `url(${image})`
+      }"
     ></div>
-    <h1 class="blog-hero__heading" :style="{ opacity: headingOpacity }">
-      {{ title }}
-    </h1>
-    <div class="blog-hero__caption"></div>
+    <div class="blog-banner__text">
+      <h1 class="blog-banner__heading" :style="{ opacity: headingOpacity }">
+        {{ title }}
+      </h1>
+      <div class="blog-banner__caption">{{ caption }}</div>
+    </div>
   </div>
 </template>
 
@@ -15,7 +20,13 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "blog-hero",
+  name: "blog-banner",
+
+  props: {
+    //title: String,
+    caption: String,
+    image: String
+  },
 
   data() {
     return {
@@ -46,7 +57,7 @@ export default {
 @import "@/styles/variables.scss";
 @import "@/styles/mixins";
 
-.blog-hero {
+.blog-banner {
   @include container-width;
   position: relative;
   height: 400px;
@@ -56,24 +67,31 @@ export default {
     opacity: 0.2;
     height: 100%;
     width: 100%;
-    background-image: url("https://sikosoft.com/img/pepperSpray.png");
     background-position: right top;
     background-size: auto 1000px;
     background-repeat: no-repeat;
   }
 
-  &__heading {
+  &__text {
     position: absolute;
     max-width: 90vw;
     margin: 0;
     top: 20%;
-    font-size: 6rem;
-    line-height: 7rem;
+
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 0 10px #000;
+  }
+
+  &__heading {
+    font-size: 6rem;
+    margin-bottom: 0;
+  }
+
+  &__caption {
+    font-size: 2rem;
   }
 }
 </style>

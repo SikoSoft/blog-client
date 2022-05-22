@@ -1,18 +1,27 @@
 <template>
   <div class="blog-header">
-    <blog-hero />
+    <blog-banner
+      :title="header.title"
+      :caption="header.caption"
+      :image="header.image"
+    />
     <blog-breadcrumb id="blog-breadcrumb" />
   </div>
 </template>
 
 <script>
-import BlogHero from "@/components/BlogHero";
+import { mapState } from "vuex";
+import BlogBanner from "@/components/BlogBanner";
 import BlogBreadcrumb from "@/components/BlogBreadcrumb";
 
 export default {
   name: "blog-header",
 
-  components: { BlogHero, BlogBreadcrumb }
+  components: { BlogBanner, BlogBreadcrumb },
+
+  computed: {
+    ...mapState(["header"])
+  }
 };
 </script>
 

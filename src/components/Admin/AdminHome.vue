@@ -25,7 +25,8 @@ export default {
         "tag_policies",
         "filters",
         "tokens",
-        "images"
+        "images",
+        "banners"
       ]
     };
   },

@@ -3,7 +3,8 @@
     <div class="admin-setting__label">{{ label }}</div>
     <div class="admin-setting__input">
       <template v-if="type === 'list'">
-        <blog-role-selector v-model="value" />
+        <blog-role-selector v-model="value" v-if="listSource === 'roles'" />
+        <blog-banner-selector v-model="value" v-if="listSource === 'banners'" />
       </template>
       <template v-if="type === 'number'">
         <input
@@ -26,6 +27,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import BlogRoleSelector from "@/components/BlogRoleSelector";
+import BlogBannerSelector from "@/components/BlogBannerSelector";
 import BlogToggle from "@/components/BlogToggle";
 
 export default {
@@ -44,7 +46,7 @@ export default {
     links: Array
   },
 
-  components: { BlogRoleSelector, BlogToggle },
+  components: { BlogRoleSelector, BlogBannerSelector, BlogToggle },
 
   data() {
     return {
@@ -60,7 +62,9 @@ export default {
     ...mapActions(["setSetting"]),
 
     handleChange() {
-      this.setSetting({ links: this.links, id: this.id, value: this.value });
+      const payload = { links: this.links, id: this.id, value: this.value };
+      console.log("payload", JSON.stringify(payload));
+      this.setSetting(payload);
     }
   },
 

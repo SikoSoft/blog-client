@@ -15,6 +15,7 @@ import Admin from "./views/Admin";
 import Filters from "./views/Filters";
 import Filter from "./views/Filter";
 import Images from "./views/Images";
+import Banners from "./views/Banners";
 
 Vue.use(Router);
 
@@ -98,6 +99,11 @@ export default new Router({
       path: "/admin/tag_policies/:tag?",
       name: "tagRoles",
       component: TagPolicies
+    },
+    {
+      path: "/admin/banners/:banner?",
+      name: "banners",
+      component: Banners
     },
     {
       path: "/access_denied",

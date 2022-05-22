@@ -116,6 +116,11 @@
   "imageSizeAdded": "The image size has been added",
   "imageSizeUpdated": "The image size has been updated",
   "imageSizeDeleted": "The image size has been deleted",
+  "heading": "Heading",
+  "caption": "Caption",
+  "imageUrl": "Image URL",
+  "newBanner": "New banner",
+  "selectABanner": "Select a banner",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
@@ -186,7 +191,9 @@
     "show_sidebar": "Show sidebar",
     "github_feed": "Github feed URL",
     "show_powered_by": "Show powered-by statement",
-    "footer_body": "Footer body"
+    "footer_body": "Footer body",
+    "analyze_comments_sentiment": "Analyze sentiment in comments",
+    "header_banner": "Header banner"
   },
   "rightsGroups": {
     "entries": "Entries",
@@ -210,6 +217,7 @@
     "manage_tag_policies": "Manage tag policies",
     "manage_filters": "Manage filters",
     "manage_images": "Manage images",
+    "manage_banners": "Manage banners",
     "upload_image": "Upload image"
   }
 }

@@ -33,6 +33,7 @@ export default {
         commit("setRoles", { roles: json.roles });
         commit("setLinks", { links: json.links });
         commit("setSettings", { settings: json.settings });
+        commit("setHeader", { header: json.header });
         commit("setInitialized");
         commit("setLoading", { loading: false });
       });
@@ -606,11 +607,16 @@ export default {
   },
 
   addContext: async ({ state, commit, dispatch }, context) => {
+    if (!context) {
+      return;
+    }
+    console.log("addContext", JSON.stringify(context));
     commit("setContextInitialized", { status: false });
-    commit("setContext", context);
+    commit("setContext", { context: [...state.context, context] });
 
     if (state.initialized && !arrayHasObject(state.contextHistory, context)) {
       await dispatch("getContextLinks");
+      //commit("setContextSynced", {contextSynced: [...state.contextSynced, context]})
     } else {
       commit("setContextInitialized", { status: true });
     }
@@ -635,5 +641,19 @@ export default {
       link("GET", "settings", links)
     );
     commit("setSettingsConfig", { settings });
+  },
+
+  async getBanners({ commit, dispatch, state }) {
+    console.log(
+      "getBanners",
+      JSON.stringify(link("GET", "banners", state.links))
+    );
+    const response = await dispatch(
+      "apiRequest",
+      link("GET", "banners", state.links)
+    );
+    console.log("get banners response", response);
+    commit("setBanners", { banners: response.banners });
+    return response;
   }
 };

@@ -1,3 +1,5 @@
+import { arrayHasObject } from "@/util/array";
+
 export default {
   headers: state => ({
     "x-functions-key": state.authToken,
@@ -6,6 +8,9 @@ export default {
   }),
 
   ready: state => state.initialized && state.contextInitialized,
+
+  contextIsReady: state => context =>
+    arrayHasObject(state.contextHistory, context),
 
   entries: state => state.entries.default.list,
 

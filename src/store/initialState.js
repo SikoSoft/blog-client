@@ -59,5 +59,8 @@ export default {
   imageSizes: [],
   context: [],
   contextHistory: [],
-  settingsConfig: []
+  contextSynced: [],
+  settingsConfig: [],
+  banners: [],
+  header: {}
 };

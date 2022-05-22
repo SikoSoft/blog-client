@@ -1,6 +1,6 @@
 <template>
   <div class="roles">
-    <admin-roles v-if="initialized" v-bind="roles" />
+    <admin-roles v-if="initialized" v-bind="roles" :links="links" />
   </div>
 </template>
 
@@ -14,12 +14,17 @@ export default {
 
   components: { AdminRoles },
 
-  mounted() {
+  props: {
+    links: Array
+  },
+
+  async mounted() {
+    await this.addContext({ id: "view", props: ["roles"] });
     this.update();
   },
 
   updated() {
-    this.update();
+    //this.update();
   },
 
   computed: {
@@ -33,7 +38,7 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
 
     async update() {
       await this.initialize();
