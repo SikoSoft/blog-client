@@ -3,8 +3,8 @@
     <div
       class="blog-banner__image"
       :style="{
-        'background-size': `auto ${imgSize}px`,
-        'background-image': `url(${image})`
+        'background-size': `${imgSize}% ${imgSize}%`,
+        ...(image ? { 'background-image': `url(${image})` } : {})
       }"
     ></div>
     <div class="blog-banner__text">
@@ -23,14 +23,13 @@ export default {
   name: "blog-banner",
 
   props: {
-    //title: String,
     caption: String,
     image: String
   },
 
   data() {
     return {
-      imgSize: 1000,
+      imgSize: 100,
       headingOpacity: 1
     };
   },
@@ -44,9 +43,8 @@ export default {
       const height = 400;
       const dif = window.pageYOffset < height ? height - window.pageYOffset : 0;
       const difRatio = dif / height;
-      const imgMin = 1000;
-      const imgMax = 1200;
-      this.imgSize = imgMin + (imgMax - imgMin) * ((height - dif) / height);
+      const scale = (1 + (1 - difRatio) * 0.25) * 100;
+      this.imgSize = scale;
       this.headingOpacity = difRatio;
     });
   }
@@ -59,6 +57,7 @@ export default {
 
 .blog-banner {
   @include container-width;
+  padding: 0;
   position: relative;
   height: 400px;
   background: radial-gradient(circle at center, #222 0, #000);
@@ -68,14 +67,14 @@ export default {
     height: 100%;
     width: 100%;
     background-position: right top;
-    background-size: auto 1000px;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
   }
 
   &__text {
     position: absolute;
     max-width: 90vw;
-    margin: 0;
+    margin: 0 2rem;
     top: 20%;
 
     display: -webkit-box;

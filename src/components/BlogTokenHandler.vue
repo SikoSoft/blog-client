@@ -18,6 +18,7 @@
 <script>
 import { mapGetters, mapState, mapActions } from "vuex";
 import BlogButton from "@/components/BlogButton";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "token-handler",
@@ -43,28 +44,25 @@ export default {
   },
 
   methods: {
-    ...mapActions(["initialize", "addToast"]),
+    ...linkHandlers,
 
-    useToken(event) {
-      fetch(this.links.useToken.href, {
-        method: this.links.useToken.method,
-        headers: this.headers,
-        body: JSON.stringify({ code: this.code })
-      })
-        .then(response => response.json())
-        .then(json => {
-          if (!json.errorCode) {
-            localStorage.setItem("sessToken", json.sessToken);
-            if (json.authToken) {
-              localStorage.setItem("authToken", json.authToken);
-            }
-            this.initialize(true).then(() => {
-              this.$router.push({ path: `/` });
-            });
-          } else {
-            this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
-          }
-        });
+    ...mapActions(["initialize", "addToast", "apiRequest"]),
+
+    async useToken(event) {
+      const response = await this.apiRequest({
+        ...this.link("POST", "useToken"),
+        body: { code: this.code }
+      });
+      if (!response.errorCode) {
+        localStorage.setItem("sessToken", response.sessToken);
+        if (response.authToken) {
+          localStorage.setItem("authToken", response.authToken);
+        }
+        await this.initialize(true);
+        this.$router.push({ path: `/` });
+      } else {
+        this.addToast(this.$strings.errors[`CODE_${response.errorCode}`]);
+      }
       event.preventDefault();
     }
   }

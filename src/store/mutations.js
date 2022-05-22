@@ -32,7 +32,6 @@ export default {
   },
 
   setLinks: (state, { links }) => {
-    console.log("setLinks", JSON.parse(JSON.stringify(links)));
     Vue.set(state, "links", links);
   },
 
@@ -331,7 +330,6 @@ export default {
   },
 
   setContext: (state, { context }) => {
-    console.log("setContext", context);
     Vue.set(state, "context", context);
   },
 
@@ -344,7 +342,6 @@ export default {
   },
 
   setContextInitialized: (state, { status }) => {
-    console.log("setContextInitialized", status);
     state.contextInitialized = status;
   },
 
@@ -353,7 +350,6 @@ export default {
   },
 
   setBanners: (state, { banners }) => {
-    console.log("setBanners");
     Vue.set(state, "banners", banners);
   },
 

@@ -595,7 +595,6 @@ export default {
     if (!payload) {
       return;
     }
-    console.log("apiRequest", JSON.stringify(payload));
     const { data } = await axios({
       url: payload.href,
       method: payload.method,
@@ -610,13 +609,11 @@ export default {
     if (!context) {
       return;
     }
-    console.log("addContext", JSON.stringify(context));
     commit("setContextInitialized", { status: false });
     commit("setContext", { context: [...state.context, context] });
 
     if (state.initialized && !arrayHasObject(state.contextHistory, context)) {
       await dispatch("getContextLinks");
-      //commit("setContextSynced", {contextSynced: [...state.contextSynced, context]})
     } else {
       commit("setContextInitialized", { status: true });
     }
@@ -644,15 +641,10 @@ export default {
   },
 
   async getBanners({ commit, dispatch, state }) {
-    console.log(
-      "getBanners",
-      JSON.stringify(link("GET", "banners", state.links))
-    );
     const response = await dispatch(
       "apiRequest",
       link("GET", "banners", state.links)
     );
-    console.log("get banners response", response);
     commit("setBanners", { banners: response.banners });
     return response;
   }

@@ -34,9 +34,7 @@ export default {
   },
 
   async updated() {
-    console.log("updated");
     if (this.contextIsReady(this.context) && this.firstUpdate) {
-      console.log("is ready, get banners");
       await this.getBanners();
       this.firstUpdate = false;
     }

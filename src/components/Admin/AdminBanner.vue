@@ -7,7 +7,7 @@
       <input type="text" v-model="caption" :placeholder="$strings.caption" />
     </div>
     <div>
-      <blog-image-input v-model="image" />
+      <blog-image-input v-model="image" type="banner" />
     </div>
     <div>
       <blog-button

@@ -152,9 +152,7 @@ export default {
     },
 
     async getTagsMatched() {
-      console.log("getTags", JSON.stringify(this.link("GET", "tags")));
       const response = await this.getTags({ tag: this.tag });
-      console.log("response", response);
       this.$emit("newLinks", response.links);
       this.autoTags = response.tags.filter(
         tag => !this.tagsToFilter.includes(tag)

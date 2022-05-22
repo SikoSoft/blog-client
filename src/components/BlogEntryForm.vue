@@ -168,6 +168,7 @@ export default {
 
   data() {
     return {
+      context: { id: "needs", props: ["uploadImage"] },
       title: this.initial.title ? this.initial.title : "",
       newId: this.initial.id ? this.initial.id : "",
       body: this.initial.body ? this.initial.body : "",
@@ -187,6 +188,10 @@ export default {
       editorSelectionPosition: {},
       schedulerIsOpen: true
     };
+  },
+
+  async created() {
+    this.addContext(this.context);
   },
 
   async mounted() {
@@ -221,7 +226,7 @@ export default {
       this.editor.setContents(JSON.parse(this.body));
     }
     const toolbar = this.editor.getModule("toolbar");
-    if (this.links.uploadImage) {
+    if (this.uploadImageLink) {
       this.setupImageUpload();
       toolbar.addHandler("image", () => {
         this.imageHandler.selectLocalImage();
@@ -279,6 +284,10 @@ export default {
       return this.link("DELETE", "entry");
     },
 
+    uploadImageLink() {
+      return this.link("POST", "uploadImage", this.$store.state.links);
+    },
+
     entryFinderStyle() {
       return {
         top: `calc(${this.editorSelectionPosition.top}px + 2rem)`,
@@ -307,7 +316,8 @@ export default {
       "setProgress",
       "addToast",
       "apiRequest",
-      "addEntryToList"
+      "addEntryToList",
+      "addContext"
     ]),
 
     publishDraft(e) {
@@ -521,7 +531,7 @@ export default {
       this.imageHandler = new imageHandler({
         setProgress: this.setProgress,
         editor: this.editor,
-        uploadImage: this.links.uploadImage,
+        uploadImage: this.uploadImageLink,
         headers: this.headers
       });
     },

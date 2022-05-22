@@ -30,7 +30,6 @@ export default {
   },
 
   created() {
-    console.log("created", this.context);
     this.addContext(this.context);
   },
 

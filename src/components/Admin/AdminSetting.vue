@@ -63,7 +63,6 @@ export default {
 
     handleChange() {
       const payload = { links: this.links, id: this.id, value: this.value };
-      console.log("payload", JSON.stringify(payload));
       this.setSetting(payload);
     }
   },
