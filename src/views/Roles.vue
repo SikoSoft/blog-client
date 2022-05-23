@@ -1,11 +1,15 @@
 <template>
   <div class="roles">
-    <admin-roles v-if="initialized" v-bind="roles" :links="links" />
+    <admin-roles
+      v-if="initialized && contextIsReady(context)"
+      v-bind="roles"
+      :links="rolesLinks"
+    />
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
 import AdminRoles from "@/components/Admin/AdminRoles";
 import linkHandlers from "@/shared/linkHandlers";
 
@@ -18,9 +22,19 @@ export default {
     links: Array
   },
 
+  data() {
+    return {
+      context: { id: "view", props: ["roles"] },
+      rolesLinks: []
+    };
+  },
+
+  async created() {
+    await this.addContext(this.context);
+  },
+
   async mounted() {
-    await this.addContext({ id: "view", props: ["roles"] });
-    this.update();
+    await this.update();
   },
 
   updated() {
@@ -28,20 +42,29 @@ export default {
   },
 
   computed: {
-    ...mapState(["initialized", "user"]),
+    ...mapState(["initialized", "user", "roles"]),
 
-    roles() {
-      return this.$store.getters.roles;
-    }
+    ...mapGetters(["contextIsReady"])
   },
 
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
+    ...mapActions([
+      "initialize",
+      "setBreadcrumbs",
+      "setTitle",
+      "addContext",
+      "apiRequest"
+    ]),
+
+    ...mapMutations(["setRoles"]),
 
     async update() {
       await this.initialize();
+      const response = await this.apiRequest(this.link("GET", "roles"));
+      this.setRoles({ roles: response.roles });
+      this.rolesLinks = response.links;
       this.setBreadcrumbs([
         { href: "/admin", label: this.$strings.admin },
         { href: "/admin/roles", label: this.$strings.roles }
