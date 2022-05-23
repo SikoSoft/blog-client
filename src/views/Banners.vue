@@ -27,8 +27,8 @@ export default {
   async mounted() {
     await this.addContext({ id: "view", props: ["banners"] });
     await this.initialize();
-    await this.getBanners();
-    //this.bannerLinks = links;
+    const { links } = await this.getBanners();
+    this.bannerLinks = links;
   },
 
   computed: {

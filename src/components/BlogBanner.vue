@@ -3,7 +3,7 @@
     <div
       class="blog-banner__image"
       :style="{
-        'background-size': `${imgSize}% ${imgSize}%`,
+        'background-size': `auto ${imgSize}%`,
         ...(image ? { 'background-image': `url(${image})` } : {})
       }"
     ></div>
