@@ -1,5 +1,6 @@
 export default {
   initialized: false,
+  contextInitialized: false,
   isLoading: true,
   config: {},
   title: "",
@@ -32,10 +33,10 @@ export default {
   entriesById: {},
   entriesFound: [],
   tags: [],
+  tagsByMatch: {},
   adminPaneIsOpen: false,
   entryFormIsOpen: false,
-  api: {},
-  token: "",
+  links: [],
   editMode: {},
   toasts: [],
   comments: {},
@@ -53,5 +54,13 @@ export default {
   sessToken: "",
   authToken: "",
   roleRights: [],
-  tagRoles: []
+  tagRoles: [],
+  overlayIsOpen: false,
+  imageSizes: [],
+  context: [],
+  contextHistory: [],
+  contextSynced: [],
+  settingsConfig: [],
+  banners: [],
+  header: {}
 };

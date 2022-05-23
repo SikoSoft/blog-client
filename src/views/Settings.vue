@@ -1,45 +1,81 @@
 <template>
   <div class="settings">
-    <admin-settings v-if="initialized" v-bind="settings" />
+    <admin-settings
+      v-if="contextIsReady(context)"
+      v-bind="settings"
+      :settingsConfig="settingsConfig"
+    />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import AdminSettings from "@/components/Admin/AdminSettings.vue";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
+import AdminSettings from "@/components/Admin/AdminSettings";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "settings",
 
   components: { AdminSettings },
 
-  mounted() {
+  props: {
+    links: Array
+  },
+
+  data() {
+    return {
+      context: { id: "view", props: ["settings"] },
+      firstUpdate: true
+    };
+  },
+
+  created() {
+    this.addContext(this.context);
+  },
+
+  async mounted() {
+    //await this.addContext();
     this.update();
   },
 
-  updated() {
-    this.update();
+  async unmounted() {
+    this.removeContext(this.context);
   },
 
   computed: {
-    ...mapGetters(["initialized", "user"]),
+    ...mapState(["initialized", "user", "settings", "settingsConfig"]),
 
-    settings() {
-      return this.$store.getters.settings;
-    }
+    ...mapGetters(["contextIsReady"])
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...linkHandlers,
 
-    update() {
-      this.initialize().then(() => {
+    ...mapActions([
+      "initialize",
+      "setBreadcrumbs",
+      "setTitle",
+      "addContext",
+      "getSettings",
+      "apiRequest"
+    ]),
+
+    ...mapMutations(["setSettingsConfig"]),
+
+    async update() {
+      if (this.firstUpdate) {
+        await this.initialize();
+        const { settings } = await this.apiRequest(
+          this.link("GET", "settings")
+        );
+        this.setSettingsConfig({ settings });
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
           { href: "/admin/settings", label: this.$strings.settings }
         ]);
         this.setTitle(this.$strings.settings);
-      });
+        this.firstUpdate = false;
+      }
     }
   },
 

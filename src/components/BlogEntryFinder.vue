@@ -19,13 +19,15 @@
         :key="entry.id"
         @click="$emit('entryClicked', entry)"
         @mouseover="selectedItem = entry.id"
-      >{{ entry.title }}</li>
+      >
+        {{ entry.title }}
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "blog-entry-finder",
@@ -38,7 +40,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["entriesFound"])
+    ...mapState(["entriesFound"])
   },
 
   mounted() {

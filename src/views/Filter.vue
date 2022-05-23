@@ -1,13 +1,13 @@
 <template>
   <div class="filter">
-    <blog-entries :type="type" :entries="entries" />
+    <blog-entries :type="type" :entries="list" />
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-
-import Entries from "@/shared/Entries.js";
+import { mapState, mapActions } from "vuex";
+import Entries from "@/shared/Entries";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   ...Entries,
@@ -17,27 +17,23 @@ export default {
   computed: {
     ...Entries.computed,
 
-    ...mapGetters(["filters"]),
+    ...mapState(["filters"]),
 
     filterId() {
       return this.$route.params.filter;
     },
 
-    entries() {
-      return this.$store.getters.entriesByFilter(this.filterId);
-    },
-
     title() {
-      return this.$store.getters.filters.length
-        ? this.$store.getters.filters.filter(
-            filter => filter.id === this.filterId
-          )[0].label
+      return this.filters.length
+        ? this.filters.filter(filter => filter.id === this.filterId)[0].label
         : "";
     }
   },
 
   methods: {
     ...Entries.methods,
+
+    ...linkHandlers,
 
     ...mapActions(["getFilters"]),
 

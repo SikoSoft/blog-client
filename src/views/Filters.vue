@@ -5,30 +5,33 @@
 </template>
 
 <script>
-import AdminFilters from "@/components/Admin/AdminFilters.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
+import AdminFilters from "@/components/Admin/AdminFilters";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "filters",
 
   components: { AdminFilters },
 
-  mounted() {
-    this.initialize().then(() => {
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/filters", label: this.$strings.filters }
-      ]);
-      this.setTitle(this.$strings.filters);
-    });
+  async mounted() {
+    this.addContext({ id: "view", props: ["filters"] });
+    await this.initialize();
+    this.setBreadcrumbs([
+      { href: "/admin", label: this.$strings.admin },
+      { href: "/admin/filters", label: this.$strings.filters }
+    ]);
+    this.setTitle(this.$strings.filters);
   },
 
   computed: {
-    ...mapGetters(["initialized", "user"])
+    ...mapState(["initialized", "user"])
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
+    ...linkHandlers,
+
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"])
   },
 
   watch: {

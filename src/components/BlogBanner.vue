@@ -1,31 +1,41 @@
 <template>
-  <div class="blog-hero">
+  <div class="blog-banner">
     <div
-      class="blog-hero__image"
-      :style="{ 'background-size': `auto ${imgSize}px` }"
+      class="blog-banner__image"
+      :style="{
+        'background-size': `auto ${imgSize}%`,
+        ...(image ? { 'background-image': `url(${image})` } : {})
+      }"
     ></div>
-    <h1 class="blog-hero__heading" :style="{ opacity: headingOpacity }">
-      {{ title }}
-    </h1>
-    <div class="blog-hero__caption"></div>
+    <div class="blog-banner__text">
+      <h1 class="blog-banner__heading" :style="{ opacity: headingOpacity }">
+        {{ title }}
+      </h1>
+      <div class="blog-banner__caption">{{ caption }}</div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
-  name: "blog-hero",
+  name: "blog-banner",
+
+  props: {
+    caption: String,
+    image: String
+  },
 
   data() {
     return {
-      imgSize: 1000,
+      imgSize: 100,
       headingOpacity: 1
     };
   },
 
   computed: {
-    ...mapGetters(["title"])
+    ...mapState(["title"])
   },
 
   mounted() {
@@ -33,9 +43,8 @@ export default {
       const height = 400;
       const dif = window.pageYOffset < height ? height - window.pageYOffset : 0;
       const difRatio = dif / height;
-      const imgMin = 1000;
-      const imgMax = 1200;
-      this.imgSize = imgMin + (imgMax - imgMin) * ((height - dif) / height);
+      const scale = (1 + (1 - difRatio) * 0.25) * 100;
+      this.imgSize = scale;
       this.headingOpacity = difRatio;
     });
   }
@@ -44,8 +53,11 @@ export default {
 
 <style lang="scss">
 @import "@/styles/variables.scss";
+@import "@/styles/mixins";
 
-.blog-hero {
+.blog-banner {
+  @include container-width;
+  padding: 0;
   position: relative;
   height: 400px;
   background: radial-gradient(circle at center, #222 0, #000);
@@ -54,25 +66,31 @@ export default {
     opacity: 0.2;
     height: 100%;
     width: 100%;
-    background-image: url("https://sikosoft.com/img/pepperSpray.png");
     background-position: right top;
-    background-size: auto 1000px;
+    background-size: 100% 100%;
     background-repeat: no-repeat;
   }
 
-  &__heading {
+  &__text {
     position: absolute;
     max-width: 90vw;
-    margin: 0;
+    margin: 0 2rem;
     top: 20%;
-    left: 2rem;
-    font-size: 6rem;
-    line-height: 7rem;
+
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-shadow: 0 0 10px #000;
+  }
+
+  &__heading {
+    font-size: 6rem;
+    margin-bottom: 0;
+  }
+
+  &__caption {
+    font-size: 2rem;
   }
 }
 </style>

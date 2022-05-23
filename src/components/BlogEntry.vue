@@ -16,10 +16,7 @@
       </h3>
       <div class="blog-entry__meta">
         <div class="blog-entry__posted-time">{{ postedTime }}</div>
-        <div
-          class="blog-entry__edit"
-          v-if="user.rights.includes('update_entry')"
-        >
+        <div class="blog-entry__edit" v-if="link('PUT', 'entry')">
           <blog-button :action="edit" :text="$strings.editEntry" />
         </div>
       </div>
@@ -43,49 +40,50 @@
         </div>
       </div>
       <div class="blog-entry__comments" v-if="showComments">
-        <blog-comment-form
-          :entry="entry"
-          v-if="user.rights.includes('post_comment')"
-        />
+        <blog-comment-form :entry="entry" v-if="link('POST', 'comment')" />
         <blog-comments @commentsLoaded="commentsLoaded" :entry="entry" />
       </div>
     </template>
     <template v-else>
       <blog-button :action="edit" :text="$strings.cancel" />
       <blog-entry-form
-        :initialEntry="entry"
+        :initial="entry"
         @idChanged="idChanged"
         @edited="edited"
+        :links="formLinks"
       />
     </template>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from "vuex";
-import BlogEntryForm from "@/components/BlogEntryForm.vue";
-import BlogComments from "@/components/BlogComments.vue";
-import BlogCommentForm from "@/components/BlogCommentForm.vue";
-import BlogButton from "@/components/BlogButton.vue";
-import { longDate } from "../util/time.js";
+import { mapState, mapActions, mapMutations } from "vuex";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import BlogEntryForm from "@/components/BlogEntryForm";
+import BlogComments from "@/components/BlogComments";
+import BlogCommentForm from "@/components/BlogCommentForm";
+import BlogButton from "@/components/BlogButton";
+import { longDate } from "@/util/time.js";
+import { parseVars } from "@/util/strings.js";
+import linkHandlers from "@/shared/linkHandlers.js";
 
 const imgRegExp = new RegExp("<img ", "g");
 
 export default {
   name: "blog-entry",
 
-  props: [
-    "id",
-    "title",
-    "body",
-    "tags",
-    "created",
-    "last_edited",
-    "api",
-    "public",
-    "fullMode"
-  ],
+  props: {
+    id: { type: String },
+    title: { type: String },
+    body: { type: String },
+    tags: { type: Array },
+    created: { type: Number },
+    listed: { type: Number },
+    last_edited: { type: Number },
+    links: { type: Array },
+    public: { type: Number },
+    fullMode: { type: Boolean }
+  },
 
   components: {
     BlogEntryForm,
@@ -101,7 +99,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user", "settings"]),
+    ...mapState(["settings"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);
@@ -114,9 +112,10 @@ export default {
         body: this.body,
         tags: this.tags,
         created: this.created,
+        listed: this.listed,
         last_edited: this.last_edited,
-        api: this.api,
-        public: this.public
+        public: this.public,
+        links: this.links
       };
     },
 
@@ -125,10 +124,9 @@ export default {
     },
 
     postedTime() {
-      return this.$strings.postedFullDate.replace(
-        "{date}",
-        longDate(this.created * 1000)
-      );
+      return parseVars(this.$strings.postedFullDate, {
+        date: longDate(this.created * 1000)
+      });
     },
 
     renderedBody() {
@@ -158,10 +156,16 @@ export default {
 
     imagesLoaded() {
       return this.$store.getters.imagesLoaded(this.id);
+    },
+
+    formLinks() {
+      return this.linksByEntity("entry");
     }
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["setEditMode"]),
 
     ...mapMutations(["imageLoaded"]),
@@ -244,7 +248,7 @@ export default {
     border-top: 1px $color-link-primary solid;
     padding-top: 5px;
     display: inline-block;
-    font-size: 1rem;
+    font-size: $font-large;
   }
 
   &__edit {
@@ -269,7 +273,7 @@ export default {
   }
 
   &__body {
-    padding: 2rem 1rem 2rem 1rem;
+    padding: $space-xlarge $space $space-xlarge 0;
     font-size: 1.5rem;
     overflow-x: auto;
     overflow-y: hidden;
@@ -283,11 +287,16 @@ export default {
     &-more {
       text-transform: uppercase;
       position: absolute;
-      width: calc(100% - 2rem);
+      width: 100%;
       padding-top: 4.5rem;
       padding-bottom: 0.5rem;
       top: 22.5rem;
-      background: linear-gradient(0deg, #000, 80%, transparent);
+      background: linear-gradient(
+        0deg,
+        $color-bg-primary $space,
+        80%,
+        transparent
+      );
     }
   }
 
@@ -313,9 +322,8 @@ export default {
   }
 
   &__comments {
-    margin: 0 -2rem;
     padding: 5rem 2rem;
-    background-color: #111;
+    background-color: $color-bg-secondary;
     border-top: 1rem #1f1f1f solid;
     border-bottom: 1rem #333 solid;
   }

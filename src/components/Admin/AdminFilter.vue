@@ -13,7 +13,10 @@
           @keydown="handleLabelUpdate"
         />
       </div>
-      <div class="admin-filter__field" :class="{ 'admin-filter__field--gone': !showId }">
+      <div
+        class="admin-filter__field"
+        :class="{ 'admin-filter__field--gone': !showId }"
+      >
         <input
           class="admin-filter__input"
           :class="{
@@ -43,7 +46,11 @@
         <img class="admin-filter__image" :src="image" v-if="image" />
       </div>
       <div class="admin-filter__field admin-filter__delete" v-if="id">
-        <blog-button destroy :text="$strings.delete" :action="showDeleteDialog" />
+        <blog-button
+          destroy
+          :text="$strings.delete"
+          :action="showDeleteDialog"
+        />
       </div>
     </div>
     <div class="admin-filter__rules">
@@ -69,11 +76,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
-import BlogButton from "@/components/BlogButton.vue";
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import AdminFilterRules from "@/components/Admin/AdminFilterRules.vue";
+import { mapActions, mapGetters, mapState } from "vuex";
+import BlogButton from "@/components/BlogButton";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import AdminFilterRules from "@/components/Admin/AdminFilterRules";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
 import imageHandler from "@/util/imageHandler";
 
@@ -82,7 +88,11 @@ export default {
 
   components: { BlogButton, BlogConfirmationDialog, AdminFilterRules },
 
-  props: ["initial", "rules", "showId"],
+  props: {
+    initial: { type: Object },
+    rules: { type: Array },
+    showId: { type: Number }
+  },
 
   data() {
     return {
@@ -100,13 +110,15 @@ export default {
       type: "filter",
       setProgress: this.setProgress,
       setImage: this.setImage,
-      uploadImage: this.api.uploadImage,
+      uploadImage: this.links.uploadImage,
       headers: this.headers
     });
   },
 
   computed: {
-    ...mapGetters(["headers", "api"])
+    ...mapState(["links"]),
+
+    ...mapGetters(["headers"])
   },
 
   methods: {
@@ -122,7 +134,6 @@ export default {
     },
 
     setImage(url) {
-      console.log(this);
       this.image = url;
       this.handleUpdate();
     },

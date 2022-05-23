@@ -31,8 +31,8 @@ export default {
     Vue.set(state, "roles", roles);
   },
 
-  setApi: (state, { api }) => {
-    Vue.set(state, "api", api);
+  setLinks: (state, { links }) => {
+    Vue.set(state, "links", links);
   },
 
   setSessToken: (state, { sessToken }) => {
@@ -270,8 +270,8 @@ export default {
     Vue.set(state, "roleRights", roleRights);
   },
 
-  addRoleRight: (state, { role, action }) => {
-    Vue.set(state, "roleRights", [...state.roleRights, { role, action }]);
+  addRoleRight: (state, { right }) => {
+    Vue.set(state, "roleRights", [...state.roleRights, right]);
   },
 
   deleteRoleRight: (state, { role, action }) => {
@@ -286,8 +286,8 @@ export default {
     Vue.set(state, "tagRoles", tagRoles);
   },
 
-  addTagRole: (state, { tag, role }) => {
-    Vue.set(state, "tagRoles", [...state.tagRoles, { tag, role }]);
+  addTagRole: (state, { tagRole }) => {
+    Vue.set(state, "tagRoles", [...state.tagRoles, tagRole]);
   },
 
   deleteTagRole: (state, { tag, role }) => {
@@ -315,5 +315,45 @@ export default {
         return role;
       })
     ]);
+  },
+
+  setTokens: (state, { tokens }) => {
+    Vue.set(state, "tokens", [...tokens]);
+  },
+
+  setOverlayIsOpen: (state, { isOpen }) => {
+    state.overlayIsOpen = isOpen;
+  },
+
+  setImageSizes: (state, { imageSizes }) => {
+    state.imageSizes = imageSizes;
+  },
+
+  setContext: (state, { context }) => {
+    Vue.set(state, "context", context);
+  },
+
+  setContextHistory: (state, { contextHistory }) => {
+    Vue.set(state, "contextHistory", [...contextHistory]);
+  },
+
+  setSettingsConfig: (state, { settings }) => {
+    Vue.set(state, "settingsConfig", settings);
+  },
+
+  setContextInitialized: (state, { status }) => {
+    state.contextInitialized = status;
+  },
+
+  setContextSynced: (state, { contextSynced }) => {
+    Vue.set(state, "contextSynced", contextSynced);
+  },
+
+  setBanners: (state, { banners }) => {
+    Vue.set(state, "banners", banners);
+  },
+
+  setHeader: (state, { header }) => {
+    state.header = header;
   }
 };

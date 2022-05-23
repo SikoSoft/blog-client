@@ -7,9 +7,10 @@
 
 <script>
 import { mapActions } from "vuex";
-
-import BlogTag from "@/components/BlogTag.vue";
-import Entries from "@/shared/Entries.js";
+import { parseVars } from "@/util/strings";
+import BlogTag from "@/components/BlogTag";
+import Entries from "@/shared/Entries";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   ...Entries,
@@ -25,19 +26,15 @@ export default {
       return this.$route.params.tag;
     },
 
-    /*
-    entries() {
-      return this.$store.getters.entriesByTag(this.tag);
-    },
-    */
-
     title() {
-      return this.$strings.entriesWithTag.replace("{tag}", this.tag);
+      return parseVars(this.$strings.entriesWithTag, { tag: this.tag });
     }
   },
 
   methods: {
     ...Entries.methods,
+
+    ...linkHandlers,
 
     ...mapActions(["getFilters"]),
 

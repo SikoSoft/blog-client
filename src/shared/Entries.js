@@ -1,11 +1,16 @@
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 
-import BlogEntries from "@/components/BlogEntries.vue";
+import BlogEntries from "@/components/BlogEntries";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "entries",
 
   components: { BlogEntries },
+
+  props: {
+    links: Array
+  },
 
   data() {
     return {
@@ -17,14 +22,13 @@ export default {
   },
 
   mounted() {
+    this.addContext({ id: "view", props: ["entries"] });
     window.addEventListener("scroll", this.scrollHandler);
     this.setTitle(this.title);
     this.initialize().then(() => {
-      this.postInit().then(() => {
-        if (!this.list.length) {
-          this.loadEntries();
-        }
-      });
+      if (!this.list.length) {
+        this.loadEntries();
+      }
     });
     this.setBreadcrumbs([]);
   },
@@ -34,13 +38,42 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions([
       "initialize",
-      "getEntries",
-      "getMoreEntries",
+      //"getEntries",
+      //"getMoreEntries",
       "setBreadcrumbs",
-      "setTitle"
+      "setNextEntriesBatch",
+      "setTitle",
+      "apiRequest",
+      "addContext"
     ]),
+
+    ...mapMutations(["setEntries", "setEntryById", "setEndOfEntries"]),
+
+    async getEntries() {
+      const link = this.link("GET", "entries");
+      if (link) {
+        const { entries, end } = await this.apiRequest(link);
+        this.setEntries({
+          entries,
+          ...(this.tag && { tag: this.tag }),
+          ...(this.filterId && { filterId: this.filterId }),
+          type: this.type
+        });
+        entries.forEach(entry => {
+          this.setEntryById({ id: entry.id, entry });
+        });
+        this.setEndOfEntries({ type: this.type, end });
+      }
+    },
+
+    async getMoreEntries() {
+      this.setNextEntriesBatch({ type: this.type });
+      this.getEntries();
+    },
 
     scrollHandler() {
       if (this.entryFormIsOpen) {
@@ -99,17 +132,11 @@ export default {
           this.gettingEntriesCoolingDown = false;
         }, this.gettingEntriesCoolDown);
       });
-    },
-
-    postInit() {
-      return Promise.resolve();
     }
   },
 
   computed: {
-    ...mapState(["entries"]),
-
-    ...mapGetters(["initialized", "entryFormIsOpen", "settings"]),
+    ...mapState(["entries", "initialized", "entryFormIsOpen", "settings"]),
 
     title() {
       return process.env.VUE_APP_SITE_NAME;
@@ -124,9 +151,12 @@ export default {
             : [];
           break;
         case "filter":
-          entriesList = this.entries[this.type].list[this.filter]
-            ? this.entries[this.type].list[this.filter]
-            : [];
+          entriesList =
+            this.entries[this.type] &&
+            this.entries[this.type].list &&
+            this.entries[this.type].list[this.filterId]
+              ? this.entries[this.type].list[this.filterId]
+              : [];
           break;
         default:
           entriesList = this.entries[this.type].list;

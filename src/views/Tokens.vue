@@ -1,39 +1,66 @@
 <template>
   <div class="tokens">
-    <admin-tokens v-if="initialized" v-bind="tokens" />
+    <admin-tokens v-if="initialized" :tokens="tokens" :links="tokensLinks" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
-import AdminTokens from "@/components/Admin/AdminTokens.vue";
+import { mapActions, mapState, mapMutations } from "vuex";
+import AdminTokens from "@/components/Admin/AdminTokens";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tokens",
 
   components: { AdminTokens },
 
-  mounted() {
-    this.initialize().then(() => {
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/tokens", label: this.$strings.tokens }
-      ]);
-      this.setTitle(this.$strings.tokens);
-    });
+  props: {
+    links: Array
+  },
+
+  data() {
+    return {
+      tokensLinks: []
+    };
+  },
+
+  async mounted() {
+    await this.addContext({ id: "view", props: ["tokens"] });
+    await this.initialize();
+    this.setBreadcrumbs([
+      { href: "/admin", label: this.$strings.admin },
+      { href: "/admin/tokens", label: this.$strings.tokens }
+    ]);
+    this.setTitle(this.$strings.tokens);
+    const response = await this.apiRequest(this.link("GET", "tokens"));
+    if (response.tokens) {
+      this.setTokens({ tokens: response.tokens });
+    }
+    if (response.links) {
+      this.tokensLinks = response.links;
+    }
   },
 
   computed: {
-    ...mapGetters(["initialized", "user", "tokens"]),
+    ...mapState(["initialized", "user", "tokens"]),
 
-    settings() {
-      return this.$store.getters.tokens;
+    tokens() {
+      return this.$store.state.tokens;
     }
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"])
+    ...linkHandlers,
+
+    ...mapActions([
+      "initialize",
+      "setBreadcrumbs",
+      "setTitle",
+      "apiRequest",
+      "addContext"
+    ]),
+
+    ...mapMutations(["setTokens"])
   },
 
   watch: {

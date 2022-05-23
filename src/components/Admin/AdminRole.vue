@@ -6,21 +6,36 @@
         <td>
           <input type="text" :placeholder="$strings.roleName" v-model="name" />
         </td>
-        <td v-if="user.rights.includes('manage_rights')">
+        <td v-if="manageLinks.length">
           <router-link :to="`/admin/rights/${id}`">{{
             $strings.manageRights
           }}</router-link>
         </td>
-        <td v-if="!isProtected">
+        <td>
           <blog-button
-            destroy
-            :action="
-              () => {
-                reqDeleteRole();
-              }
-            "
-            :text="$strings.deleteRole"
+            v-if="addLink"
+            create
+            :action="addRole"
+            :text="$strings.add"
           />
+          <blog-button
+            v-if="updateLink"
+            create
+            :action="updateRole"
+            :text="$strings.update"
+          />
+          <template v-if="!isProtected">
+            <blog-button
+              v-if="deleteLink"
+              destroy
+              :action="
+                () => {
+                  reqDeleteRole();
+                }
+              "
+              :text="$strings.delete"
+            />
+          </template>
         </td>
       </tr>
     </table>
@@ -46,10 +61,10 @@
 </template>
 
 <script>
+import { mapState, mapActions, mapMutations } from "vuex";
 import BlogButton from "@/components/BlogButton";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
-
-import { mapGetters, mapActions } from "vuex";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-role",
@@ -59,7 +74,11 @@ export default {
     BlogConfirmationDialog
   },
 
-  props: ["id", "initialName"],
+  props: {
+    id: Number,
+    initialName: String,
+    links: Array
+  },
 
   data() {
     return {
@@ -70,18 +89,38 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user", "settings"]),
+    ...mapState(["user", "settings", "roles"]),
 
     isProtected() {
       return (
         [this.settings.role_admin, this.settings.role_guest].indexOf(this.id) >
         -1
       );
+    },
+
+    addLink() {
+      return this.link("POST", "role");
+    },
+
+    updateLink() {
+      return this.link("PUT", "role");
+    },
+
+    deleteLink() {
+      return this.link("DELETE", "role");
+    },
+
+    manageLinks() {
+      return [];
     }
   },
 
   methods: {
-    ...mapActions(["deleteRole", "updateRole"]),
+    ...linkHandlers,
+
+    ...mapActions(["deleteRole", "updateRole", "apiRequest"]),
+
+    ...mapMutations(["setRoles"]),
 
     reqDeleteRole() {
       this.showDeleteDialog();
@@ -93,20 +132,39 @@ export default {
 
     showDeleteDialog() {
       this.deleteDialogIsOpen = true;
-    }
-  },
+    },
 
-  watch: {
-    name(newName) {
-      if (this.updateTimer) {
-        clearTimeout(this.updateTimer);
-      }
-      this.updateTimer = setTimeout(() => {
-        this.updateRole({ id: this.id, name: newName });
-      }, 200);
+    async addRole() {
+      const response = await this.apiRequest({
+        ...this.addLink,
+        body: { name: this.name }
+      });
+      this.setRoles({
+        roles: [...this.roles, response.role]
+      });
+    },
+
+    async updateRole() {
+      await this.apiRequest({
+        ...this.updateLink,
+        body: { name: this.name }
+      });
+      this.setRoles({
+        roles: [
+          ...this.roles.map(role => ({
+            ...role,
+            name: role.id === this.id ? this.name : role.name
+          }))
+        ]
+      });
+    },
+
+    async deleteRole() {
+      await this.apiRequest(this.deleteLink);
+      this.setRoles({
+        roles: [...this.roles.filter(role => role.id !== this.id)]
+      });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

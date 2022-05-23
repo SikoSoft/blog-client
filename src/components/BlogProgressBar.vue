@@ -6,13 +6,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "blog-progress-bar",
 
   computed: {
-    ...mapGetters(["progress"]),
+    ...mapState(["progress"]),
 
     progressWidth() {
       return {

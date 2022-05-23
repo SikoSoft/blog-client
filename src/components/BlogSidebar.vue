@@ -1,20 +1,31 @@
 <template>
   <aside class="blog-sidebar" v-if="show">
     <blog-at-a-glance v-if="filters.length" :filters="filters" />
-    <blog-github-feed v-if="feed.length" :feed="feed" />
+    <blog-block
+      :context="[
+        { type: 'setting_is_not', payload: { id: 'github_feed', value: '' } }
+      ]"
+    >
+      <blog-github-feed v-if="feed.length" :feed="feed" />
+    </blog-block>
   </aside>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-
-import BlogAtAGlance from "@/components/BlogAtAGlance.vue";
-import BlogGithubFeed from "@/components/BlogGithubFeed.vue";
+import { mapState } from "vuex";
+import BlogBlock from "@/components/BlogBlock";
+import BlogAtAGlance from "@/components/BlogAtAGlance";
+import BlogGithubFeed from "@/components/BlogGithubFeed";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-sidebar",
 
-  components: { BlogAtAGlance, BlogGithubFeed },
+  components: { BlogAtAGlance, BlogGithubFeed, BlogBlock },
+
+  props: {
+    filters: Array
+  },
 
   data() {
     return {
@@ -23,7 +34,6 @@ export default {
   },
 
   mounted() {
-    this.getFilters();
     if (this.settings.github_feed) {
       fetch(this.settings.github_feed)
         .then(response => response.json())
@@ -34,14 +44,14 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getFilters"])
+    ...linkHandlers
   },
 
   computed: {
-    ...mapGetters(["settings", "api", "filters"]),
+    ...mapState(["settings"]),
 
     show() {
-      if (this.feed.length) {
+      if (this.feed.length || this.filters.length) {
         return true;
       }
       return false;
@@ -49,5 +59,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

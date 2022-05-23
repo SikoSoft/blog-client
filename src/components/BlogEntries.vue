@@ -15,14 +15,17 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
-import BlogEntry from "@/components/BlogEntry.vue";
+import BlogEntry from "@/components/BlogEntry";
 
 export default {
   name: "blog-entries",
 
-  props: ["type", "entries"],
+  props: {
+    type: { type: String },
+    entries: { type: Array }
+  },
 
   components: { BlogEntry },
 
@@ -33,7 +36,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["initialized", "settings"])
+    ...mapState(["initialized", "settings"])
   },
 
   methods: {

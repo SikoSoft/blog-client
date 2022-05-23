@@ -31,30 +31,41 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-tag-input",
 
-  props: ["tagsToFilter"],
+  props: {
+    tagsToFilter: Array,
+    initialValue: String,
+    links: Array
+  },
 
   data() {
     return {
       tagsCoolDown: 200,
       tagsTimeout: 0,
       minTagLength: 2,
-      tag: "",
+      tag: this.initialValue || "",
       autoTags: [],
       autoTagSelected: "",
       tagsFocused: false
     };
   },
 
-  computed: {
-    ...mapGetters(["api"])
+  mounted() {
+    if (this.tag) {
+      this.getTagsMatched();
+    }
   },
 
   methods: {
+    ...linkHandlers,
+
+    ...mapActions(["apiRequest", "getTags"]),
+
     tagsKeyDown(e) {
       switch (e.which) {
         case 13:
@@ -76,7 +87,7 @@ export default {
             clearTimeout(this.tagsTimeout);
           }
           this.tagsTimeout = setTimeout(() => {
-            this.getTags();
+            this.getTagsMatched();
           }, this.tagsCoolDown);
       }
     },
@@ -140,17 +151,12 @@ export default {
       this.$parent.setTags(this.$parent.tags.filter(t => t != tag));
     },
 
-    getTags() {
-      fetch(`${this.api.getTags.href}?tag=${encodeURIComponent(this.tag)}`, {
-        method: this.api.getTags.method,
-        headers: this.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          this.autoTags = json.tags.filter(
-            tag => !this.tagsToFilter.includes(tag)
-          );
-        });
+    async getTagsMatched() {
+      const response = await this.getTags({ tag: this.tag });
+      this.$emit("newLinks", response.links);
+      this.autoTags = response.tags.filter(
+        tag => !this.tagsToFilter.includes(tag)
+      );
     }
   },
 

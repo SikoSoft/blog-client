@@ -1,10 +1,14 @@
 <template>
   <div class="admin-filter-rule">
     <select v-model="type">
-      <option :value="type" v-for="type in types" :key="type">{{ type }}</option>
+      <option :value="type" v-for="type in types" :key="type">{{
+        type
+      }}</option>
     </select>
     <select v-model="operator">
-      <option :value="operator" v-for="operator in operators" :key="operator">{{ operator }}</option>
+      <option :value="operator" v-for="operator in operators" :key="operator">{{
+        operator
+      }}</option>
     </select>
     <input type="text" v-model="value" />
     <span class="admin-filter-rule__create-button" v-if="!id">
@@ -53,14 +57,16 @@
 
 <script>
 import { mapActions } from "vuex";
-
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogButton from "@/components/BlogButton";
 
 export default {
   name: "admin-filter-rule",
 
-  props: ["initial", "filterId"],
+  props: {
+    initial: { type: Object },
+    filterId: { type: String }
+  },
 
   components: { BlogButton, BlogConfirmationDialog },
 

@@ -1,5 +1,8 @@
+import axios from "axios";
 import { uuid } from "@/util/uuid";
+import { arrayUnique, arrayHasObject } from "@/util/array";
 import strings from "@/data/strings.json";
+import { link } from "@/shared/linkHandlers";
 
 export default {
   initialize({ state, commit, getters }, force) {
@@ -28,8 +31,9 @@ export default {
       .then(json => {
         commit("setUser", { user: { ...json.user } });
         commit("setRoles", { roles: json.roles });
-        commit("setApi", { api: json.api });
+        commit("setLinks", { links: json.links });
         commit("setSettings", { settings: json.settings });
+        commit("setHeader", { header: json.header });
         commit("setInitialized");
         commit("setLoading", { loading: false });
       });
@@ -50,19 +54,19 @@ export default {
     let getUrl, getMethod;
     switch (type) {
       case "tag":
-        getUrl = state.api.getEntriesByTag.href.replace("{tag}", tag);
-        getMethod = state.api.getEntriesByTag.method;
+        getUrl = state.links.getEntriesByTag.href.replace("{tag}", tag);
+        getMethod = state.links.getEntriesByTag.method;
         break;
       case "filter":
-        getUrl = state.api.getEntriesByFilter.href.replace(
+        getUrl = state.links.getEntriesByFilter.href.replace(
           "{filter}",
           filterId
         );
-        getMethod = state.api.getEntriesByFilter.method;
+        getMethod = state.links.getEntriesByFilter.method;
         break;
       default:
-        getUrl = state.api.getEntries.href;
-        getMethod = state.api.getEntries.method;
+        getUrl = state.links.getEntries.href;
+        getMethod = state.links.getEntries.method;
     }
 
     getUrl += start > 0 ? `/${start}` : "";
@@ -97,35 +101,30 @@ export default {
     dispatch("getEntries", { type, filterId, tag, force: true });
   },
 
-  async getEntry({ state, commit, getters }, { id, force, addToList }) {
+  async getEntry(
+    { commit, getters, dispatch },
+    { links, id, force, addToList }
+  ) {
     if (getters.entryById(id) && !force) {
       return Promise.resolve();
     }
-
     commit("setLoading", { loading: true });
+    const { entry } = await dispatch("apiRequest", link("GET", "entry", links));
+    commit("setEntryById", { id, entry });
+    if (addToList) {
+      dispatch("addEntryToList", { entry });
+    }
+    commit("setLoading", { loading: false });
+  },
 
-    return new Promise((resolve, reject) => {
-      fetch(state.api.getEntry.href.replace("{id}", id), {
-        method: state.api.getEntry.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setEntryById", { id, entry: json });
-          if (addToList) {
-            commit("setEntries", {
-              type: "default",
-              entries: [json, ...state.entries.default.list]
-            });
-            commit("setEntriesStart", {
-              type: "default",
-              start: state.getEntriesStart + 1
-            });
-          }
-          commit("setLoading", { loading: false });
-          resolve();
-        })
-        .catch(e => reject(e));
+  async addEntryToList({ commit, state }, { entry }) {
+    commit("setEntries", {
+      type: "default",
+      entries: [entry, ...state.entries.default.list]
+    });
+    commit("setEntriesStart", {
+      type: "default",
+      start: state.getEntriesStart + 1
     });
   },
 
@@ -137,19 +136,13 @@ export default {
     commit("setBreadcrumbs", { breadcrumbs });
   },
 
-  getTags({ state, commit, getters }) {
-    if (state.tags.length > 0) {
-      return;
-    }
-
-    fetch(state.api.getTags.href, {
-      method: state.api.getTags.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(json => {
-        commit("setTags", { tags: json.tags });
-      });
+  async getTags({ state, commit, dispatch }, { tag = "" }) {
+    const response = await dispatch("apiRequest", {
+      ...link("GET", "tags", state.links),
+      query: { tag }
+    });
+    commit("setTags", { tags: response.tags });
+    return response;
   },
 
   showAdminPane({ commit }) {
@@ -192,28 +185,18 @@ export default {
     });
   },
 
-  getComments({ state, commit, getters }, { entryId, force }) {
+  async getComments({ state, commit, dispatch }, { links, entryId, force }) {
     if (state.comments[entryId] && !force) {
       return Promise.resolve();
     }
-
-    const api = getters.entryById(entryId).api;
-
-    return new Promise((resolve, reject) => {
-      fetch(api.getComments.href, {
-        method: api.getComments.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          json.comments.forEach(comment => {
-            commit("setComment", { id: comment.id, comment });
-          });
-          commit("setEntryComments", { entryId, comments: json.comments });
-          resolve();
-        })
-        .catch(e => reject(e));
+    const { comments } = await dispatch(
+      "apiRequest",
+      link("GET", "comments", links)
+    );
+    comments.forEach(comment => {
+      commit("setComment", { id: comment.id, comment });
     });
+    commit("setEntryComments", { entryId, comments });
   },
 
   toggleComment({ state, commit }, id) {
@@ -227,72 +210,26 @@ export default {
     commit("setSelectedComments", { comments });
   },
 
-  publishComments({ state, commit, getters, dispatch }) {
-    fetch(state.api.publishComments.href, {
-      method: state.api.publishComments.method,
-      headers: getters.headers,
-      body: JSON.stringify({ ids: state.selectedComments })
-    })
-      .then(response => response.json())
-      .then(() => {
-        state.selectedComments.forEach(commentId => {
-          if (state.comments[commentId]) {
-            state.comments[commentId].public = 1;
-          }
-        });
-        commit("setSelectedComments", { comments: [] });
-        dispatch("addToast", strings.commentsPublished);
-      });
+  async setSetting({ commit, dispatch }, { links, id, value }) {
+    await dispatch("apiRequest", {
+      ...link("PUT", "setting", links),
+      body: { value }
+    });
+    commit("setSetting", { id, value });
   },
 
-  deleteComments({ state, commit, dispatch, getters }) {
-    fetch(state.api.deleteComments.href, {
-      method: state.api.deleteComments.method,
-      headers: getters.headers,
-      body: JSON.stringify({ ids: state.selectedComments })
-    })
-      .then(response => response.json())
-      .then(() => {
-        state.selectedComments.forEach(commentId => {
-          commit("deleteComment", { id: commentId });
-        });
-        commit("setSelectedComments", { comments: [] });
-        dispatch("addToast", strings.commentsDeleted);
-      });
-  },
-
-  setSetting({ commit, state, getters }, { id, value }) {
-    fetch(state.api.saveSetting.href, {
-      method: state.api.saveSetting.method,
-      headers: getters.headers,
-      body: JSON.stringify({ id, value })
-    })
-      .then(response => response.json())
-      .then(() => {
-        commit("setSetting", { id, value });
-      });
-  },
-
-  getDrafts({ commit, state, getters }, force) {
+  async getDrafts({ commit, state, dispatch }, { force = false }) {
     if (state.drafts.length && !force) {
       return Promise.resolve();
     }
 
     commit("setLoading", { loading: true });
-
-    return new Promise((resolve, reject) => {
-      fetch(state.api.getDrafts.href, {
-        method: state.api.getDrafts.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(({ drafts }) => {
-          commit("setDrafts", { drafts });
-          commit("setLoading", { loading: false });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    const { drafts } = await dispatch(
+      "apiRequest",
+      link("GET", "drafts", state.links)
+    );
+    commit("setDrafts", { drafts });
+    commit("setLoading", { loading: false });
   },
 
   async getDraft({ state, commit, getters }, { id, force }) {
@@ -301,8 +238,8 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getDraft.href.replace("{id}", id), {
-        method: state.api.getDraft.method,
+      fetch(state.links.getDraft.href.replace("{id}", id), {
+        method: state.links.getDraft.method,
         headers: getters.headers
       })
         .then(response => response.json())
@@ -327,7 +264,9 @@ export default {
     }
 
     return new Promise((resolve, reject) => {
-      fetch(state.api.getFilters.href, { method: state.api.getFilters.method })
+      fetch(state.links.getFilters.href, {
+        method: state.links.getFilters.method
+      })
         .then(response => response.json())
         .then(json => {
           commit("setFilters", { filters: json });
@@ -351,32 +290,18 @@ export default {
     });
   },
 
-  deleteEntry: ({ state, commit, getters }, { id }) => {
-    const entry = getters.entryById(id);
-    fetch(entry.api.delete.href, {
-      method: entry.api.delete.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(() => {
-        commit("deleteEntry", { id });
-        commit("setEntriesStart", {
-          type: "default",
-          start: state.getEntriesStart - 1
-        });
-      });
+  deleteEntry: async ({ state, commit, dispatch }, { links, id }) => {
+    await dispatch("apiRequest", link("DELETE", "entry", links));
+    commit("deleteEntry", { id });
+    commit("setEntriesStart", {
+      type: "default",
+      start: state.getEntriesStart - 1
+    });
   },
 
-  deleteDraft: ({ commit, getters }, { id }) => {
-    const draft = getters.draftById(id);
-    fetch(draft.api.delete.href, {
-      method: draft.api.delete.method,
-      headers: getters.headers
-    })
-      .then(response => response.json())
-      .then(() => {
-        commit("deleteDraft", { id });
-      });
+  deleteDraft: async ({ commit, dispatch }, { links, id }) => {
+    await dispatch("apiRequest", link("DELETE", "draft", links));
+    commit("deleteDraft", { id });
   },
 
   setProgress: ({ state, commit }, { progress }) => {
@@ -392,8 +317,8 @@ export default {
   },
 
   findEntries: ({ state, commit, getters }, { title }) => {
-    fetch(`${state.api.findEntry.href}?title=${title}`, {
-      method: state.api.findEntry.method,
+    fetch(`${state.links.findEntry.href}?title=${title}`, {
+      method: state.links.findEntry.method,
       headers: getters.headers
     })
       .then(result => result.json())
@@ -404,8 +329,8 @@ export default {
 
   updateFilter: ({ state, commit, getters, dispatch }, payload) => {
     return new Promise((resolve, reject) => {
-      fetch(state.api.updateFilter.href.replace("{filter}", payload.id), {
-        method: state.api.updateFilter.method,
+      fetch(state.links.updateFilter.href.replace("{filter}", payload.id), {
+        method: state.links.updateFilter.method,
         headers: getters.headers,
         body: JSON.stringify(payload)
       })
@@ -424,8 +349,8 @@ export default {
     { newId, label, image }
   ) => {
     return new Promise((resolve, reject) => {
-      fetch(state.api.newFilter.href, {
-        method: state.api.newFilter.method,
+      fetch(state.links.newFilter.href, {
+        method: state.links.newFilter.method,
         headers: getters.headers,
         body: JSON.stringify({ id: newId, label, image })
       })
@@ -441,8 +366,8 @@ export default {
 
   deleteFilter: ({ state, commit, getters, dispatch }, { id }) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteFilter.href.replace("{filter}", id), {
-        method: state.api.deleteFilter.method,
+      fetch(state.links.deleteFilter.href.replace("{filter}", id), {
+        method: state.links.deleteFilter.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -459,8 +384,8 @@ export default {
     { orderedFilters }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.saveFilterOrder.href, {
-        method: state.api.saveFilterOrder.method,
+      fetch(state.links.saveFilterOrder.href, {
+        method: state.links.saveFilterOrder.method,
         headers: getters.headers,
         body: JSON.stringify({ orderedFilters })
       })
@@ -475,8 +400,8 @@ export default {
 
   getFilterRules: ({ state, commit, getters }) => {
     return new Promise(resolve => {
-      fetch(state.api.getFilterRules.href, {
-        method: state.api.getFilterRules.method,
+      fetch(state.links.getFilterRules.href, {
+        method: state.links.getFilterRules.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -492,8 +417,8 @@ export default {
     { filterId, type, value, operator }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.addFilterRule.href.replace("{filterId}", filterId), {
-        method: state.api.addFilterRule.method,
+      fetch(state.links.addFilterRule.href.replace("{filterId}", filterId), {
+        method: state.links.addFilterRule.method,
         headers: getters.headers,
         body: JSON.stringify({ type, value, operator })
       })
@@ -517,8 +442,8 @@ export default {
     { filterId, id }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteFilterRule.href.replace("{filterId}", filterId), {
-        method: state.api.deleteFilterRule.method,
+      fetch(state.links.deleteFilterRule.href.replace("{filterId}", filterId), {
+        method: state.links.deleteFilterRule.method,
         headers: getters.headers,
         body: JSON.stringify({ id })
       })
@@ -536,8 +461,8 @@ export default {
     { filterId, id, type, value, operator }
   ) => {
     return new Promise(resolve => {
-      fetch(state.api.saveFilterRule.href.replace("{filterId}", filterId), {
-        method: state.api.saveFilterRule.method,
+      fetch(state.links.saveFilterRule.href.replace("{filterId}", filterId), {
+        method: state.links.saveFilterRule.method,
         headers: getters.headers,
         body: JSON.stringify({ id, type, value, operator })
       })
@@ -556,51 +481,35 @@ export default {
     });
   },
 
-  getRoleRights: ({ state, commit, getters }) => {
+  getRoleRights: async ({ state, commit, dispatch }, { links }) => {
     if (state.roleRights.length) {
       return Promise.resolve();
     }
 
-    return new Promise(resolve => {
-      fetch(state.api.getRoleRights.href, {
-        method: state.api.getRoleRights.method,
-        headers: getters.headers
-      })
-        .then(result => result.json())
-        .then(roleRights => {
-          commit("setRoleRights", { roleRights });
-          resolve();
-        });
-    });
+    const response = await dispatch(
+      "apiRequest",
+      link("GET", "roleRights", links)
+    );
+    commit("setRoleRights", { roleRights: response.roleRights });
+    return response;
   },
 
-  addRoleRight: ({ state, commit, getters }, { role, action }) => {
-    return new Promise(resolve => {
-      fetch(
-        state.api.addRoleRight.href
-          .replace("{role}", role)
-          .replace("{action}", action),
-        {
-          method: state.api.addRoleRight.method,
-          headers: getters.headers
-        }
-      )
-        .then(result => result.json())
-        .then(() => {
-          commit("addRoleRight", { role, action });
-          resolve();
-        });
+  addRoleRight: async ({ commit, dispatch }, { links, action }) => {
+    const { right } = await dispatch("apiRequest", {
+      ...link("POST", "roleRight", links),
+      body: { action }
     });
+    commit("addRoleRight", { right });
   },
 
   deleteRoleRight: ({ state, commit, getters }, { role, action }) => {
     return new Promise(resolve => {
       fetch(
-        state.api.deleteRoleRight.href
+        state.links.deleteRoleRight.href
           .replace("{role}", role)
           .replace("{action}", action),
         {
-          method: state.api.deleteRoleRight.method,
+          method: state.links.deleteRoleRight.method,
           headers: getters.headers
         }
       )
@@ -612,64 +521,36 @@ export default {
     });
   },
 
-  getTagRoles: ({ state, commit, getters }) => {
+  getTagRoles: async ({ state, commit, dispatch }, { links }) => {
     if (state.tagRoles.length) {
       return Promise.resolve();
     }
 
-    return new Promise(resolve => {
-      fetch(state.api.getTagRoles.href, {
-        method: state.api.getTagRoles.method,
-        headers: getters.headers
-      })
-        .then(result => result.json())
-        .then(tagRoles => {
-          commit("setTagRoles", { tagRoles });
-          resolve();
-        });
-    });
+    const response = await dispatch(
+      "apiRequest",
+      link("GET", "tagRoles", links)
+    );
+    commit("setTagRoles", { tagRoles: response.tagRoles });
+    return response;
   },
 
-  addTagRole: ({ state, commit, getters }, { tag, role }) => {
-    return new Promise(resolve => {
-      fetch(
-        state.api.addTagRole.href.replace("{tag}", tag).replace("{role}", role),
-        {
-          method: state.api.addTagRole.method,
-          headers: getters.headers
-        }
-      )
-        .then(result => result.json())
-        .then(() => {
-          commit("addTagRole", { tag, role });
-          resolve();
-        });
+  addTagRole: async ({ commit, dispatch }, { role, links }) => {
+    const { tagRole } = await dispatch("apiRequest", {
+      ...link("POST", "tagRole", links),
+      body: { role }
     });
+    commit("addTagRole", { tagRole });
   },
 
-  deleteTagRole: ({ state, commit, getters }, { tag, role }) => {
-    return new Promise(resolve => {
-      fetch(
-        state.api.deleteTagRole.href
-          .replace("{tag}", tag)
-          .replace("{role}", role),
-        {
-          method: state.api.deleteTagRole.method,
-          headers: getters.headers
-        }
-      )
-        .then(result => result.json())
-        .then(() => {
-          commit("deleteTagRole", { tag, role });
-          resolve();
-        });
-    });
+  deleteTagRole: async ({ commit, dispatch }, { tag, role, links }) => {
+    await dispatch("apiRequest", link("DELETE", "tagRole", links));
+    commit("deleteTagRole", { tag, role });
   },
 
   addRole: ({ state, commit, getters }, { name }) => {
     return new Promise(resolve => {
-      fetch(state.api.addRole.href, {
-        method: state.api.addRole.method,
+      fetch(state.links.addRole.href, {
+        method: state.links.addRole.method,
         headers: getters.headers,
         body: JSON.stringify({ name })
       })
@@ -683,8 +564,8 @@ export default {
 
   deleteRole: ({ state, commit, getters }, { id }) => {
     return new Promise(resolve => {
-      fetch(state.api.deleteRole.href.replace("{role}", id), {
-        method: state.api.deleteRole.method,
+      fetch(state.links.deleteRole.href.replace("{role}", id), {
+        method: state.links.deleteRole.method,
         headers: getters.headers
       })
         .then(result => result.json())
@@ -697,8 +578,8 @@ export default {
 
   updateRole: ({ state, commit, getters }, { id, name }) => {
     return new Promise(resolve => {
-      fetch(state.api.updateRole.href.replace("{role}", id), {
-        method: state.api.updateRole.method,
+      fetch(state.links.updateRole.href.replace("{role}", id), {
+        method: state.links.updateRole.method,
         headers: getters.headers,
         body: JSON.stringify({ name })
       })
@@ -708,5 +589,66 @@ export default {
           resolve();
         });
     });
+  },
+
+  apiRequest: async ({ getters }, payload) => {
+    if (!payload) {
+      return;
+    }
+    const { data } = await axios({
+      url: payload.href,
+      method: payload.method,
+      headers: {
+        ...getters.headers,
+        ...(payload.key ? { "x-functions-key": payload.key } : {})
+      },
+      ...(payload.body ? { data: payload.body } : {}),
+      ...(payload.query ? { params: payload.query } : {})
+    });
+    return data;
+  },
+
+  addContext: async ({ state, commit, dispatch }, context) => {
+    if (!context) {
+      return;
+    }
+    commit("setContextInitialized", { status: false });
+    commit("setContext", { context: [...state.context, context] });
+
+    if (state.initialized && !arrayHasObject(state.contextHistory, context)) {
+      await dispatch("getContextLinks");
+    } else {
+      commit("setContextInitialized", { status: true });
+    }
+
+    commit("setContextHistory", {
+      contextHistory: arrayUnique([...state.contextHistory, context])
+    });
+  },
+
+  getContextLinks: async ({ state, dispatch, commit }) => {
+    const { links } = await dispatch(
+      "apiRequest",
+      link("GET", "contextLinks", state.links)
+    );
+    commit("setLinks", { links: arrayUnique([...state.links, ...links]) });
+    commit("setContextInitialized", { status: true });
+  },
+
+  getSettings: async ({ commit, dispatch }, { links }) => {
+    const { settings } = await dispatch(
+      "apiRequest",
+      link("GET", "settings", links)
+    );
+    commit("setSettingsConfig", { settings });
+  },
+
+  async getBanners({ commit, dispatch, state }) {
+    const response = await dispatch(
+      "apiRequest",
+      link("GET", "banners", state.links)
+    );
+    commit("setBanners", { banners: response.banners });
+    return response;
   }
 };

@@ -5,34 +5,25 @@
       :key="role.id"
       :id="role.id"
       :initialName="role.name"
+      :links="role.links"
     />
-
-    <table>
-      <tr>
-        <td>
-          <input
-            type="text"
-            :placeholder="$strings.roleName"
-            v-model="newRoleName"
-          />
-        </td>
-
-        <td>
-          <blog-button create :action="reqAddRole" :text="$strings.addRole" />
-        </td>
-      </tr>
-    </table>
+    <fieldset>
+      <legend>{{ $strings.newRole }}</legend>
+      <admin-role :links="links" />
+    </fieldset>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-
-import BlogButton from "@/components/BlogButton";
+import { mapState } from "vuex";
 import AdminRole from "@/components/Admin/AdminRole";
 
 export default {
   name: "admin-roles",
+
+  props: {
+    links: Array
+  },
 
   data() {
     return {
@@ -40,22 +31,10 @@ export default {
     };
   },
 
-  components: { BlogButton, AdminRole },
+  components: { AdminRole },
 
   computed: {
-    ...mapGetters(["roles", "user", "settings"])
-  },
-
-  methods: {
-    ...mapActions(["addRole", "updateRole"]),
-
-    reqAddRole() {
-      this.addRole({ name: this.newRoleName }).then(() => {
-        this.newRoleName = "";
-      });
-    }
+    ...mapState(["roles", "user", "settings"])
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

@@ -1,25 +1,34 @@
 <template>
   <div class="blog-header">
-    <blog-hero />
-    <blog-admin v-if="user.rights && user.rights.includes('create_entry')" />
+    <blog-banner
+      :title="header.title"
+      :caption="header.caption"
+      :image="header.image"
+    />
     <blog-breadcrumb id="blog-breadcrumb" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
-import BlogHero from "@/components/BlogHero.vue";
-import BlogAdmin from "@/components/BlogAdmin.vue";
-import BlogBreadcrumb from "@/components/BlogBreadcrumb.vue";
+import { mapState } from "vuex";
+import BlogBanner from "@/components/BlogBanner";
+import BlogBreadcrumb from "@/components/BlogBreadcrumb";
 
 export default {
   name: "blog-header",
 
-  components: { BlogHero, BlogAdmin, BlogBreadcrumb },
+  components: { BlogBanner, BlogBreadcrumb },
 
-  computed: mapGetters(["user"])
+  computed: {
+    ...mapState(["header"])
+  }
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@import "@/styles/variables";
+
+.blog-header {
+  background-color: #000;
+}
+</style>

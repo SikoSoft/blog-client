@@ -3,33 +3,41 @@
     <blog-tag-input
       @tagChanged="tagChanged"
       @tagEntered="tagEntered"
+      @newLinks="setAddLinks"
+      :initialValue="tag"
       :tagsToFilter="[]"
+      :links="links"
     />
     <div v-if="tag">
-      {{ $strings.rolesWithTagAccess.replace("{tag}", tag) }}
-      <table>
-        <tr v-for="tagRole in tagRoles" :key="tagRole.role">
-          <td>{{ roleName(tagRole.role) }}</td>
-          <td>
-            <blog-button
-              destroy
-              :action="
-                () => {
-                  deleteRole(tagRole.role);
-                }
-              "
-              :text="$strings.delete"
-            />
-          </td>
-        </tr>
-      </table>
-
+      <template v-if="tagRoles.length">
+        {{ tagName }}
+        <table>
+          <tr v-for="tagRole in tagRoles" :key="tagRole.role">
+            <td>{{ roleName(tagRole.role) }}</td>
+            <td>
+              <blog-button
+                destroy
+                :action="
+                  () => {
+                    deleteRole(tagRole);
+                  }
+                "
+                :text="$strings.delete"
+              />
+            </td>
+          </tr>
+        </table>
+      </template>
       <div>
         <select v-model="role">
           <option value="0">{{ $strings.selectOption }}</option>
-          <option v-for="role in roles" :key="role.id" :value="role.id">{{
-            role.name
-          }}</option>
+          <option
+            v-for="role in roles"
+            :key="role.id"
+            :value="role.id"
+            :disabled="tagRoleExists(role.id)"
+            >{{ role.name }}</option
+          >
         </select>
         <blog-button create :action="addRole" :text="$strings.add" />
       </div>
@@ -38,10 +46,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
-import BlogButton from "@/components/BlogButton.vue";
-import BlogTagInput from "@/components/BlogTagInput.vue";
+import { mapActions, mapState } from "vuex";
+import BlogButton from "@/components/BlogButton";
+import BlogTagInput from "@/components/BlogTagInput";
+import { parseVars } from "@/util/strings.js";
 
 export default {
   name: "admin-tag-policies",
@@ -51,20 +59,33 @@ export default {
     BlogTagInput
   },
 
-  props: ["tag", "tagRoles"],
+  props: {
+    tag: String,
+    tagRoles: Array,
+    links: Array
+  },
 
   data() {
     return {
-      role: 0
+      role: 0,
+      addLinks: []
     };
   },
 
   computed: {
-    ...mapGetters(["roles"])
+    ...mapState(["roles"]),
+
+    tagName() {
+      return parseVars(this.$strings.rolesWithTagAccess, { tag: this.tag });
+    }
   },
 
   methods: {
     ...mapActions(["addTagRole", "deleteTagRole"]),
+
+    setAddLinks(links) {
+      this.addLinks = links;
+    },
 
     tagChanged({ tag }) {
       this.$router.push({ path: `/admin/tag_policies/${tag}` });
@@ -73,11 +94,23 @@ export default {
     tagEntered() {},
 
     addRole() {
-      this.addTagRole({ tag: this.tag, role: this.role });
+      this.addTagRole({ tag: this.tag, role: this.role, links: this.addLinks });
     },
 
-    deleteRole(role) {
-      this.deleteTagRole({ tag: this.tag, role });
+    deleteRole(tagRole) {
+      this.deleteTagRole({
+        tag: this.tag,
+        role: tagRole.role,
+        links: tagRole.links
+      });
+    },
+
+    tagRoleExists(roleId) {
+      return (
+        this.tagRoles.filter(
+          tagRole => tagRole.tag === this.tag && tagRole.role === roleId
+        ).length > 0
+      );
     },
 
     roleName(id) {
@@ -86,5 +119,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

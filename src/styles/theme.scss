@@ -1,5 +1,6 @@
 @import "variables";
 @import "media";
+@import "mixins";
 
 html,
 body {
@@ -7,7 +8,7 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
-  background-color: #000;
+  background-color: $color-bg-primary;
   font-family: $font-family;
   color: #efefef;
 }
@@ -15,6 +16,9 @@ body {
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -22,11 +26,12 @@ header {
 }
 
 .main-container {
+  @include container-width;
   display: flex;
   align-items: flex-start;
-  max-width: 1920px;
-  margin: auto;
   transition: height 0.3s;
+  gap: 1rem;
+  width: calc(100% - $space-xlarge * 2);
 
   &--loading {
     main {
@@ -37,16 +42,24 @@ header {
 
 main {
   position: relative;
-  padding: $space-xlarge;
   flex: 7;
   min-height: $loader-height;
 }
 
 aside {
+  margin-top: 1rem;
   min-width: 352px;
   padding: $space-xlarge;
   flex: 3;
-  border-left: 1px #444 solid;
+  background-color: $color-bg-secondary;
+  position: sticky;
+  top: calc(1rem);
+  border-right: 2px $color-border-primary solid;
+  border-bottom: 2px $color-border-primary solid;
+}
+
+.app--has-admin-pane aside {
+  top: calc(1rem + $admin-pane-height);
 }
 
 strong {
@@ -77,7 +90,7 @@ textarea {
   padding: 8px;
   outline: none;
   border: 2px #000 solid;
-  font-family: "Pathway Gothic One", sans-serif;
+  font-family: $font-family;
 }
 
 button {

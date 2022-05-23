@@ -8,7 +8,9 @@
 export default {
   name: "blog-toggle",
 
-  props: ["value"],
+  props: {
+    value: { type: Number }
+  },
 
   computed: {
     classes() {
@@ -21,7 +23,7 @@ export default {
 
   methods: {
     toggle() {
-      this.$emit("input", !this.value);
+      this.$emit("input", this.value ? 0 : 1);
     }
   }
 };

@@ -1,5 +1,6 @@
 <template>
-  <div id="app">
+  <div id="app" :class="classes">
+    <blog-admin-pane v-if="showAdminPane" :links="[link('POST', 'entry')]" />
     <header>
       <blog-header />
     </header>
@@ -9,35 +10,44 @@
     >
       <main>
         <blog-loader v-if="isLoading" />
-        <router-view />
+        <router-view :links="routeLinks" />
       </main>
-      <blog-sidebar v-if="showSidebar" />
+      <blog-sidebar v-if="showSidebar" :filters="filters" />
     </div>
     <blog-toasts />
     <blog-progress-bar v-if="showProgressBar" />
+    <blog-footer />
+    <blog-overlay />
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
-import BlogLoader from "@/components/BlogLoader.vue";
-import BlogHeader from "@/components/BlogHeader.vue";
-import BlogToasts from "@/components/BlogToasts.vue";
-import BlogSidebar from "@/components/BlogSidebar.vue";
-import BlogProgressBar from "@/components/BlogProgressBar.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
+import BlogOverlay from "@/components/BlogOverlay";
+import BlogAdminPane from "@/components/BlogAdminPane";
+import BlogLoader from "@/components/BlogLoader";
+import BlogHeader from "@/components/BlogHeader";
+import BlogFooter from "@/components/BlogFooter";
+import BlogToasts from "@/components/BlogToasts";
+import BlogSidebar from "@/components/BlogSidebar";
+import BlogProgressBar from "@/components/BlogProgressBar";
+import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {
   components: {
+    BlogAdminPane,
     BlogLoader,
     BlogHeader,
+    BlogFooter,
     BlogToasts,
     BlogSidebar,
-    BlogProgressBar
+    BlogProgressBar,
+    BlogOverlay
   },
 
   data() {
     return {
+      fetched: false,
       viewsWithSidebar: ["entry", "entries", "draft", "tag", "entries-filter"]
     };
   },
@@ -100,10 +110,32 @@ export default {
         }
       }
     });
+    this.update();
+  },
+
+  updated() {
+    this.update();
   },
 
   computed: {
-    ...mapGetters(["initialized", "isLoading", "settings", "showProgressBar"]),
+    ...mapState([
+      "initialized",
+      "isLoading",
+      "settings",
+      "showProgressBar",
+      "links",
+      "filters"
+    ]),
+
+    classes() {
+      return {
+        "app--has-admin-pane": this.showAdminPane
+      };
+    },
+
+    showAdminPane() {
+      return this.initialized && this.links && this.link("POST", "entry");
+    },
 
     showSidebar() {
       return (
@@ -111,6 +143,33 @@ export default {
         this.settings.show_sidebar &&
         this.viewsWithSidebar.includes(this.$route.name)
       );
+    },
+
+    routeLinks() {
+      return this.linksByEntity(this.$route.name);
+    }
+  },
+
+  methods: {
+    ...linkHandlers,
+
+    ...mapActions(["apiRequest"]),
+
+    ...mapMutations(["setFilters", "setContextInitialized"]),
+
+    async getFilters() {
+      const link = this.link("GET", "filters");
+      if (link) {
+        const { filters } = await this.apiRequest(link);
+        this.setFilters({ filters });
+      }
+    },
+
+    update() {
+      if (!this.fetched && this.links) {
+        this.getFilters();
+        this.fetched = true;
+      }
     }
   }
 };

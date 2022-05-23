@@ -3,21 +3,14 @@
     <div class="admin-setting__label">{{ label }}</div>
     <div class="admin-setting__input">
       <template v-if="type === 'list'">
-        <select v-model="value">
-          <option>{{ $strings.selectARole }}</option>
-          <option
-            v-for="option in listOptions(listSource)"
-            :key="option.value"
-            :value="option.value"
-            :selected="option.value === value"
-            >{{ option.label }}</option
-          >
-        </select>
+        <blog-role-selector v-model="value" v-if="listSource === 'roles'" />
+        <blog-banner-selector v-model="value" v-if="listSource === 'banners'" />
       </template>
       <template v-if="type === 'number'">
         <input
           type="text"
           class="admin-setting__input-number"
+          :maxlength="maxLength ? maxLength : ''"
           v-model="value"
         />
       </template>
@@ -33,8 +26,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-
-import BlogToggle from "@/components/BlogToggle.vue";
+import BlogRoleSelector from "@/components/BlogRoleSelector";
+import BlogBannerSelector from "@/components/BlogBannerSelector";
+import BlogToggle from "@/components/BlogToggle";
 
 export default {
   name: "admin-setting",
@@ -48,14 +42,15 @@ export default {
     },
     listSource: { type: String, default: "" },
     maxLength: { type: Number, default: 3 },
-    initialValue: { type: [String, Number, Boolean] }
+    initialValue: { type: [String, Number, Boolean] },
+    links: Array
   },
 
-  components: { BlogToggle },
+  components: { BlogRoleSelector, BlogBannerSelector, BlogToggle },
 
   data() {
     return {
-      value: this.initialValue ? this.initialValue : ""
+      value: this.initialValue ? this.initialValue : 0
     };
   },
 
@@ -67,7 +62,8 @@ export default {
     ...mapActions(["setSetting"]),
 
     handleChange() {
-      this.setSetting({ id: this.id, value: this.value });
+      const payload = { links: this.links, id: this.id, value: this.value };
+      this.setSetting(payload);
     }
   },
 

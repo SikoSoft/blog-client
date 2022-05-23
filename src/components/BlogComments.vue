@@ -1,47 +1,130 @@
 <template>
-  <div class="blog-comments" v-if="comments.length">
+  <div
+    class="blog-comments"
+    v-if="entryComments[entry.id] && entryComments[entry.id].length"
+  >
     <h3 class="blog-comments__head">{{ $strings.comments }}</h3>
     <div class="blog-comments__list">
-      <blog-comment v-bind="comment" v-for="comment in comments" :key="comment.id" />
+      <blog-comment
+        v-bind="comment"
+        v-for="comment in comments"
+        :key="comment.id"
+      />
     </div>
     <div
       class="blog-comments__buttons"
       :class="{ 'blog-comments__buttons--active': selectedComments.length }"
     >
-      <blog-button create :action="publishComments" :text="$strings.publish" />
-      <blog-button destroy :action="deleteComments" :text="$strings.delete" />
+      <blog-button
+        v-if="canPublish"
+        create
+        :action="publishComments"
+        :text="$strings.publish"
+      />
+      <blog-button
+        v-if="canDelete"
+        destroy
+        :action="deleteComments"
+        :text="$strings.delete"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BlogComment from "@/components/BlogComment.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import { mapActions, mapState, mapMutations } from "vuex";
+import BlogComment from "@/components/BlogComment";
+import BlogButton from "@/components/BlogButton";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-comments",
 
   components: { BlogComment, BlogButton },
 
-  props: ["entry"],
+  props: {
+    entry: { type: Object }
+  },
+
+  data() {
+    return {
+      firstUpdate: true
+    };
+  },
 
   mounted() {
-    this.getComments({ entryId: this.entry.id }).then(() => {
-      this.$emit("commentsLoaded");
-    });
+    if (this.firstUpdate) {
+      this.getComments({
+        links: this.entry.links,
+        entryId: this.entry.id
+      }).then(() => {
+        this.$emit("commentsLoaded");
+      });
+      this.firstUpdate = false;
+    }
   },
 
   computed: {
-    ...mapGetters(["selectedComments"]),
+    ...mapState(["selectedComments", "comments", "entryComments"]),
 
-    comments() {
-      return this.$store.getters.commentsByEntry(this.entry.id);
+    canPublish() {
+      return (
+        this.entryComments[this.entry.id] &&
+        this.entryComments[this.entry.id].some(comment =>
+          this.link("PUT", "comment", comment.links)
+        )
+      );
+    },
+
+    canDelete() {
+      return (
+        this.entryComments[this.entry.id] &&
+        this.entryComments[this.entry.id].some(comment =>
+          this.link("DELETE", "comment", comment.links)
+        )
+      );
+    },
+
+    commentsToProcess() {
+      return this.entryComments[this.entry.id].filter(
+        comment => this.selectedComments.indexOf(comment.id) > -1
+      );
     }
   },
 
   methods: {
-    ...mapActions(["getComments", "publishComments", "deleteComments"])
+    ...linkHandlers,
+
+    ...mapActions(["apiRequest", "getComments", "addToast"]),
+
+    ...mapMutations(["setSelectedComments", "setComment", "deleteComment"]),
+
+    async publishComments() {
+      for (const comment of this.commentsToProcess) {
+        await this.apiRequest({
+          ...this.link("PUT", "comment", comment.links),
+          body: { public: 1 }
+        });
+        this.setComment({
+          id: comment.id,
+          comment: {
+            ...this.comments[comment.id],
+            public: 1
+          }
+        });
+      }
+      this.setSelectedComments({ comments: [] });
+      this.addToast(this.$strings.commentsPublished);
+    },
+
+    async deleteComments() {
+      for (const comment of this.commentsToProcess) {
+        await this.apiRequest(this.link("DELETE", "comment", comment.links));
+        this.deleteComment({ id: comment.id });
+      }
+      this.setSelectedComments({ comments: [] });
+      this.addToast(this.$strings.commentsDeleted);
+    }
   }
 };
 </script>

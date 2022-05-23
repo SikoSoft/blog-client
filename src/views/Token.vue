@@ -6,8 +6,8 @@
 
 <script>
 import { mapActions } from "vuex";
-
-import BlogTokenHandler from "@/components/BlogTokenHandler.vue";
+import BlogTokenHandler from "@/components/BlogTokenHandler";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tag",
@@ -21,15 +21,16 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "useToken", "setBreadcrumbs", "setTitle"]),
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([
-          { href: "/token/", label: this.$strings.authenticator }
-        ]);
-        this.setTitle(this.$strings.authenticator);
-      });
+    async update() {
+      await this.initialize();
+      this.setBreadcrumbs([
+        { href: "/token/", label: this.$strings.authenticator }
+      ]);
+      this.setTitle(this.$strings.authenticator);
     }
   }
 };

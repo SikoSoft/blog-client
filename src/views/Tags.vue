@@ -5,27 +5,29 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BlogTags from "@/components/BlogTags.vue";
+import { mapActions, mapState } from "vuex";
+import BlogTags from "@/components/BlogTags";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tags",
 
   components: { BlogTags },
 
-  mounted() {
-    this.initialize().then(() => {
-      this.getTags();
-      this.setTitle(this.$strings.tags);
-      this.setBreadcrumbs([{ href: "/tags", label: this.$strings.tags }]);
-    });
+  async mounted() {
+    await this.initialize();
+    this.getTags();
+    this.setTitle(this.$strings.tags);
+    this.setBreadcrumbs([{ href: "/tags", label: this.$strings.tags }]);
   },
 
   computed: {
-    ...mapGetters(["tags"])
+    ...mapState(["tags"])
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "getTags"])
   }
 };

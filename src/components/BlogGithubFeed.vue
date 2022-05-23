@@ -2,18 +2,22 @@
   <div class="blog-github-feed">
     <h3 class="blog-github-feed__head">{{ $strings.githubFeed }}</h3>
     <ul class="blog-github-feed__list">
-      <blog-github-event v-for="event in filteredFeed" v-bind="event" :key="event.id" />
+      <blog-github-event
+        v-for="event in filteredFeed"
+        v-bind="event"
+        :key="event.id"
+      />
     </ul>
   </div>
 </template>
 
 <script>
-import BlogGithubEvent from "@/components/BlogGithubEvent.vue";
+import BlogGithubEvent from "@/components/BlogGithubEvent";
 
 export default {
   name: "blog-github-feed",
 
-  props: ["feed"],
+  props: { feed: { type: Array } },
 
   components: { BlogGithubEvent },
 

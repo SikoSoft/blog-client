@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-
-import AdminHome from "@/components/Admin/AdminHome.vue";
+import { mapActions, mapState } from "vuex";
+import AdminHome from "@/components/Admin/AdminHome";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin",
@@ -15,21 +15,23 @@ export default {
   components: { AdminHome },
 
   computed: {
-    ...mapGetters(["initialized"])
+    ...mapState(["initialized"])
   },
 
-  mounted() {
+  async mounted() {
+    await this.addContext({ id: "view", props: ["admin"] });
     this.update();
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...linkHandlers,
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([{ href: "/admin", label: this.$strings.admin }]);
-        this.setTitle(this.$strings.admin);
-      });
+    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "addContext"]),
+
+    async update() {
+      await this.initialize();
+      this.setBreadcrumbs([{ href: "/admin", label: this.$strings.admin }]);
+      this.setTitle(this.$strings.admin);
     }
   }
 };

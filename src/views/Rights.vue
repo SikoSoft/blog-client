@@ -1,54 +1,72 @@
 <template>
   <div class="rights">
-    <admin-rights v-if="initialized && roleRights" :role="role" />
+    <admin-rights v-if="initialized" :role="role" :links="rightsLinks" />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
-import AdminRights from "@/components/Admin/AdminRights.vue";
+import { mapActions, mapState } from "vuex";
+import AdminRights from "@/components/Admin/AdminRights";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "rights",
 
   components: { AdminRights },
 
+  props: {
+    links: Array
+  },
+
+  data() {
+    return {
+      isUpdating: false,
+      firstUpdate: true,
+      rightsLinks: []
+    };
+  },
+
   mounted() {
+    this.addContext({ id: "view", props: ["roleRights"] });
     this.update();
   },
 
   updated() {
-    this.update();
+    //this.update();
   },
 
   computed: {
-    ...mapState(["roleRights"]),
-
-    ...mapGetters(["initialized", "user"]),
+    ...mapState(["roleRights", "initialized", "user"]),
 
     role() {
       return parseInt(this.$route.params.role);
-    },
+    }
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions([
       "initialize",
       "setBreadcrumbs",
       "setTitle",
       "getRoleRights",
+      "addContext"
     ]),
 
-    update() {
-      this.initialize().then(() => {
+    async update() {
+      if (this.firstUpdate) {
+        await this.initialize();
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/rights", label: this.$strings.rights },
+          { href: "/admin/rights", label: this.$strings.rights }
         ]);
         this.setTitle(this.$strings.rights);
-        this.getRoleRights();
-      });
-    },
+        const response = await this.getRoleRights({ links: this.links });
+        this.rightsLinks = response.links;
+        this.firstUpdate = false;
+      }
+    }
   },
 
   watch: {
@@ -56,7 +74,7 @@ export default {
       if (!this.user.rights.includes("manage_rights")) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>

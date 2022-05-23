@@ -3,7 +3,7 @@
     <ul class="admin-home__list">
       <li v-for="tool in tools" :key="tool">
         <router-link :to="`/admin/${tool}`">{{
-          rights.Admin[`manage_${tool}`]
+          $strings.rightsLabels[`manage_${tool}`]
         }}</router-link>
       </li>
     </ul>
@@ -11,22 +11,28 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-
-import rights from "@/data/rights.json";
+import { mapState } from "vuex";
 
 export default {
   name: "admin-home",
 
   data() {
     return {
-      rights,
-      available: ["settings", "roles", "rights", "tag_policies", "filters"]
+      available: [
+        "settings",
+        "roles",
+        "rights",
+        "tag_policies",
+        "filters",
+        "tokens",
+        "images",
+        "banners"
+      ]
     };
   },
 
   computed: {
-    ...mapGetters(["user"]),
+    ...mapState(["user"]),
 
     tools() {
       return this.available.filter(tool =>
@@ -44,5 +50,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>

@@ -12,14 +12,17 @@
 </template>
 
 <script>
-import AdminFilterRule from "@/components/Admin/AdminFilterRule.vue";
+import AdminFilterRule from "@/components/Admin/AdminFilterRule";
 
 export default {
   name: "admin-filter-rules",
 
   components: { AdminFilterRule },
 
-  props: ["rules", "filterId"]
+  props: {
+    rules: { type: Array },
+    filterId: { type: String }
+  }
 };
 </script>
 

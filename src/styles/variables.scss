@@ -1,34 +1,34 @@
-$font-family: "Pathway Gothic One", sans-serif;
+$font-family: 'Rajdhani', sans-serif;
 
 $space: 1rem;
 $space-large: $space * 1.5;
 $space-xlarge: $space * 2;
 $space-xxlarge: $space * 3;
 $space-xxxlarge: $space * 4;
-$space-small: $space / 1.5;
-$space-xsmall: $space / 2;
-$space-xxsmall: $space / 3;
-$space-xxxsmall: $space / 4;
+$space-small: $space * 0.666;
+$space-xsmall: $space * 0.5;
+$space-xxsmall: $space * 0.333;
+$space-xxxsmall: $space * 0.25;
 
 $font: 1rem;
 $font-large: $font * 1.5;
 $font-xlarge: $font * 2;
 $font-xxlarge: $font * 3;
 $font-xxxlarge: $font * 4;
-$font-small: $font / 1.1;
-$font-xsmall: $font / 1.25;
-$font-xxsmall: $font / 1.5;
-$font-xxxsmall: $font / 1.75;
+$font-small: $font * 0.9090;
+$font-xsmall: $font * 0.8;
+$font-xxsmall: $font * 0.666;
+$font-xxxsmall: $font * 0.571428;
 
-$color-bg-primary: #000;
-$color-bg-secondary: #202020;
+$color-bg-primary: #181818;
+$color-bg-secondary: #222;
 $color-bg-secondary-highlight: #404040;
-$color-border-primary: #666;
-$color-border-secondary: #444;
-$color-link-primary: yellow;
-$color-link-secondary: rgb(176, 160, 112);
-$color-link-hover: rgb(255, 255, 200);
-$color-emphasis: orange;
+$color-border-primary: #000;
+$color-border-secondary: #333;
+$color-link-primary: rgb(0, 196, 64);
+$color-link-secondary: rgb(16, 212, 80);
+$color-link-hover: rgb(200, 255, 228);
+$color-emphasis: #cfcfcf;
 $color-text-headline: #fff;
 $color-text-subtle: #888;
 $color-text-main: #dfdfdf;
@@ -42,4 +42,7 @@ $color-action-destroy-text: #fff;
 $color-action-neutral-bg: #08b;
 $color-action-neutral-text: #fff;
 
+$size-border: 2px;
+
 $loader-height: 10rem;
+$admin-pane-height: 2rem;

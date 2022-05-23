@@ -22,16 +22,26 @@
 
 <script>
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import { mapActions, mapState } from "vuex";
 import { longDate } from "../util/time.js";
-import { mapActions, mapGetters } from "vuex";
+import { parseVars } from "@/util/strings.js";
+import linkHandlers from "@/shared/linkHandlers.js";
 
 export default {
   name: "blog-comment",
 
-  props: ["entry_id", "id", "message", "name", "time", "public"],
+  props: {
+    entry_id: { type: String },
+    id: { type: Number },
+    message: { type: String },
+    name: { type: String },
+    time: { type: Number },
+    public: { type: Number },
+    links: { type: Array }
+  },
 
   computed: {
-    ...mapGetters(["user"]),
+    ...mapState(["user"]),
 
     renderedMessage() {
       return new QuillDeltaToHtmlConverter(
@@ -41,10 +51,9 @@ export default {
     },
 
     postDate() {
-      return this.$strings.postedFullDate.replace(
-        "{date}",
-        longDate(this.time * 1000)
-      );
+      return parseVars(this.$strings.postedFullDate, {
+        date: longDate(this.time * 1000)
+      });
     },
 
     isSelected() {
@@ -59,10 +68,7 @@ export default {
     },
 
     showCheckBox() {
-      if (
-        (this.user.rights.includes("publish_comment") && this.public === 0) ||
-        this.user.rights.includes("delete_comment")
-      ) {
+      if ((this.link("PUT") && this.public === 0) || this.link("DELETE")) {
         return true;
       }
       return false;
@@ -70,6 +76,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["toggleComment"]),
 
     select() {
@@ -85,9 +93,6 @@ export default {
 .blog-comment {
   margin: $space-xlarge 0;
   display: flex;
-
-  &--selected {
-  }
 
   &--needs-approval {
     opacity: 0.5;

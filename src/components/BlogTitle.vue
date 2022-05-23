@@ -3,18 +3,13 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "blog-title",
 
   computed: {
-    ...mapGetters(["title"])
+    ...mapState(["title"])
   }
 };
 </script>
-
-<style lang="scss">
-.blog-title {
-}
-</style>

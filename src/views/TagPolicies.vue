@@ -1,65 +1,79 @@
 <template>
   <div class="tag-policies">
     <admin-tag-policies
-      v-if="initialized && tagRolesFetched"
+      v-if="initialized && contextIsReady(context)"
       :tag="tag"
-      :tagRoles="tagRoles.filter((tagRole) => tagRole.tag === tag)"
+      :tagRoles="tagRoles.filter(tagRole => tagRole.tag === tag)"
+      :links="tagRolesLinks"
     />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
-import AdminTagPolicies from "@/components/Admin/AdminTagPolicies.vue";
+import { mapActions, mapState, mapGetters } from "vuex";
+import AdminTagPolicies from "@/components/Admin/AdminTagPolicies";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "tag-policies",
 
   components: { AdminTagPolicies },
 
+  props: {
+    links: Array
+  },
+
   data() {
     return {
-      tagRolesFetching: false,
-      tagRolesFetched: false,
+      context: { id: "view", props: ["tagRoles"] },
+      firstUpdate: true,
+      tagRolesLinks: []
     };
   },
 
-  mounted() {
-    this.update();
+  created() {
+    this.addContext(this.context);
   },
 
-  updated() {
+  async mounted() {
     this.update();
   },
 
   computed: {
-    ...mapState(["tagRoles"]),
+    ...mapState(["tagRoles", "initialized", "user"]),
 
-    ...mapGetters(["initialized", "user"]),
+    ...mapGetters(["contextIsReady"]),
 
     tag() {
       return this.$route.params.tag;
-    },
+    }
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle", "getTagRoles"]),
+    ...linkHandlers,
 
-    update() {
-      this.initialize().then(() => {
+    ...mapActions([
+      "initialize",
+      "setBreadcrumbs",
+      "setTitle",
+      "getTagRoles",
+      "addContext"
+    ]),
+
+    async update() {
+      if (this.firstUpdate && this.contextIsReady(this.context)) {
+        await this.initialize();
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/tag_policies", label: this.$strings.tagPolicies },
+          { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
         ]);
         this.setTitle(this.$strings.tagPolicies);
-        if (!this.tagRolesFetching) {
-          this.tagRolesFetching = true;
-          this.getTagRoles().then(() => {
-            this.tagRolesFetched = true;
-          });
-        }
-      });
-    },
+        this.tagRolesFetching = true;
+        const response = await this.getTagRoles({ links: this.links });
+        this.tagRolesLinks = response.links;
+        this.firstUpdate = false;
+      }
+    }
   },
 
   watch: {
@@ -67,7 +81,7 @@ export default {
       if (!this.user.rights.includes("manage_roles")) {
         this.$router.push({ path: "/access_denied" });
       }
-    },
-  },
+    }
+  }
 };
 </script>

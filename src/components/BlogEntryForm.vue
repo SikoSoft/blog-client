@@ -1,55 +1,87 @@
 <template>
   <form class="blog-entry-form" @submit="submitForm" :id="formId">
-    <div v-if="!initialEntry.id && drafts.length">
-      <select @change="loadDraft" class="blog-entry-form__draft">
-        <option value>{{ $strings.newEntry }}</option>
-        <optgroup :label="$strings.unpublishedDrafts">
-          <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
-            {{ draft.title }}
-          </option>
-        </optgroup>
-      </select>
-    </div>
-    <div>
-      <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
-      <h2 v-else>{{ $strings.editEntry }}</h2>
-    </div>
-    <div>
-      <input
-        type="text"
-        class="blog-entry-form__title"
-        v-model="title"
-        @keyup="
-          e => {
-            updateNewId(e);
-            saveFormState();
-          }
-        "
-        :placeholder="$strings.title"
-      />
-    </div>
-    <div v-if="showNewId">
-      <input
-        type="text"
-        class="blog-entry-form__title"
-        v-model="newId"
-        @keyup="saveFormState"
-        :placeholder="$strings.id"
-      />
-    </div>
-    <div class="blog-entry-form__body">
-      <div :id="editorId"></div>
-      <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
-        <blog-entry-finder
-          v-if="entryFinderOpen"
-          @entryClicked="insertEntryLink"
-          @inputBlurred="hideEntryFinder"
-        />
-      </div>
-    </div>
-    <div>
-      <blog-tag-manager :tags="tags" />
-    </div>
+    <blog-tabs>
+      <blog-tab :title="$strings.content">
+        <div v-if="!initial.id && drafts.length">
+          <select @change="loadDraft" class="blog-entry-form__draft">
+            <option value>{{ $strings.newEntry }}</option>
+            <optgroup :label="$strings.unpublishedDrafts">
+              <option v-for="draft in drafts" :value="draft.id" :key="draft.id">
+                {{ draft.title }}
+              </option>
+            </optgroup>
+          </select>
+        </div>
+        <div>
+          <h2 v-if="!entry.id">{{ $strings.newEntry }}</h2>
+          <h2 v-else>{{ $strings.editEntry }}</h2>
+        </div>
+        <div>
+          <input
+            type="text"
+            class="blog-entry-form__title"
+            v-model="title"
+            @keyup="
+              e => {
+                updateNewId(e);
+                saveFormState();
+              }
+            "
+            :placeholder="$strings.title"
+          />
+        </div>
+        <div v-if="showNewId">
+          <input
+            type="text"
+            class="blog-entry-form__title"
+            v-model="newId"
+            @keyup="saveFormState"
+            :placeholder="$strings.id"
+          />
+        </div>
+        <div class="blog-entry-form__body">
+          <div :id="editorId"></div>
+          <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
+            <blog-entry-finder
+              v-if="entryFinderOpen"
+              @entryClicked="insertEntryLink"
+              @inputBlurred="hideEntryFinder"
+            />
+          </div>
+        </div>
+        <div>
+          <blog-tag-manager @tagsUpdated="tagsUpdated" :tags="tags" />
+        </div>
+      </blog-tab>
+      <blog-tab :title="$strings.meta">
+        <div class="blog-entry-form__listed">
+          <label>
+            <input type="checkbox" v-model="listed" />
+            {{ $strings.includeEntryInListings }}</label
+          >
+        </div>
+        <div
+          class="blog-entry-form__schedule"
+          v-if="!entryId || entry.public === 0"
+        >
+          {{ $strings.publishAtScheduledTime }}
+          <div class="blog-entry-form__schedule-calendar">
+            <v-date-picker
+              v-if="schedulerIsOpen"
+              v-model="publishAt"
+              mode="dateTime"
+              :min-date="new Date()"
+            />
+          </div>
+          <input
+            type="hidden"
+            :placeholder="$strings.publishAtScheduledTime"
+            @focus="showScheduler"
+            v-model="publishAt"
+          />
+        </div>
+      </blog-tab>
+    </blog-tabs>
     <div>
       <template v-if="!entryId || entry.public === 1">
         <blog-button
@@ -73,7 +105,7 @@
         <blog-button
           destroy
           type="button"
-          v-if="entry.id && user.rights.includes('delete_entry')"
+          v-if="deleteLink"
           :action="showConfirmationDialog"
           :text="$strings.deleteEntry"
         />
@@ -88,12 +120,13 @@
         <blog-button
           destroy
           type="button"
-          v-if="entry.id && user.rights.includes('delete_entry')"
+          v-if="deleteLink"
           :action="showConfirmationDialog"
           :text="$strings.deleteDraft"
         />
       </template>
       <blog-confirmation-dialog
+        v-if="deleteLink"
         :isOpen="confirmationDialogOpen"
         :title="$strings.deleteEntry"
         :message="$strings.confirmDeleteEntry"
@@ -106,21 +139,27 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapState, mapGetters, mapMutations } from "vuex";
 import Quill from "quill";
-
-import BlogEntryFinder from "@/components/BlogEntryFinder.vue";
-import BlogTagManager from "@/components/BlogTagManager.vue";
-import BlogConfirmationDialog from "@/components/BlogConfirmationDialog.vue";
-import BlogButton from "@/components/BlogButton.vue";
+import BlogTabs from "@/components/BlogTabs";
+import BlogTab from "@/components/BlogTab";
+import BlogEntryFinder from "@/components/BlogEntryFinder";
+import BlogTagManager from "@/components/BlogTagManager";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogButton from "@/components/BlogButton";
 import imageHandler from "@/util/imageHandler";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-entry-form",
 
-  props: ["initialEntry"],
+  props: {
+    initial: { type: Object }
+  },
 
   components: {
+    BlogTabs,
+    BlogTab,
     BlogEntryFinder,
     BlogTagManager,
     BlogConfirmationDialog,
@@ -129,23 +168,34 @@ export default {
 
   data() {
     return {
-      title: this.initialEntry.title ? this.initialEntry.title : "",
-      newId: this.initialEntry.id ? this.initialEntry.id : "",
-      body: this.initialEntry.body ? this.initialEntry.body : "",
-      tags: this.initialEntry.tags ? this.initialEntry.tags : [],
-      entry: this.initialEntry ? this.initialEntry : false,
+      context: { id: "needs", props: ["uploadImage"] },
+      title: this.initial.title ? this.initial.title : "",
+      newId: this.initial.id ? this.initial.id : "",
+      body: this.initial.body ? this.initial.body : "",
+      tags: this.initial.tags ? this.initial.tags : [],
+      links: this.initial.links ? this.initial.links : [],
+      entry: this.initial ? this.initial : false,
       editor: false,
       initialized: false,
       confirmationDialogOpen: false,
-      public: this.initialEntry.public ? this.initialEntry.public : 1,
+      listed: typeof this.initial.listed === "number" ? this.initial.listed : 1,
+      public: this.initial.public ? this.initial.public : 1,
+      publishAt: this.initial.publish_at
+        ? new Date(this.initial.publish_at * 1000)
+        : "",
       entryFinderOpen: false,
       entryFinderRange: null,
-      editorSelectionPosition: {}
+      editorSelectionPosition: {},
+      schedulerIsOpen: true
     };
   },
 
-  mounted() {
-    this.getDrafts();
+  async created() {
+    this.addContext(this.context);
+  },
+
+  async mounted() {
+    await this.getDrafts({ links: this.links });
     this.editor = new Quill(`#${this.editorId}`, {
       theme: "snow",
       modules: {
@@ -175,16 +225,13 @@ export default {
     if (this.body) {
       this.editor.setContents(JSON.parse(this.body));
     }
-    this.imageHandler = new imageHandler({
-      setProgress: this.setProgress,
-      editor: this.editor,
-      uploadImage: this.api.uploadImage,
-      headers: this.headers
-    });
     const toolbar = this.editor.getModule("toolbar");
-    toolbar.addHandler("image", () => {
-      this.imageHandler.selectLocalImage();
-    });
+    if (this.uploadImageLink) {
+      this.setupImageUpload();
+      toolbar.addHandler("image", () => {
+        this.imageHandler.selectLocalImage();
+      });
+    }
     this.editor.on("text-change", () => {
       this.updateSelectionPosition();
       this.saveFormState();
@@ -209,7 +256,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["api", "headers", "user", "drafts", "entryFormIsOpen"]),
+    ...mapState(["user", "drafts", "entryFormIsOpen"]),
+
+    ...mapGetters(["headers"]),
 
     entryId() {
       return this.entry && this.entry.id ? this.entry.id : false;
@@ -231,6 +280,14 @@ export default {
       return this.public === 1;
     },
 
+    deleteLink() {
+      return this.link("DELETE", "entry");
+    },
+
+    uploadImageLink() {
+      return this.link("POST", "uploadImage", this.$store.state.links);
+    },
+
     entryFinderStyle() {
       return {
         top: `calc(${this.editorSelectionPosition.top}px + 2rem)`,
@@ -240,6 +297,8 @@ export default {
   },
 
   methods: {
+    ...linkHandlers,
+
     ...mapMutations(["setLoading", "hideEntryForm"]),
 
     ...mapActions([
@@ -255,7 +314,10 @@ export default {
       "deleteEntry",
       "deleteDraft",
       "setProgress",
-      "addToast"
+      "addToast",
+      "apiRequest",
+      "addEntryToList",
+      "addContext"
     ]),
 
     publishDraft(e) {
@@ -268,53 +330,49 @@ export default {
       this.submitForm(e);
     },
 
-    submitForm(e) {
+    async submitForm(e) {
       const bodyDelta = this.editor.getContents().ops;
       const entry = {
         title: this.title,
         newId: this.newId,
         body: bodyDelta,
         tags: this.tags,
-        public: this.public
+        listed: this.listed ? 1 : 0,
+        public: this.public,
+        publishAt: this.publishAt
+          ? Math.floor(this.publishAt.getTime() / 1000)
+          : 0
       };
       this.setLoading({ loading: true });
-      fetch(this.entry.api.save.href, {
-        method: this.entry.api.save.method,
-        headers: this.headers,
-        body: JSON.stringify(entry)
-      })
-        .then(response => response.json())
-        .then(json => {
-          if (!json.errorCode) {
-            this[this.public === 1 ? "getEntry" : "getDraft"]({
-              id: json.id,
-              force: true,
-              addToList: !this.entryId ? true : false
-            }).then(() => {
-              this.setLoading({ loading: false });
-              this.hideEntryForm();
-              this.setEditMode({ id: json.id, mode: false });
-              localStorage.removeItem(this.formId);
-              const routeType = this.public === 1 ? "entry" : "draft";
-              if (this.entryId && this.entryId !== json.id) {
-                this.$emit("idChanged", json.id);
-                this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
-                  id: this.entryId,
-                  newId: json.id
-                });
-              }
-              if (window.location.pathname !== `/${routeType}/${json.id}`) {
-                if (!this.entryId) {
-                  this.$router.push({ path: `/${routeType}/${json.id}` });
-                } else {
-                  this.$emit("edited", json.id);
-                }
-              }
-            });
+      const response = await this.apiRequest({
+        ...this.link(this.initial.id ? "PUT" : "POST", "entry"),
+        body: entry
+      });
+      if (!response.errorCode) {
+        this.setEntryById({ id: response.entry.id, entry: response.entry });
+        this.entryId || (await this.addEntryToList({ entry: response.entry }));
+        this.setLoading({ loading: false });
+        this.hideEntryForm();
+        this.setEditMode({ id: response.entry.id, mode: false });
+        localStorage.removeItem(this.formId);
+        const routeType = this.public === 1 ? "entry" : "draft";
+        if (this.entryId && this.entryId !== response.entry.id) {
+          this.$emit("idChanged", response.entry.id);
+          this[this.public === 1 ? "updateEntryId" : "updateDraftId"]({
+            id: this.entryId,
+            newId: response.entry.id
+          });
+        }
+        if (window.location.pathname !== `/${routeType}/${response.entry.id}`) {
+          if (!this.entryId) {
+            this.$router.push({ path: `/${routeType}/${response.entry.id}` });
           } else {
-            this.addToast(this.$strings.errors[`CODE_${json.errorCode}`]);
+            this.$emit("edited", response.entry.id);
           }
-        });
+        }
+      } else {
+        this.addToast(this.$strings.errors[`CODE_${response.errorCode}`]);
+      }
       e.preventDefault();
     },
 
@@ -384,6 +442,26 @@ export default {
             };
           }
         }
+      } else if (!this.editorSelectionPosition.top) {
+        const rects = this.editor.root.getClientRects();
+        if (rects.length > 0) {
+          this.editorSelectionPosition = {
+            top:
+              rects[0].top +
+              parseInt(
+                window
+                  .getComputedStyle(this.editor.root)
+                  .getPropertyValue("padding-top")
+              ),
+            left:
+              rects[0].left +
+              parseInt(
+                window
+                  .getComputedStyle(this.editor.root)
+                  .getPropertyValue("padding-left")
+              )
+          };
+        }
       }
     },
 
@@ -394,6 +472,14 @@ export default {
 
     hideEntryFinder() {
       this.entryFinderOpen = false;
+    },
+
+    showScheduler() {
+      this.schedulerIsOpen = true;
+    },
+
+    hideScheduler() {
+      this.schedulerIsOpen = false;
     },
 
     insertEntryLink(payload) {
@@ -416,6 +502,8 @@ export default {
         this.body = this.entry.body;
         this.tags = this.entry.tags;
         this.public = this.entry.public;
+        this.publishAt = new Date(this.entry.publish_at * 1000);
+        this.links = this.entry.links;
         this.editor.setContents(JSON.parse(this.entry.body));
       } else {
         this.entry = false;
@@ -426,9 +514,9 @@ export default {
 
     handleDelete() {
       if (this.isPublic) {
-        this.deleteEntry({ id: this.entry.id });
+        this.deleteEntry({ links: this.links, id: this.entry.id });
       } else {
-        this.deleteDraft({ id: this.entry.id });
+        this.deleteDraft({ links: this.links, id: this.entry.id });
         this.loadDraft();
         this.hideConfirmationDialog();
       }
@@ -437,6 +525,19 @@ export default {
       } else if (window.location.pathname !== "/") {
         this.$router.push({ path: "/" });
       }
+    },
+
+    setupImageUpload() {
+      this.imageHandler = new imageHandler({
+        setProgress: this.setProgress,
+        editor: this.editor,
+        uploadImage: this.uploadImageLink,
+        headers: this.headers
+      });
+    },
+
+    tagsUpdated(tags) {
+      this.tags = tags;
     }
   }
 };
@@ -450,6 +551,10 @@ export default {
 
   .blog-entry-form__draft {
     max-width: 90%;
+  }
+
+  .blog-entry-form__schedule {
+    margin-top: $space;
   }
 
   input,

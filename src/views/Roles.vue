@@ -1,45 +1,75 @@
 <template>
   <div class="roles">
-    <admin-roles v-if="initialized" v-bind="roles" />
+    <admin-roles
+      v-if="initialized && contextIsReady(context)"
+      v-bind="roles"
+      :links="rolesLinks"
+    />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import AdminRoles from "@/components/Admin/AdminRoles.vue";
+import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
+import AdminRoles from "@/components/Admin/AdminRoles";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "roles",
 
   components: { AdminRoles },
 
-  mounted() {
-    this.update();
+  props: {
+    links: Array
+  },
+
+  data() {
+    return {
+      context: { id: "view", props: ["roles"] },
+      rolesLinks: []
+    };
+  },
+
+  async created() {
+    await this.addContext(this.context);
+  },
+
+  async mounted() {
+    await this.update();
   },
 
   updated() {
-    this.update();
+    //this.update();
   },
 
   computed: {
-    ...mapGetters(["initialized", "user"]),
+    ...mapState(["initialized", "user", "roles"]),
 
-    roles() {
-      return this.$store.getters.roles;
-    }
+    ...mapGetters(["contextIsReady"])
   },
 
   methods: {
-    ...mapActions(["initialize", "setBreadcrumbs", "setTitle"]),
+    ...linkHandlers,
 
-    update() {
-      this.initialize().then(() => {
-        this.setBreadcrumbs([
-          { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/roles", label: this.$strings.roles }
-        ]);
-        this.setTitle(this.$strings.roles);
-      });
+    ...mapActions([
+      "initialize",
+      "setBreadcrumbs",
+      "setTitle",
+      "addContext",
+      "apiRequest"
+    ]),
+
+    ...mapMutations(["setRoles"]),
+
+    async update() {
+      await this.initialize();
+      const response = await this.apiRequest(this.link("GET", "roles"));
+      this.setRoles({ roles: response.roles });
+      this.rolesLinks = response.links;
+      this.setBreadcrumbs([
+        { href: "/admin", label: this.$strings.admin },
+        { href: "/admin/roles", label: this.$strings.roles }
+      ]);
+      this.setTitle(this.$strings.roles);
     }
   },
 
