@@ -598,7 +598,10 @@ export default {
     const { data } = await axios({
       url: payload.href,
       method: payload.method,
-      headers: { ...getters.headers, "x-functions-key": payload.key },
+      headers: {
+        ...getters.headers,
+        ...(payload.key ? { "x-functions-key": payload.key } : {})
+      },
       ...(payload.body ? { data: payload.body } : {}),
       ...(payload.query ? { params: payload.query } : {})
     });
