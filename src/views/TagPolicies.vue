@@ -1,7 +1,7 @@
 <template>
   <div class="tag-policies">
     <admin-tag-policies
-      v-if="initialized && tagRolesLinks.length"
+      v-if="initialized && contextIsReady(context)"
       :tag="tag"
       :tagRoles="tagRoles.filter(tagRole => tagRole.tag === tag)"
       :links="tagRolesLinks"
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 import AdminTagPolicies from "@/components/Admin/AdminTagPolicies";
 import linkHandlers from "@/shared/linkHandlers";
 
@@ -25,22 +25,24 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["tagRoles"] },
       firstUpdate: true,
       tagRolesLinks: []
     };
   },
 
-  mounted() {
-    this.addContext({ id: "view", props: ["tagRoles"] });
-    this.update();
+  created() {
+    this.addContext(this.context);
   },
 
-  updated() {
-    //this.update();
+  async mounted() {
+    this.update();
   },
 
   computed: {
     ...mapState(["tagRoles", "initialized", "user"]),
+
+    ...mapGetters(["contextIsReady"]),
 
     tag() {
       return this.$route.params.tag;
@@ -59,7 +61,7 @@ export default {
     ]),
 
     async update() {
-      if (this.firstUpdate) {
+      if (this.firstUpdate && this.contextIsReady(this.context)) {
         await this.initialize();
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },

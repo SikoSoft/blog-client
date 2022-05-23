@@ -287,11 +287,16 @@ export default {
     &-more {
       text-transform: uppercase;
       position: absolute;
-      width: calc(100% - 2rem);
+      width: 100%;
       padding-top: 4.5rem;
       padding-bottom: 0.5rem;
       top: 22.5rem;
-      background: linear-gradient(0deg, #000, 80%, transparent);
+      background: linear-gradient(
+        0deg,
+        $color-bg-primary $space,
+        80%,
+        transparent
+      );
     }
   }
 

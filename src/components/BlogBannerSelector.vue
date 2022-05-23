@@ -24,8 +24,8 @@ export default {
 
   data() {
     return {
-      firstUpdate: true,
-      context: { id: "view", props: ["banners"] }
+      context: { id: "view", props: ["banners"] },
+      setupResponse: false
     };
   },
 
@@ -34,9 +34,9 @@ export default {
   },
 
   async updated() {
-    if (this.contextIsReady(this.context) && this.firstUpdate) {
-      await this.getBanners();
-      this.firstUpdate = false;
+    if (this.contextIsReady(this.context) && !this.setupResponse) {
+      const response = this.getBanners();
+      this.setupResponse = response;
     }
   },
 
@@ -55,7 +55,9 @@ export default {
 
     change(e) {
       this.$emit("input", parseInt(e.target.value));
-    }
+    },
+
+    async update() {}
   }
 };
 </script>
