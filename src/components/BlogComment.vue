@@ -12,6 +12,7 @@
           class="blog-comment__checkbox"
           type="checkbox"
           :value="id"
+          :checked="isSelected"
           @change="select"
         />
       </div>
