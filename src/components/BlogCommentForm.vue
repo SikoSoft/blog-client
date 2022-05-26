@@ -199,7 +199,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-comment-form {
   transition: all 0.2s;

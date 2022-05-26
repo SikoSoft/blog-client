@@ -118,7 +118,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-github-event {
   padding: $space-xsmall 0;

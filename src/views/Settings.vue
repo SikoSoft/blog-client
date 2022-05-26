@@ -30,16 +30,13 @@ export default {
   },
 
   created() {
+    console.log("Settings.created");
     this.addContext(this.context);
   },
 
   async mounted() {
-    //await this.addContext();
+    console.log("Settings.mounted");
     this.update();
-  },
-
-  async unmounted() {
-    this.removeContext(this.context);
   },
 
   computed: {
@@ -63,19 +60,15 @@ export default {
     ...mapMutations(["setSettingsConfig"]),
 
     async update() {
-      if (this.firstUpdate) {
-        await this.initialize();
-        const { settings } = await this.apiRequest(
-          this.link("GET", "settings")
-        );
-        this.setSettingsConfig({ settings });
-        this.setBreadcrumbs([
-          { href: "/admin", label: this.$strings.admin },
-          { href: "/admin/settings", label: this.$strings.settings }
-        ]);
-        this.setTitle(this.$strings.settings);
-        this.firstUpdate = false;
-      }
+      console.log("Settings.update");
+      await this.initialize();
+      const { settings } = await this.apiRequest(this.link("GET", "settings"));
+      this.setSettingsConfig({ settings });
+      this.setBreadcrumbs([
+        { href: "/admin", label: this.$strings.admin },
+        { href: "/admin/settings", label: this.$strings.settings }
+      ]);
+      this.setTitle(this.$strings.settings);
     }
   },
 

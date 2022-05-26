@@ -68,8 +68,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/mixins.scss";
-@import "@/styles/variables.scss";
+@import "@theme/mixins";
+@import "@theme/variables";
 
 .blog-entry-finder {
   width: 25vw;

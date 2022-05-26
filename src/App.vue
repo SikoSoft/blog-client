@@ -175,4 +175,6 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./styles/theme.scss"></style>
+<style lang="scss">
+@import "@theme/theme";
+</style>

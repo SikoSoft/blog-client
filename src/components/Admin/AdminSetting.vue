@@ -5,6 +5,7 @@
       <template v-if="type === 'list'">
         <blog-role-selector v-model="value" v-if="listSource === 'roles'" />
         <blog-banner-selector v-model="value" v-if="listSource === 'banners'" />
+        <blog-theme-selector v-model="value" v-if="listSource === 'themes'" />
       </template>
       <template v-if="type === 'number'">
         <input
@@ -28,6 +29,7 @@
 import { mapActions, mapGetters } from "vuex";
 import BlogRoleSelector from "@/components/BlogRoleSelector";
 import BlogBannerSelector from "@/components/BlogBannerSelector";
+import BlogThemeSelector from "@/components/BlogThemeSelector";
 import BlogToggle from "@/components/BlogToggle";
 
 export default {
@@ -46,7 +48,12 @@ export default {
     links: Array
   },
 
-  components: { BlogRoleSelector, BlogBannerSelector, BlogToggle },
+  components: {
+    BlogRoleSelector,
+    BlogBannerSelector,
+    BlogToggle,
+    BlogThemeSelector
+  },
 
   data() {
     return {

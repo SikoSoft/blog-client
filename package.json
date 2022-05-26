@@ -10,7 +10,7 @@
   "dependencies": {
     "@primer/octicons": "^9.6.0",
     "axios": "^0.27.2",
-    "blog-spec": "github:SikoSoft/blog-spec#2.6.5",
+    "blog-spec": "github:SikoSoft/blog-spec#2.7.3",
     "core-js": "^3.18.3",
     "quill": "^1.3.7",
     "quill-delta-to-html": "^0.11.0",

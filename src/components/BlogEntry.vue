@@ -222,7 +222,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-entry {
   margin: 4rem 0 12rem 0;

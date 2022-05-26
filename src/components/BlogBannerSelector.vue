@@ -24,7 +24,7 @@ export default {
 
   data() {
     return {
-      context: { id: "view", props: ["banners"] },
+      context: { id: "needs", props: ["banners"] },
       setupResponse: false
     };
   },

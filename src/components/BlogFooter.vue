@@ -28,8 +28,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables";
-@import "@/styles/mixins";
+@import "@theme/variables";
+@import "@theme/mixins";
 
 .blog-footer {
   border-top: 1px $color-border-secondary solid;

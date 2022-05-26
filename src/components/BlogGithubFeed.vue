@@ -32,9 +32,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables.scss";
-@import "@/styles/mixins.scss";
-@import "@/styles/theme.scss";
+@import "@theme/variables";
+@import "@theme/mixins";
+@import "@theme/theme";
 
 .blog-github-feed {
   @include sidebar-block;

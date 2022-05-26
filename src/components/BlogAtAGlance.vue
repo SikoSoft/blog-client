@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/mixins.scss";
+@import "@theme/mixins";
 
 .blog-at-a-glance {
   @include sidebar-block;

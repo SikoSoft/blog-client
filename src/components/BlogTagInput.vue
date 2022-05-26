@@ -169,8 +169,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/mixins.scss";
-@import "@/styles/variables.scss";
+@import "@theme/mixins";
+@import "@theme/variables";
 
 .blog-tag-input {
   display: inline-block;

@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables";
+@import "@theme/variables";
 
 .blog-header {
   background-color: #000;

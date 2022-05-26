@@ -544,7 +544,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-entry-form {
   margin: 16px 0;

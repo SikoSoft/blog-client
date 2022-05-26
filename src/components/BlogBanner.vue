@@ -52,8 +52,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
-@import "@/styles/mixins";
+@import "@theme/variables";
+@import "@theme/mixins";
 
 .blog-banner {
   @include container-width;

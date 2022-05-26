@@ -194,7 +194,8 @@
     "show_powered_by": "Show powered-by statement",
     "footer_body": "Footer body",
     "analyze_comments_sentiment": "Analyze sentiment in comments",
-    "header_banner": "Header banner"
+    "header_banner": "Header banner",
+    "theme": "Theme"
   },
   "rightsGroups": {
     "entries": "Entries",
