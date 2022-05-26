@@ -5,7 +5,7 @@
     font-size: 1.5rem;
     margin: 0.5rem 0;
     padding-bottom: 1rem;
-    border-bottom: $space-xsmall #333 solid;
+    border-bottom: $space-xsmall $color-border-secondary solid;
   }
 
   ul {
@@ -16,7 +16,7 @@
 
     li {
       padding: 1.5rem 0;
-      border-bottom: 2px #222 solid;
+      border-bottom: 2px $color-border-secondary solid;
       &:last-child {
         border-bottom: none;
       }

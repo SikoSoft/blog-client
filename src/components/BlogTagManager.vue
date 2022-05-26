@@ -103,7 +103,7 @@ export default {
       margin-right: 1rem;
       font-size: 16px;
       padding: 4px;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: $color-list-item-bg;
       border: 1px #000 solid;
       border-radius: 4px;
 

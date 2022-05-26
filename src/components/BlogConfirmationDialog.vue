@@ -56,9 +56,9 @@ export default {
   border-radius: 8px;
   padding: $space-large;
   box-sizing: border-box;
-  background-color: rgba(16, 16, 16, 0.8);
+  background-color: $color-modal-bg;
   border: 1px $color-border-primary solid;
-  box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px 10px $color-box-shadow;
   transition: all 0.3s;
 
   &--open {

@@ -60,7 +60,11 @@ export default {
   padding: 0;
   position: relative;
   height: 400px;
-  background: radial-gradient(circle at center, #222 0, #000);
+  background: radial-gradient(
+    circle at center,
+    $color-banner-bg-primary 0,
+    $color-banner-bg-secondary
+  );
 
   &__image {
     opacity: 0.2;
@@ -81,7 +85,7 @@ export default {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 0 10px #000;
+    text-shadow: 0 0 10px $color-text-shadow;
   }
 
   &__heading {

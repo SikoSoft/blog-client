@@ -562,9 +562,9 @@ export default {
   &__body {
     margin: 8px 0;
     border-radius: 4px;
-    border: 4px #000 solid;
-    background-color: #fff;
-    color: #000;
+    border: 4px $color-border-primary solid;
+    background-color: $color-input-bg;
+    color: $color-input-text;
   }
 
   .blog-entry-form__title {

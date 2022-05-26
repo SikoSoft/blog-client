@@ -212,22 +212,22 @@ export default {
   &__message {
     margin: 8px 0;
     border-radius: 4px;
-    border: 4px #000 solid;
-    background-color: #fff;
-    color: #000;
+    border: 4px $color-border-primary solid;
+    background-color: $color-input-bg;
+    color: $color-input-text;
   }
 
   &__captcha {
-    border-top: 1px #444 dotted;
-    border-bottom: 1px #444 dotted;
+    border-top: 1px $color-bg-secondary dotted;
+    border-bottom: 1px $color-bg-secondary dotted;
     text-align: center;
     padding: $space-small;
     margin: $space 0;
     background: linear-gradient(
       to top,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.05)
+      $color-nested-box-bg-primary,
+      $color-nested-box-bg-secondary,
+      $color-nested-box-bg-primary
     );
 
     &-links {

@@ -73,7 +73,7 @@ export default {
 
   &--open {
     height: auto;
-    box-shadow: 0 0 500px rgba(0, 0, 0, 1);
+    box-shadow: 0 0 500px $color-box-shadow;
   }
 
   &__bar {

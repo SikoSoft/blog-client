@@ -324,8 +324,8 @@ export default {
   &__comments {
     padding: 5rem 2rem;
     background-color: $color-bg-secondary;
-    border-top: 1rem #1f1f1f solid;
-    border-bottom: 1rem #333 solid;
+    border-top: 1rem $color-bg-primary-highlight solid;
+    border-bottom: 1rem $color-border-secondary solid;
   }
 
   pre {
