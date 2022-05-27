@@ -255,6 +255,10 @@ export default {
     this.initialized = true;
   },
 
+  beforeDestroy() {
+    this.removeContext(this.context);
+  },
+
   computed: {
     ...mapState(["user", "drafts", "entryFormIsOpen"]),
 
@@ -317,7 +321,8 @@ export default {
       "addToast",
       "apiRequest",
       "addEntryToList",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     publishDraft(e) {

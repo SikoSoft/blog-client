@@ -626,6 +626,18 @@ export default {
     });
   },
 
+  removeContext: async ({ state, commit }, context) => {
+    console.log("removeContext", JSON.stringify(context));
+    commit("setContext", {
+      context: [
+        ...state.context.filter(
+          contextRecord =>
+            JSON.stringify(contextRecord) !== JSON.stringify(context)
+        )
+      ]
+    });
+  },
+
   getContextLinks: async ({ state, dispatch, commit }) => {
     const { links } = await dispatch(
       "apiRequest",

@@ -32,12 +32,14 @@ export default {
     this.addContext(this.context);
   },
 
-  mounted() {},
-
   updated() {
     if (this.themesLink) {
       this.update();
     }
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -61,11 +63,11 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["addContext", "apiRequest"]),
+    ...mapActions(["addContext", "removeContext", "apiRequest"]),
 
     async update() {
       if (!this.setup) {
-        console.log("update");
+        this.setup = true;
         this.setup = await this.apiRequest(this.themesLink);
       }
     },

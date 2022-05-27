@@ -47,6 +47,10 @@ export default {
     }
   },
 
+  beforeDestroy() {
+    this.removeContext(this.context);
+  },
+
   computed: {
     ...mapState(["links"]),
 
@@ -60,7 +64,7 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["setProgress", "addContext"]),
+    ...mapActions(["setProgress", "addContext", "removeContext"]),
 
     setupImageHandler() {
       this.imageHandler = new imageHandler({

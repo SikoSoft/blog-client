@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <admin-settings
-      v-if="contextIsReady(context)"
+      v-if="contextIsReady(context) && settingsConfig.length"
       v-bind="settings"
       :settingsConfig="settingsConfig"
     />
@@ -39,6 +39,10 @@ export default {
     this.update();
   },
 
+  beforeDestroy() {
+    this.removeContext(this.context);
+  },
+
   computed: {
     ...mapState(["initialized", "user", "settings", "settingsConfig"]),
 
@@ -53,6 +57,7 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "addContext",
+      "removeContext",
       "getSettings",
       "apiRequest"
     ]),

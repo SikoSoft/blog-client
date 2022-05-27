@@ -30,6 +30,7 @@ export default {
   },
 
   async created() {
+    console.log("created banner selector");
     await this.addContext(this.context);
   },
 
@@ -38,6 +39,11 @@ export default {
       const response = this.getBanners();
       this.setupResponse = response;
     }
+  },
+
+  beforeDestroy() {
+    console.log("about to destroy banner selector");
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -51,7 +57,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getBanners", "addContext"]),
+    ...mapActions(["getBanners", "addContext", "removeContext"]),
 
     change(e) {
       this.$emit("input", parseInt(e.target.value));

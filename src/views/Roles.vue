@@ -37,8 +37,8 @@ export default {
     await this.update();
   },
 
-  updated() {
-    //this.update();
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -55,6 +55,7 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "addContext",
+      "removeContext",
       "apiRequest"
     ]),
 

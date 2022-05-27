@@ -39,6 +39,10 @@ export default {
     this.update();
   },
 
+  beforeDestroy() {
+    this.removeContext(this.context);
+  },
+
   computed: {
     ...mapState(["tagRoles", "initialized", "user"]),
 
@@ -57,7 +61,8 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "getTagRoles",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     async update() {

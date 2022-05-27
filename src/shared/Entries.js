@@ -14,6 +14,7 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["entries"] },
       gettingEntries: false,
       gettingEntriesCoolingDown: false,
       gettingEntriesCoolDown: 1500,
@@ -22,7 +23,7 @@ export default {
   },
 
   mounted() {
-    this.addContext({ id: "view", props: ["entries"] });
+    this.addContext(this.context);
     window.addEventListener("scroll", this.scrollHandler);
     this.setTitle(this.title);
     this.initialize().then(() => {
@@ -31,6 +32,10 @@ export default {
       }
     });
     this.setBreadcrumbs([]);
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   destroyed() {
@@ -48,7 +53,8 @@ export default {
       "setNextEntriesBatch",
       "setTitle",
       "apiRequest",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     ...mapMutations(["setEntries", "setEntryById", "setEndOfEntries"]),

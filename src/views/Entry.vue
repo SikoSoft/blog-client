@@ -25,6 +25,7 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["entry", this.$route.params.id] },
       firstUpdate: true,
       id: this.$route.params.id,
       routeType: this.$route.path.match(/\/draft\//) ? "draft" : "entry",
@@ -43,7 +44,7 @@ export default {
   },
 
   mounted() {
-    this.addContext({ id: "view", props: ["entry", this.id] });
+    this.addContext(this.context);
     this.update();
   },
 
@@ -51,6 +52,10 @@ export default {
     this.id = to.params.id;
     this.update();
     next();
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   methods: {
@@ -63,7 +68,8 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "apiRequest",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     ...mapMutations(["setEntryById"]),

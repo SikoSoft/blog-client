@@ -1,10 +1,8 @@
 <template>
-  <div class="admin-settings" v-if="ready">
+  <div class="admin-settings" v-if="contextIsReady(context)">
     <blog-tabs>
       <blog-tab
-        v-for="settingGroup in Object.keys(settingGroups).filter(
-          settingGroup => settingGroups[settingGroup].length > 0
-        )"
+        v-for="settingGroup in settingsGroupsIds"
         :key="settingGroup"
         :title="$strings.settingsGroups[settingGroup]"
       >
@@ -15,7 +13,7 @@
             :key="settingId"
           >
             <admin-setting
-              v-bind="settingById(settingId)"
+              v-bind="settingsObject[settingId]"
               :initialValue="settings[settingId] ? settings[settingId] : null"
             />
           </div>
@@ -34,13 +32,7 @@ import AdminSetting from "@/components/Admin/AdminSetting";
 
 const settingGroups = {
   roles: ["role_admin", "role_guest"],
-  ui: [
-    "theme",
-    "header_banner",
-    "toast_life",
-    "show_powered_by",
-    "footer_body"
-  ],
+  ui: ["header_banner", "toast_life", "show_powered_by", "footer_body"],
   entries: [
     "per_load",
     "teaser_mode",
@@ -79,23 +71,55 @@ export default {
 
   data() {
     return {
+      context: { id: "needs", props: ["setting"] },
       settingGroups,
       spec
     };
   },
 
   async created() {
-    await this.addContext({ id: "view", props: ["setting"] });
+    await this.addContext(this.context);
+  },
+
+  async updated() {
+    console.log("AdminSettings updated");
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
     ...mapState(["settings"]),
 
-    ...mapGetters(["ready"])
+    ...mapGetters(["ready", "contextIsReady"]),
+
+    settingsGroupsIds() {
+      return Object.keys(settingGroups).filter(
+        settingGroup => settingGroups[settingGroup].length > 0
+      );
+    },
+
+    settingsObject() {
+      console.log("#########CREATING SETTINGS OBJECT");
+      const object = {};
+      for (const setting of this.spec.settings) {
+        object[setting.id] = {
+          ...setting,
+          ...this.settingsConfig.filter(
+            configSetting => configSetting.id === setting.id
+          )[0],
+          label: this.$strings.settingsLabels[setting.id]
+            ? (setting.label = this.$strings.settingsLabels[setting.id])
+            : setting.id
+        };
+      }
+      return object;
+    }
   },
 
   methods: {
-    ...mapActions(["addContext"]),
+    ...mapActions(["addContext", "removeContext"]),
 
     settingById(id) {
       const matchConfig = this.settingsConfig.filter(

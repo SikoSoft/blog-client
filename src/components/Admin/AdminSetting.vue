@@ -5,7 +5,6 @@
       <template v-if="type === 'list'">
         <blog-role-selector v-model="value" v-if="listSource === 'roles'" />
         <blog-banner-selector v-model="value" v-if="listSource === 'banners'" />
-        <blog-theme-selector v-model="value" v-if="listSource === 'themes'" />
       </template>
       <template v-if="type === 'number'">
         <input
@@ -29,7 +28,6 @@
 import { mapActions, mapGetters } from "vuex";
 import BlogRoleSelector from "@/components/BlogRoleSelector";
 import BlogBannerSelector from "@/components/BlogBannerSelector";
-import BlogThemeSelector from "@/components/BlogThemeSelector";
 import BlogToggle from "@/components/BlogToggle";
 
 export default {
@@ -51,14 +49,17 @@ export default {
   components: {
     BlogRoleSelector,
     BlogBannerSelector,
-    BlogToggle,
-    BlogThemeSelector
+    BlogToggle
   },
 
   data() {
     return {
       value: this.initialValue ? this.initialValue : 0
     };
+  },
+
+  created() {
+    console.log("created admin setting", this.id);
   },
 
   computed: {

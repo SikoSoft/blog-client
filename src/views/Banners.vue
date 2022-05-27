@@ -20,15 +20,24 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["banners"] },
       bannerLinks: []
     };
   },
 
+  async created() {
+    console.log("created banners");
+  },
+
   async mounted() {
-    await this.addContext({ id: "view", props: ["banners"] });
+    await this.addContext(this.context);
     await this.initialize();
     const { links } = await this.getBanners();
     this.bannerLinks = links;
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -40,7 +49,7 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["addContext", "initialize", "getBanners"])
+    ...mapActions(["addContext", "removeContext", "initialize", "getBanners"])
   }
 };
 </script>
