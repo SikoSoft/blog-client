@@ -1,7 +1,7 @@
 <template>
   <div class="blog-header">
     <blog-banner
-      :title="header.title"
+      :heading="header.heading"
       :caption="header.caption"
       :image="header.image"
     />

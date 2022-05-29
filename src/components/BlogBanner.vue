@@ -17,12 +17,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   name: "blog-banner",
 
   props: {
+    heading: String,
     caption: String,
     image: String
   },
@@ -35,7 +34,9 @@ export default {
   },
 
   computed: {
-    ...mapState(["title"])
+    title() {
+      return this.heading || this.$store.state.title;
+    }
   },
 
   mounted() {
