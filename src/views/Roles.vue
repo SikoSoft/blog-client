@@ -24,6 +24,7 @@ export default {
 
   data() {
     return {
+      firstUpdate: true,
       context: { id: "view", props: ["roles"] },
       rolesLinks: []
     };
@@ -34,6 +35,10 @@ export default {
   },
 
   async mounted() {
+    await this.update();
+  },
+
+  async updated() {
     await this.update();
   },
 
@@ -63,14 +68,17 @@ export default {
 
     async update() {
       await this.initialize();
-      const response = await this.apiRequest(this.link("GET", "roles"));
-      this.setRoles({ roles: response.roles });
-      this.rolesLinks = response.links;
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/roles", label: this.$strings.roles }
-      ]);
-      this.setTitle(this.$strings.roles);
+      if (this.contextIsReady(this.context) && this.firstUpdate) {
+        this.firstUpdate = false;
+        const response = await this.apiRequest(this.link("GET", "roles"));
+        this.setRoles({ roles: response.roles });
+        this.rolesLinks = response.links;
+        this.setBreadcrumbs([
+          { href: "/admin", label: this.$strings.admin },
+          { href: "/admin/roles", label: this.$strings.roles }
+        ]);
+        this.setTitle(this.$strings.roles);
+      }
     }
   },
 

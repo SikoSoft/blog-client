@@ -58,7 +58,13 @@ export default {
         window.scroll({
           top:
             document.getElementById("blog-breadcrumb").getBoundingClientRect()
-              .top + window.scrollY,
+              .top +
+            window.scrollY -
+            (this.showAdminPane
+              ? document
+                  .querySelector(".blog-admin-pane")
+                  .getBoundingClientRect().height
+              : 0),
           left: 0,
           behavior: "smooth"
         });
