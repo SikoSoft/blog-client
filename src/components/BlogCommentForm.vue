@@ -212,14 +212,14 @@ export default {
   &__message {
     margin: 8px 0;
     border-radius: 4px;
-    border: 4px $color-border-primary solid;
+    border: 4px $color-primary-border solid;
     background-color: $color-input-bg;
     color: $color-input-text;
   }
 
   &__captcha {
-    border-top: 1px $color-bg-secondary dotted;
-    border-bottom: 1px $color-bg-secondary dotted;
+    border-top: 1px $color-secondary-border dotted;
+    border-bottom: 1px $color-secondary-border dotted;
     text-align: center;
     padding: $space-small;
     margin: $space 0;

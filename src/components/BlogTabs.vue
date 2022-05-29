@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables";
+@import "@theme/variables";
 
 .blog-tabs {
   transition: all 0.3s;
@@ -66,7 +66,7 @@ export default {
 
         &.active {
           opacity: 1;
-          background-color: $color-bg-primary;
+          background-color: $color-secondary-bg;
         }
       }
     }
@@ -74,7 +74,7 @@ export default {
 
   &__content {
     padding: $space;
-    background-color: $color-bg-primary;
+    background-color: $color-secondary-bg;
   }
 }
 </style>

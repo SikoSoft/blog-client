@@ -5,7 +5,7 @@
     font-size: 1.5rem;
     margin: 0.5rem 0;
     padding-bottom: 1rem;
-    border-bottom: $space-xsmall $color-border-secondary solid;
+    border-bottom: $space-xsmall $color-secondary-border solid;
   }
 
   ul {
@@ -16,7 +16,7 @@
 
     li {
       padding: 1.5rem 0;
-      border-bottom: 2px $color-border-secondary solid;
+      border-bottom: 2px $color-secondary-border solid;
       &:last-child {
         border-bottom: none;
       }
@@ -61,7 +61,7 @@
 @mixin admin-list-item {
   margin: $space 0;
   padding: $space;
-  background-color: $color-bg-secondary;
-  border: 1px $color-border-secondary solid;
+  background-color: $color-secondary-bg;
+  border: 1px $color-secondary-border solid;
   max-width: 100%;
 }

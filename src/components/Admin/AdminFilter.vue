@@ -186,8 +186,8 @@ export default {
 @import "@theme/variables";
 
 .admin-filter {
-  background-color: $color-bg-secondary;
-  border: 1px $color-border-secondary solid;
+  background-color: $color-secondary-bg;
+  border: 1px $color-secondary-border solid;
   border-radius: 1rem;
   margin: 0.5rem;
   padding: 0.5rem;
@@ -267,7 +267,7 @@ export default {
     top: 0.5rem;
     left: 0.5rem;
     padding: 0.25rem;
-    border-color: $color-border-primary;
+    border-color: $color-primary-border;
     transition: all 0.3s;
 
     &:hover {

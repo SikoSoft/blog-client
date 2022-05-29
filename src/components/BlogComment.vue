@@ -106,12 +106,12 @@ export default {
   &__avatar-image {
     width: 5rem;
     height: 5rem;
-    border: 1px $color-border-secondary solid;
+    border: 1px $color-secondary-border solid;
     border-radius: $space-xsmall;
   }
 
   &__body {
-    border: 1px $color-border-secondary solid;
+    border: 1px $color-secondary-border solid;
     border-radius: 4px;
     flex-grow: 10;
     position: relative;
@@ -121,7 +121,7 @@ export default {
       position: absolute;
       left: -10px;
       top: 10px;
-      border-right: 10px solid $color-border-secondary;
+      border-right: 10px solid $color-secondary-border;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
     }
@@ -131,7 +131,7 @@ export default {
       position: absolute;
       left: -8px;
       top: 12px;
-      border-right: 8px solid $color-border-secondary;
+      border-right: 8px solid $color-secondary-border;
       border-top: 8px solid transparent;
       border-bottom: 8px solid transparent;
     }
@@ -147,9 +147,9 @@ export default {
 
   &__meta {
     color: $color-text-subtle;
-    background-color: $color-bg-secondary;
+    background-color: $color-secondary-bg;
     padding: $space-small;
-    border-bottom: 1px $color-border-secondary solid;
+    border-bottom: 1px $color-secondary-border solid;
     position: relative;
   }
 

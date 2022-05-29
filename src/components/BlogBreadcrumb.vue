@@ -57,16 +57,16 @@ $height: 6rem;
 .blog-breadcrumb {
   background: linear-gradient(
     to bottom,
-    $color-bg-secondary-highlight,
+    $color-secondary-bg-highlight,
     5%,
-    $color-bg-secondary,
+    $color-secondary-bg,
     95%,
-    $color-bg-secondary-highlight
+    $color-secondary-bg-highlight
   );
   font-size: 2rem;
   white-space: nowrap;
-  border-top: 2px $color-border-primary solid;
-  border-bottom: 2px $color-border-primary solid;
+  border-top: 2px $color-primary-border solid;
+  border-bottom: 2px $color-primary-border solid;
 
   .blog-breadcrumb__inner {
     @include container-width;
@@ -93,9 +93,9 @@ $height: 6rem;
   .blog-breadcrumb__list-item-link {
     display: inline-block;
     height: $height;
-    color: $color-breadcrumb-link;
+    color: $color-secondary-link;
     &--disabled {
-      color: $color-breadcrumb-text;
+      color: $color-secondary-text;
       cursor: text;
     }
   }

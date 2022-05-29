@@ -66,9 +66,10 @@ export default {
     $color-banner-bg-primary 0,
     $color-banner-bg-secondary
   );
+  color: $color-banner-text;
 
   &__image {
-    opacity: 0.2;
+    opacity: 0.7;
     height: 100%;
     width: 100%;
     background-position: right top;

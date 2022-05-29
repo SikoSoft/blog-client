@@ -245,7 +245,7 @@ export default {
 
   &__posted-time {
     color: $color-text-subtle;
-    border-top: 1px $color-link-primary solid;
+    border-top: 1px $color-primary-link solid;
     padding-top: 5px;
     display: inline-block;
     font-size: $font-large;
@@ -268,7 +268,7 @@ export default {
     font-size: 48px;
 
     &--clickable {
-      border-left: 5px $color-link-primary solid;
+      border-left: 5px $color-primary-link solid;
     }
   }
 
@@ -293,7 +293,7 @@ export default {
       top: 22.5rem;
       background: linear-gradient(
         0deg,
-        $color-bg-primary $space,
+        $color-primary-bg $space,
         80%,
         transparent
       );
@@ -323,9 +323,9 @@ export default {
 
   &__comments {
     padding: 5rem 2rem;
-    background-color: $color-bg-secondary;
-    border-top: 1rem $color-bg-primary-highlight solid;
-    border-bottom: 1rem $color-border-secondary solid;
+    background-color: $color-secondary-bg;
+    border-top: 1rem $color-primary-bg-highlight solid;
+    border-bottom: 1rem $color-secondary-border solid;
   }
 
   pre {

@@ -8,9 +8,9 @@ body {
   padding: 0;
   width: 100%;
   height: auto;
-  background-color: $color-bg-primary;
+  background-color: $color-primary-bg;
   font-family: $font-family;
-  color: #efefef;
+  color: $color-primary-text;
 }
 
 #app {
@@ -45,6 +45,7 @@ main {
   flex: 7;
   min-height: $loader-height;
   max-width: 100%;
+  padding: $space 0;
 }
 
 aside {
@@ -52,11 +53,11 @@ aside {
   min-width: 352px;
   padding: $space-xlarge;
   flex: 3;
-  background-color: $color-bg-secondary;
+  background-color: $color-secondary-bg;
   position: sticky;
   top: calc(1rem);
-  border-right: 2px $color-border-primary solid;
-  border-bottom: 2px $color-border-primary solid;
+  border-right: 2px $color-primary-border solid;
+  border-bottom: 2px $color-primary-border solid;
   box-sizing: border-box;
 
   @media screen and (max-width: $size-mobile) {
@@ -74,12 +75,12 @@ strong {
 }
 
 a {
-  color: $color-link-primary;
+  color: $color-primary-link;
   text-shadow: 0 0 5px $color-link-shadow;
   text-decoration: none;
   transition: all 0.2s;
   &:hover {
-    color: $color-link-hover;
+    color: $color-primary-link-hover;
   }
 }
 
@@ -95,7 +96,9 @@ textarea {
   border-radius: 4px;
   padding: 8px;
   outline: none;
-  border: 2px #000 solid;
+  border: 2px $color-input-border solid;
+  color: $color-input-text;
+  background-color: $color-input-bg;
   font-family: $font-family;
 }
 

@@ -57,7 +57,7 @@ export default {
   padding: $space-large;
   box-sizing: border-box;
   background-color: $color-modal-bg;
-  border: 1px $color-border-primary solid;
+  border: 1px $color-primary-border solid;
   box-shadow: 0 0 10px 10px $color-box-shadow;
   transition: all 0.3s;
 

@@ -567,7 +567,7 @@ export default {
   &__body {
     margin: 8px 0;
     border-radius: 4px;
-    border: 4px $color-border-primary solid;
+    border: 4px $color-input-border solid;
     background-color: $color-input-bg;
     color: $color-input-text;
   }

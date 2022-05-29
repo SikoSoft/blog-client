@@ -152,8 +152,8 @@ export default {
     width: 100%;
     height: 5rem;
     text-align: center;
-    background-color: $color-bg-primary;
-    border-top: 3px $color-border-secondary solid;
+    background-color: $color-primary-bg;
+    border-top: 3px $color-secondary-border solid;
     transition: all 0.3s;
 
     &--active {

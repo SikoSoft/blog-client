@@ -169,7 +169,7 @@ export default {
       }
 
       &--over {
-        border: 0.25rem $color-border-primary dashed;
+        border: 0.25rem $color-primary-border dashed;
         opacity: 0.9;
       }
     }
@@ -180,7 +180,7 @@ export default {
   }
   &__new {
     border-radius: 1rem;
-    border-color: $color-border-primary;
+    border-color: $color-primary-border;
   }
 }
 </style>

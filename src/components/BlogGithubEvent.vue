@@ -125,8 +125,8 @@ export default {
   border: 1px;
 
   &__icon {
-    border: 1px #444 solid;
-    background-color: #222;
+    border: 1px $color-secondary-border solid;
+    background-color: $color-secondary-bg-highlight;
     border-radius: 4px;
     vertical-align: middle;
     height: 24px;
@@ -139,7 +139,7 @@ export default {
   }
 
   &__link {
-    color: $color-link-primary;
+    color: $color-secondary-link;
   }
 }
 </style>

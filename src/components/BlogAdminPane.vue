@@ -67,9 +67,10 @@ export default {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: $color-bg-secondary;
+  color: $color-secondary-text;
+  background-color: $color-secondary-bg;
   transition: all 0.3s;
-  border-bottom: 1px $color-border-secondary solid;
+  border-bottom: 1px $color-secondary-border solid;
 
   &--open {
     height: auto;
@@ -93,6 +94,7 @@ export default {
   }
 
   &__link {
+    color: $color-secondary-link;
     font-weight: bold;
   }
 

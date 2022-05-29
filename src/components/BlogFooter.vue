@@ -32,11 +32,12 @@ export default {
 @import "@theme/mixins";
 
 .blog-footer {
-  border-top: 1px $color-border-secondary solid;
+  border-top: 1px $color-secondary-border solid;
   margin-top: $space;
   font-size: $font-large;
   padding: 6rem 0;
-  background-color: #000;
+  color: $color-footer-text;
+  background-color: $color-footer-bg;
 
   &__inner {
     @include container-width;
