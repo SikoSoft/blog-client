@@ -30,7 +30,6 @@ export default {
   },
 
   async created() {
-    console.log("created banner selector");
     await this.addContext(this.context);
   },
 
@@ -42,7 +41,6 @@ export default {
   },
 
   beforeDestroy() {
-    console.log("about to destroy banner selector");
     this.removeContext(this.context);
   },
 

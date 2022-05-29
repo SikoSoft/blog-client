@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <admin-settings
-      v-if="contextIsReady(context) && settingsConfig.length"
+      v-if="ready && settingsConfig.length"
       v-bind="settings"
       :settingsConfig="settingsConfig"
     />
@@ -30,12 +30,14 @@ export default {
   },
 
   created() {
-    console.log("Settings.created");
     this.addContext(this.context);
   },
 
   async mounted() {
-    console.log("Settings.mounted");
+    this.update();
+  },
+
+  async updated() {
     this.update();
   },
 
@@ -46,7 +48,11 @@ export default {
   computed: {
     ...mapState(["initialized", "user", "settings", "settingsConfig"]),
 
-    ...mapGetters(["contextIsReady"])
+    ...mapGetters(["contextIsReady"]),
+
+    ready() {
+      return this.contextIsReady(this.context);
+    }
   },
 
   methods: {
@@ -65,15 +71,18 @@ export default {
     ...mapMutations(["setSettingsConfig"]),
 
     async update() {
-      console.log("Settings.update");
       await this.initialize();
-      const { settings } = await this.apiRequest(this.link("GET", "settings"));
-      this.setSettingsConfig({ settings });
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/settings", label: this.$strings.settings }
-      ]);
-      this.setTitle(this.$strings.settings);
+      if (this.ready && !this.settingsConfig.length) {
+        const { settings } = await this.apiRequest(
+          this.link("GET", "settings")
+        );
+        this.setSettingsConfig({ settings });
+        this.setBreadcrumbs([
+          { href: "/admin", label: this.$strings.admin },
+          { href: "/admin/settings", label: this.$strings.settings }
+        ]);
+        this.setTitle(this.$strings.settings);
+      }
     }
   },
 

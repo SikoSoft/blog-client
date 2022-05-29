@@ -25,10 +25,6 @@ export default {
     };
   },
 
-  async created() {
-    console.log("created banners");
-  },
-
   async mounted() {
     await this.addContext(this.context);
     await this.initialize();

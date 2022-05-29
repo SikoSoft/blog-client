@@ -58,10 +58,6 @@ export default {
     };
   },
 
-  created() {
-    console.log("created admin setting", this.id);
-  },
-
   computed: {
     ...mapGetters({ listOptions: "settingListOptions" })
   },

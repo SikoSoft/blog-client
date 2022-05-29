@@ -1,5 +1,5 @@
 const path = require("path");
-console.log("THEME", process.env.VUE_APP_THEME);
+
 module.exports = {
   publicPath: "/",
   configureWebpack: {

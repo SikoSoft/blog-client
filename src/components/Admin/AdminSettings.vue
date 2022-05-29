@@ -81,10 +81,6 @@ export default {
     await this.addContext(this.context);
   },
 
-  async updated() {
-    console.log("AdminSettings updated");
-  },
-
   beforeDestroy() {
     this.removeContext(this.context);
   },
@@ -101,7 +97,6 @@ export default {
     },
 
     settingsObject() {
-      console.log("#########CREATING SETTINGS OBJECT");
       const object = {};
       for (const setting of this.spec.settings) {
         object[setting.id] = {
