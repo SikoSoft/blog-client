@@ -56,6 +56,11 @@ aside {
   top: calc(1rem);
   border-right: 2px $color-border-primary solid;
   border-bottom: 2px $color-border-primary solid;
+  box-sizing: border-box;
+
+  @media screen and (max-width: $size-mobile) {
+    min-width: auto;
+  }
 }
 
 .app--has-admin-pane aside {

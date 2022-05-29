@@ -89,8 +89,8 @@ export default {
   }
 
   &__heading {
-    font-size: 6rem;
-    margin-bottom: 0;
+    font-size: clamp(64px, 8vw, 172px);
+    margin: 0;
   }
 
   &__caption {
