@@ -103,7 +103,13 @@ export default {
         ...this.updateLink,
         body: this.payload
       });
-      this.setBanners({ banners: [...this.banners, banner] });
+      this.setBanners({
+        banners: [
+          ...this.banners.map(_banner =>
+            _banner.id === banner.id ? banner : _banner
+          )
+        ]
+      });
     },
 
     async deleteBanner() {
@@ -115,3 +121,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+@import "@theme/mixins";
+
+.admin-banner {
+  @include admin-list-item;
+}
+</style>

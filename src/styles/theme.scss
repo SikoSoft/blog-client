@@ -44,6 +44,7 @@ main {
   position: relative;
   flex: 7;
   min-height: $loader-height;
+  max-width: 100%;
 }
 
 aside {

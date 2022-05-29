@@ -102,3 +102,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@theme/mixins";
+
+.admin-right {
+  @include admin-list-item;
+}
+</style>

@@ -57,3 +57,11 @@
   max-width: 1920px;
   margin: auto;
 }
+
+@mixin admin-list-item {
+  margin: $space 0;
+  padding: $space;
+  background-color: $color-bg-secondary;
+  border: 1px $color-border-secondary solid;
+  max-width: 100%;
+}

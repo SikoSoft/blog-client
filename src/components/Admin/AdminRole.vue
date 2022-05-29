@@ -168,3 +168,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@theme/mixins";
+
+.admin-role {
+  @include admin-list-item;
+}
+</style>

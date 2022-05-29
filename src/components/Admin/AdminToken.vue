@@ -163,3 +163,11 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@theme/mixins";
+
+.admin-token {
+  @include admin-list-item;
+}
+</style>
