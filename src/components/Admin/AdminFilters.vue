@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-filters" v-if="initialized">
+  <div class="admin-filters">
     <div class="admin-filters__show-id">
       <div class="admin-filters__show-id-toggle">
         <blog-toggle v-model="showId" />
@@ -27,7 +27,8 @@
         >
           <admin-filter
             :initial="{ ...filter }"
-            :rules="rules(filter.id)"
+            :rules="filter.rules"
+            :links="filter.links"
             :showId="showId"
           />
         </li>
@@ -35,7 +36,7 @@
     </fieldset>
     <fieldset class="admin-filters__new">
       <legend>{{ $strings.newFilter }}</legend>
-      <admin-filter key="new" :showId="showId" />
+      <admin-filter key="new" :showId="showId" :links="links" />
     </fieldset>
   </div>
 </template>
@@ -50,9 +51,14 @@ export default {
 
   components: { BlogToggle, AdminFilter },
 
+  props: {
+    filters: Array,
+    links: Array
+  },
+
   data() {
     return {
-      initialized: false,
+      //initialized: false,
       showId: 0,
       isDragging: false,
       draggedFilter: null,
@@ -62,11 +68,11 @@ export default {
   },
 
   computed: {
-    ...mapState(["filters", "filterRules"])
+    ...mapState(["filterRules"])
   },
 
   methods: {
-    ...mapActions(["getFilters", "getFilterRules", "setFilterOrder"]),
+    ...mapActions(["getFilterRules", "setFilterOrder"]),
 
     rules(filterId) {
       return (
@@ -122,9 +128,11 @@ export default {
   },
 
   mounted() {
+    /*
     Promise.all([this.getFilters(), this.getFilterRules()]).then(() => {
       this.initialized = true;
     });
+    */
   }
 };
 </script>

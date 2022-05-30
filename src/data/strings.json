@@ -122,6 +122,7 @@
   "newBanner": "New banner",
   "selectABanner": "Select a banner",
   "newRole": "New role",
+  "rules": "Rules",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

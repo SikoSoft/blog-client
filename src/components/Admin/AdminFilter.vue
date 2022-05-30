@@ -25,37 +25,36 @@
           :placeholder="$strings.id"
           type="text"
           v-model="newId"
-          @keydown="handleUpdate"
         />
       </div>
       <div class="admin-filter__field">
-        <blog-button
-          class="admin-filter__image-upload"
-          :text="$strings.upload"
-          :action="selectImage"
-        />
-        <input
-          ref="image"
-          class="admin-filter__input admin-filter__input-image"
-          :placeholder="$strings.image"
-          type="text"
-          :value="image"
-          @keydown="handleUpdate"
-          @change="handleUpdate"
-        />
-        <img class="admin-filter__image" :src="image" v-if="image" />
+        <blog-image-input type="filter" v-model="image" />
       </div>
-      <div class="admin-filter__field admin-filter__delete" v-if="id">
+      <div class="admin-filter__field">
         <blog-button
+          v-if="addLink"
+          create
+          :text="$strings.add"
+          :action="addFilter"
+        />
+        <blog-button
+          v-if="updateLink"
+          create
+          :text="$strings.update"
+          :action="updateFilter"
+        />
+        <blog-button
+          v-if="deleteLink"
           destroy
           :text="$strings.delete"
           :action="showDeleteDialog"
         />
       </div>
     </div>
-    <div class="admin-filter__rules">
+    <fieldset class="admin-filter__rules">
+      <legend>{{ $strings.rules }}</legend>
       <admin-filter-rules :rules="rules" :filterId="id" />
-    </div>
+    </fieldset>
     <blog-confirmation-dialog
       :title="$strings.deleteFilter"
       :message="$strings.confirmDeleteFilter"
@@ -76,19 +75,26 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
 import BlogButton from "@/components/BlogButton";
+import BlogImageInput from "@/components/BlogImageInput";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import AdminFilterRules from "@/components/Admin/AdminFilterRules";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
-import imageHandler from "@/util/imageHandler";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-filter",
 
-  components: { BlogButton, BlogConfirmationDialog, AdminFilterRules },
+  components: {
+    BlogButton,
+    BlogImageInput,
+    BlogConfirmationDialog,
+    AdminFilterRules
+  },
 
   props: {
+    links: Array,
     initial: { type: Object },
     rules: { type: Array },
     showId: { type: Number }
@@ -105,44 +111,46 @@ export default {
     };
   },
 
-  mounted() {
-    this.imageHandler = new imageHandler({
-      type: "filter",
-      setProgress: this.setProgress,
-      setImage: this.setImage,
-      uploadImage: this.links.uploadImage,
-      headers: this.headers
-    });
-  },
+  mounted() {},
 
   computed: {
-    ...mapState(["links"]),
+    ...mapState(["filters"]),
 
-    ...mapGetters(["headers"])
+    ...mapGetters(["headers"]),
+
+    addLink() {
+      return this.link("POST", "filter");
+    },
+
+    updateLink() {
+      return this.link("PUT", "filter");
+    },
+
+    deleteLink() {
+      return this.link("DELETE", "filter");
+    },
+
+    payload() {
+      return {
+        id: this.id,
+        newId: this.newId,
+        label: this.label,
+        image: this.image
+      };
+    }
   },
 
   methods: {
-    ...mapActions([
-      "createFilter",
-      "updateFilter",
-      "deleteFilter",
-      "setProgress"
-    ]),
+    ...linkHandlers,
 
-    selectImage() {
-      this.imageHandler.selectLocalImage();
-    },
+    ...mapActions(["apiRequest"]),
 
-    setImage(url) {
-      this.image = url;
-      this.handleUpdate();
-    },
+    ...mapMutations(["setFilters"]),
 
     handleLabelUpdate() {
       if (this.showId) {
         this.newId = sanitizeTitle(this.label);
       }
-      this.handleUpdate();
     },
 
     handleUpdate() {
@@ -171,6 +179,30 @@ export default {
       }, 500);
     },
 
+    async addFilter() {
+      const { filter } = await this.apiRequest({
+        ...this.addLink,
+        body: this.payload
+      });
+      this.setFilters({ filters: [...this.state.filters, filter] });
+    },
+
+    async updateFilter() {
+      const { filter } = await this.apiRequest({
+        ...this.updateLink,
+        body: this.payload
+      });
+      this.setFilters({
+        filters: this.filters.map(stateFilter =>
+          stateFilter.id === this.payload.id ? filter : stateFilter
+        )
+      });
+    },
+
+    async deleteFilter() {
+      await this.apiRequest(this.deleteLink);
+    },
+
     showDeleteDialog() {
       this.deleteDialogIsOpen = true;
     },
@@ -194,7 +226,7 @@ export default {
 
   .admin-filter__fields {
     margin: $space-small 0;
-    display: flex;
+    //display: flex;
   }
 
   &__field {
@@ -233,7 +265,6 @@ export default {
 
   &__delete {
     flex: 0;
-    opacity: 0;
     overflow: hidden;
     vertical-align: top;
     padding: $space-xxxsmall 0;
@@ -241,16 +272,6 @@ export default {
     button {
       vertical-align: top;
       float: right;
-    }
-  }
-
-  &:hover:not(.admin-filter--new) {
-    .admin-filter__field:nth-child(3) {
-      flex: 1.75;
-    }
-    .admin-filter__delete {
-      flex: 0.25;
-      opacity: 1;
     }
   }
 

@@ -155,7 +155,7 @@ export default {
   },
 
   setFilters: (state, { filters }) => {
-    state.filters = filters;
+    Vue.set(state, "filters", filters);
   },
 
   deleteEntry: (state, { id }) => {
