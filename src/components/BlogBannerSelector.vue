@@ -1,22 +1,35 @@
 <template>
-  <select class="blog-banner-selector" v-if="ready" @change="change">
-    <option value="0" :selected="0 === value">{{
-      $strings.selectABanner
-    }}</option>
-    <option
-      v-for="banner in banners"
-      :key="banner.id"
-      :selected="banner.id === value"
-      >{{ banner.id }}</option
-    >
-  </select>
+  <div class="blog-banner-selector">
+    <select v-if="ready" @change="change">
+      <option value="0" :selected="0 === value">{{
+        $strings.selectABanner
+      }}</option>
+      <option
+        v-for="banner in banners"
+        :key="banner.id"
+        :selected="banner.id === value"
+        :value="banner.id"
+        >{{ banner.heading }} ({{ banner.id }})</option
+      >
+    </select>
+    <div class="blog-banner-selector__preview" v-if="selectedBanner">
+      <blog-banner
+        :heading="selectedBanner.heading"
+        :caption="selectedBanner.caption"
+        :image="selectedBanner.image"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
+import BlogBanner from "@/components/BlogBanner";
 
 export default {
   name: "blog-banner-selector",
+
+  components: { BlogBanner },
 
   props: {
     value: Number
@@ -51,6 +64,12 @@ export default {
 
     ready() {
       return this.contextIsReady(this.context);
+    },
+
+    selectedBanner() {
+      return (
+        this.banners.filter(banner => banner.id === this.value)[0] || false
+      );
     }
   },
 
