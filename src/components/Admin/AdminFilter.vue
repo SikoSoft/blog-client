@@ -10,7 +10,7 @@
           :placeholder="$strings.title"
           type="text"
           v-model="label"
-          @keydown="handleLabelUpdate"
+          @keyup="handleLabelUpdate"
         />
       </div>
       <div
@@ -51,9 +51,9 @@
         />
       </div>
     </div>
-    <fieldset class="admin-filter__rules">
+    <fieldset class="admin-filter__rules" v-if="id">
       <legend>{{ $strings.rules }}</legend>
-      <admin-filter-rules :rules="rules" :filterId="id" />
+      <admin-filter-rules :rules="rules" :filterId="id" :links="newRuleLinks" />
     </fieldset>
     <blog-confirmation-dialog
       :title="$strings.deleteFilter"
@@ -128,6 +128,10 @@ export default {
 
     deleteLink() {
       return this.link("DELETE", "filter");
+    },
+
+    newRuleLinks() {
+      return [this.link("POST", "filterRule")];
     },
 
     payload() {

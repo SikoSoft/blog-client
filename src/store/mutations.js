@@ -237,35 +237,6 @@ export default {
     Vue.set(state, "filters", newFilters);
   },
 
-  setFilterRules: (state, { rules }) => {
-    Vue.set(state, "filterRules", rules);
-  },
-
-  addFilterRule: (state, { filterId, id, type, value, operator }) => {
-    Vue.set(state, "filterRules", [
-      ...state.filterRules,
-      { filter_id: filterId, id, type, value, operator }
-    ]);
-  },
-
-  deleteFilterRule: (state, { id }) => {
-    Vue.set(
-      state,
-      "filterRules",
-      state.filterRules.filter(filter => filter.id !== id)
-    );
-  },
-
-  updateFilterRule: (state, payload) => {
-    Vue.set(
-      state,
-      "filterRules",
-      state.filterRules.map(rule =>
-        rule.id === payload.id ? { ...rule, ...payload } : rule
-      )
-    );
-  },
-
   setRoleRights: (state, { roleRights }) => {
     Vue.set(state, "roleRights", roleRights);
   },

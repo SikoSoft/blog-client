@@ -2,10 +2,14 @@
   <div class="admin-filter-rules">
     <ul class="admin-filter-rules__list">
       <li v-for="rule in rules" :key="rule.id">
-        <admin-filter-rule :filterId="filterId" :initial="{ ...rule }" />
+        <admin-filter-rule
+          :filterId="filterId"
+          :initial="{ ...rule }"
+          :links="rule.links"
+        />
       </li>
       <li>
-        <admin-filter-rule :filterId="filterId" />
+        <admin-filter-rule :filterId="filterId" :links="links" />
       </li>
     </ul>
   </div>
@@ -20,6 +24,7 @@ export default {
   components: { AdminFilterRule },
 
   props: {
+    links: Array,
     rules: { type: Array },
     filterId: { type: String }
   }
