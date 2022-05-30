@@ -39,6 +39,10 @@ export default {
     this.update();
   },
 
+  async updated() {
+    this.update();
+  },
+
   beforeDestroy() {
     this.removeContext(this.context);
   },
@@ -66,8 +70,9 @@ export default {
     ]),
 
     async update() {
+      await this.initialize();
       if (this.firstUpdate && this.contextIsReady(this.context)) {
-        await this.initialize();
+        this.firstUpdate = false;
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
           { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
@@ -76,7 +81,6 @@ export default {
         this.tagRolesFetching = true;
         const response = await this.getTagRoles({ links: this.links });
         this.tagRolesLinks = response.links;
-        this.firstUpdate = false;
       }
     }
   },

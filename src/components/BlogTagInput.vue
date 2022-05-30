@@ -40,7 +40,11 @@ export default {
   props: {
     tagsToFilter: Array,
     initialValue: String,
-    links: Array
+    links: Array,
+    clearOnEnter: {
+      type: Boolean,
+      default: true
+    }
   },
 
   data() {
@@ -140,11 +144,13 @@ export default {
 
     addTag() {
       this.$emit("tagEntered", { tag: this.tag.toLowerCase() });
-      this.tag = "";
-      this.autoTags = this.autoTags.filter(
-        tag => !this.tagsToFilter.includes(tag)
-      );
-      this.autoTagSelected = "";
+      if (this.clearOnEnter) {
+        this.tag = "";
+        this.autoTags = this.autoTags.filter(
+          tag => !this.tagsToFilter.includes(tag)
+        );
+        this.autoTagSelected = "";
+      }
     },
 
     deleteTag(tag) {

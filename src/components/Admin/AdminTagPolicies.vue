@@ -4,6 +4,7 @@
       @tagChanged="tagChanged"
       @tagEntered="tagEntered"
       @newLinks="setAddLinks"
+      :clearOnEnter="false"
       :initialValue="tag"
       :tagsToFilter="[]"
       :links="links"
