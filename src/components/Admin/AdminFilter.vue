@@ -131,7 +131,9 @@ export default {
     },
 
     newRuleLinks() {
-      return [this.link("POST", "filterRule")];
+      return this.link("POST", "filterRule")
+        ? [this.link("POST", "filterRule")]
+        : [];
     },
 
     payload() {
@@ -183,12 +185,23 @@ export default {
       }, 500);
     },
 
+    reset() {
+      this.id = "";
+      this.newId = "";
+      this.label = "";
+      this.image = "";
+    },
+
     async addFilter() {
+      if (!this.id) {
+        this.id = sanitizeTitle(this.label);
+      }
       const { filter } = await this.apiRequest({
         ...this.addLink,
         body: this.payload
       });
-      this.setFilters({ filters: [...this.state.filters, filter] });
+      this.setFilters({ filters: [...this.filters, filter] });
+      this.reset();
     },
 
     async updateFilter() {
@@ -205,6 +218,9 @@ export default {
 
     async deleteFilter() {
       await this.apiRequest(this.deleteLink);
+      this.setFilters({
+        filters: [...this.filters.filter(filter => filter.id !== this.id)]
+      });
     },
 
     showDeleteDialog() {
