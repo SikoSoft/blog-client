@@ -1,6 +1,13 @@
 <template>
   <div class="admin-block-content">
-    <textarea v-model="content"></textarea>
+    <select v-model="type">
+      <option v-for="blockType of types" :key="blockType" :value="blockType">{{
+        $strings.blockTypes[`CODE_${blockType}`]
+      }}</option>
+    </select>
+    <div class="admin-block-content__content">
+      <textarea v-model="content"></textarea>
+    </div>
     <div class="admin-block-content__buttons">
       <blog-button
         create
@@ -25,9 +32,10 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import BlogButton from "@/components/BlogButton";
 import linkHandlers from "@/shared/linkHandlers";
+import { blockTypes } from "blog-spec";
 
 export default {
   name: "admin-block-content",
@@ -36,16 +44,29 @@ export default {
 
   props: {
     links: Array,
-    initial: Object
+    initial: Object,
+    blockId: Number
   },
 
   data() {
     return {
+      types: Object.values(blockTypes),
+      type: this?.initial?.type || 0,
       content: this?.initial?.content || ""
     };
   },
 
   computed: {
+    ...mapState(["blocks"]),
+
+    payload() {
+      return {
+        type: this.type,
+        block_id: this.blockId,
+        content: this.content
+      };
+    },
+
     addLink() {
       return this.link("POST", "blockContent");
     },
@@ -64,14 +85,22 @@ export default {
 
     ...mapActions(["apiRequest"]),
 
-    ...mapMutations(["setBlockContent"]),
+    ...mapMutations(["setBlocks"]),
 
     async addContent() {
-      await this.apiRequest(this.addLink);
+      const { content } = await this.apiRequest({
+        ...this.addLink,
+        body: this.payload
+      });
+      console.log("content", content);
     },
 
     async updateContent() {
-      await this.apiRequest(this.updateLink);
+      const { content } = await this.apiRequest({
+        ...this.updateLink,
+        body: this.payload
+      });
+      console.log("content", content);
     },
 
     async deleteContent() {
@@ -87,6 +116,14 @@ export default {
 
 .admin-block-content {
   @include admin-list-item;
+
+  &__content {
+    textarea {
+      width: 100%;
+      height: 10rem;
+      box-sizing: border-box;
+    }
+  }
 
   &__buttons {
     margin-top: $space;

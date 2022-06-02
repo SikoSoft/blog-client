@@ -7,9 +7,10 @@
         v-for="contentRow of content"
         :key="contentRow.id"
         :initial="contentRow"
+        :blockId="id"
         :links="contentRow.links"
       />
-      <admin-block-content :links="addContentLinks" />
+      <admin-block-content :blockId="id" :links="links" />
     </fieldset>
     <div class="admin-block__buttons">
       <blog-button

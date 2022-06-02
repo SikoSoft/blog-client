@@ -4,7 +4,7 @@
       v-for="block of blocks"
       :key="block.id"
       :initial="block"
-      :links="block.links"
+      :links="[...block.links, ...links]"
     />
     <admin-block :links="links" />
   </div>

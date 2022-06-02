@@ -4,6 +4,8 @@ import { arrayUnique, arrayHasObject } from "@/util/array";
 import strings from "@/data/strings.json";
 import { link } from "@/shared/linkHandlers";
 
+const promises = {};
+
 export default {
   initialize({ state, commit, getters }, force) {
     if (state.initialized && !force) {
@@ -662,5 +664,24 @@ export default {
     );
     commit("setBanners", { banners: response.banners });
     return response;
+  },
+
+  async getBlocks({ commit, state, dispatch }) {
+    if (state.blocks.length) {
+      return state.blocks;
+    }
+
+    if (typeof promises.getBlocks === "undefined") {
+      promises.getBlocks = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link("GET", "blocks", state.links))
+          .then(response => {
+            commit("setBlocks", { blocks: response.blocks });
+            resolve(response);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getBlocks;
   }
 };

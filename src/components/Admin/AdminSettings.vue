@@ -32,7 +32,13 @@ import AdminSetting from "@/components/Admin/AdminSetting";
 
 const settingGroups = {
   roles: ["role_admin", "role_guest"],
-  ui: ["header_banner", "toast_life", "show_powered_by", "footer_body"],
+  ui: [
+    "header_banner",
+    "toast_life",
+    "show_powered_by",
+    "sidebar_block",
+    "footer_block"
+  ],
   entries: [
     "per_load",
     "teaser_mode",
