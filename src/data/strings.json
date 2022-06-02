@@ -123,6 +123,15 @@
   "selectABanner": "Select a banner",
   "newRole": "New role",
   "rules": "Rules",
+  "blocks": "Blocks",
+  "context": "Context",
+  "newContent": "New content",
+  "newContext": "New context",
+  "deleteBlock": "Delete block",
+  "confirmDeleteBlock": "Are you sure you want to delete this block?",
+  "blockAdded": "The block has been added.",
+  "blockUpdated": "The block has been updated.",
+  "blockDeleted": "The block has been deleted.",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",
@@ -221,6 +230,7 @@
     "manage_filters": "Manage filters",
     "manage_images": "Manage images",
     "manage_banners": "Manage banners",
+    "manage_blocks": "Manage blocks",
     "upload_image": "Upload image"
   }
 }

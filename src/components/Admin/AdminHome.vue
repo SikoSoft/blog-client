@@ -26,7 +26,8 @@ export default {
         "filters",
         "tokens",
         "images",
-        "banners"
+        "banners",
+        "blocks"
       ]
     };
   },

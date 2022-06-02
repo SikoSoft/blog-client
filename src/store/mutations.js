@@ -326,5 +326,9 @@ export default {
 
   setHeader: (state, { header }) => {
     state.header = header;
+  },
+
+  setBlocks: (state, { blocks }) => {
+    Vue.set(state, "blocks", blocks);
   }
 };
