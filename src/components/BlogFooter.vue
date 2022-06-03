@@ -2,6 +2,10 @@
   <div class="blog-footer">
     <div class="blog-footer__inner">
       <template v-if="settings.show_powered_by">{{ poweredBy }}</template>
+      <blog-block-injector
+        v-if="settings.footer_block"
+        :id="settings.footer_block"
+      />
     </div>
   </div>
 </template>
@@ -9,9 +13,11 @@
 <script>
 import { mapState } from "vuex";
 import { version, displayName } from "blog-spec";
+import BlogBlockInjector from "@/components/BlogBlockInjector";
 import { parseVars } from "@/util/strings.js";
 
 export default {
+  components: { BlogBlockInjector },
   name: "blog-footer",
 
   computed: {

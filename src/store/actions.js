@@ -4,7 +4,7 @@ import { arrayUnique, arrayHasObject } from "@/util/array";
 import strings from "@/data/strings.json";
 import { link } from "@/shared/linkHandlers";
 
-const promises = {};
+const promises = { getBlockById: {} };
 
 export default {
   initialize({ state, commit, getters }, force) {
@@ -617,8 +617,9 @@ export default {
     commit("setContextInitialized", { status: false });
     commit("setContext", { context: [...state.context, context] });
 
+    let response;
     if (state.initialized && !arrayHasObject(state.contextHistory, context)) {
-      await dispatch("getContextLinks");
+      response = await dispatch("getContextLinks");
     } else {
       commit("setContextInitialized", { status: true });
     }
@@ -626,10 +627,11 @@ export default {
     commit("setContextHistory", {
       contextHistory: arrayUnique([...state.contextHistory, context])
     });
+
+    return response;
   },
 
   removeContext: async ({ state, commit }, context) => {
-    console.log("removeContext", JSON.stringify(context));
     commit("setContext", {
       context: [
         ...state.context.filter(
@@ -647,6 +649,7 @@ export default {
     );
     commit("setLinks", { links: arrayUnique([...state.links, ...links]) });
     commit("setContextInitialized", { status: true });
+    return links;
   },
 
   getSettings: async ({ commit, dispatch }, { links }) => {
@@ -683,5 +686,26 @@ export default {
     }
 
     return promises.getBlocks;
+  },
+
+  async getBlock({ commit, state, dispatch }, { id, link }) {
+    if (state.blocksById[id]) {
+      return state.blocksById[id];
+    }
+
+    console.log(promises);
+
+    if (typeof promises.getBlockById[id] === "undefined") {
+      promises.getBlockById[id] = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link)
+          .then(response => {
+            commit("setBlock", { block: response.block });
+            resolve(response);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getBlockById[id];
   }
 };

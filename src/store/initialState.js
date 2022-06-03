@@ -63,5 +63,6 @@ export default {
   settingsConfig: [],
   banners: [],
   header: {},
-  blocks: []
+  blocks: [],
+  blocksById: {}
 };

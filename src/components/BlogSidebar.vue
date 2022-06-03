@@ -1,27 +1,18 @@
 <template>
   <aside class="blog-sidebar" v-if="show">
-    <blog-at-a-glance v-if="filters.length" :filters="filters" />
-    <blog-block
-      :context="[
-        { type: 'setting_is_not', payload: { id: 'github_feed', value: '' } }
-      ]"
-    >
-      <blog-github-feed v-if="feed.length" :feed="feed" />
-    </blog-block>
+    <blog-block-injector :id="settings.sidebar_block" />
   </aside>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import BlogBlock from "@/components/BlogBlock";
-import BlogAtAGlance from "@/components/BlogAtAGlance";
-import BlogGithubFeed from "@/components/BlogGithubFeed";
+import BlogBlockInjector from "@/components/BlogBlockInjector";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-sidebar",
 
-  components: { BlogAtAGlance, BlogGithubFeed, BlogBlock },
+  components: { BlogBlockInjector },
 
   props: {
     filters: Array
@@ -33,15 +24,7 @@ export default {
     };
   },
 
-  mounted() {
-    if (this.settings.github_feed) {
-      fetch(this.settings.github_feed)
-        .then(response => response.json())
-        .then(json => {
-          this.feed = json;
-        });
-    }
-  },
+  mounted() {},
 
   methods: {
     ...linkHandlers
@@ -51,10 +34,7 @@ export default {
     ...mapState(["settings"]),
 
     show() {
-      if (this.feed.length || this.filters.length) {
-        return true;
-      }
-      return false;
+      return !!this.settings.show_sidebar && !!this.settings.sidebar_block;
     }
   }
 };

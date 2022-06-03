@@ -330,5 +330,9 @@ export default {
 
   setBlocks: (state, { blocks }) => {
     Vue.set(state, "blocks", blocks);
+  },
+
+  setBlock: (state, { block }) => {
+    state.blocksById[block.id] = block;
   }
 };

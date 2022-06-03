@@ -33,3 +33,13 @@ All includes/requires should omit the file extension when possible.
 Use "isOpen" when referring to the state of something, not just "open". Verbs should be reserved for actions, not states.
 
 Use affirmative terminology in all cases. isOpen rather than isClosed.
+
+# To Do
+
+Make as many low level (atomic) components stateless. They should be rendered based on their props alone.
+
+Devise a naming pattern or wrapping structure for components that makes for a clear distinction between pure and impure components (those that trigger API calls, require additional context dependencies, etc). It is starting to become difficult to determine just by looking at a component whether it will trigger API calls or simply render data it is provided as properties.
+
+Suggestions for a pattern that allows for the flexibility, but defines the clear boundaries of usage and naming, are very much welcome.
+
+Create clear separation of conerns regarding whether it is the components duty to issue API requests, or to keep all code related to API communication in the state actions. A high degree of mixing is happening in regard to this at the moment. Where does API communication make more sense to go? Should components own all their concerns, should the API communication be abstracted to an actions file, even if they may only be used in one context or for one purpose? What are the benefits of each?
