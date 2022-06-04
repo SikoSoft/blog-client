@@ -644,7 +644,8 @@ export default {
   },
 
   getContextLinks: async ({ state, dispatch, commit }) => {
-    const digest = hash(JSON.stringify(state.context));
+    const digest = await hash(JSON.stringify(state.context));
+
     if (typeof promises.getContextLinks[digest] === "undefined") {
       promises.getContextLinks[digest] = new Promise((resolve, reject) => {
         dispatch("apiRequest", link("GET", "contextLinks", state.links))
@@ -702,8 +703,6 @@ export default {
     if (state.blocksById[id]) {
       return state.blocksById[id];
     }
-
-    console.log(promises);
 
     if (typeof promises.getBlockById[id] === "undefined") {
       promises.getBlockById[id] = new Promise((resolve, reject) => {

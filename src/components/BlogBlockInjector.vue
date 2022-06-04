@@ -38,7 +38,6 @@ export default {
 
   async created() {
     const response = await this.addContext(this.context);
-    console.log(this.id, "response", JSON.stringify(response));
     this.blockLinks = response;
   },
 
@@ -56,7 +55,11 @@ export default {
     ...mapGetters(["contextIsReady"]),
 
     getLink() {
-      return this.link("GET", "block", this.blockLinks);
+      return this.link(
+        "GET",
+        "block",
+        this.linksByRel(this.id, this.blockLinks)
+      );
     },
 
     ready() {
@@ -64,7 +67,7 @@ export default {
     },
 
     block() {
-      return this.blocksById?.[this.id] || false;
+      return this.blocksById[this.id] || false;
     }
   },
 
