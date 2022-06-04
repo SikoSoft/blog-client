@@ -3,8 +3,9 @@ import { uuid } from "@/util/uuid";
 import { arrayUnique, arrayHasObject } from "@/util/array";
 import strings from "@/data/strings.json";
 import { link } from "@/shared/linkHandlers";
+import { hash } from "../util/cryptography";
 
-const promises = { getBlockById: {} };
+const promises = { getBlockById: {}, getContextLinks: {} };
 
 export default {
   initialize({ state, commit, getters }, force) {
@@ -643,13 +644,22 @@ export default {
   },
 
   getContextLinks: async ({ state, dispatch, commit }) => {
-    const { links } = await dispatch(
-      "apiRequest",
-      link("GET", "contextLinks", state.links)
-    );
-    commit("setLinks", { links: arrayUnique([...state.links, ...links]) });
-    commit("setContextInitialized", { status: true });
-    return links;
+    const digest = hash(JSON.stringify(state.context));
+    if (typeof promises.getContextLinks[digest] === "undefined") {
+      promises.getContextLinks[digest] = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link("GET", "contextLinks", state.links))
+          .then(({ links }) => {
+            commit("setLinks", {
+              links: arrayUnique([...state.links, ...links])
+            });
+            commit("setContextInitialized", { status: true });
+            resolve(links);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getContextLinks[digest];
   },
 
   getSettings: async ({ commit, dispatch }, { links }) => {
