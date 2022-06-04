@@ -1,5 +1,5 @@
 <template>
-  <blog-block v-if="ready && blockLinks.length" v-bind="block">
+  <blog-block v-if="ready" v-bind="block">
     <template>
       <blog-block-content
         v-for="content of block.content"
@@ -79,7 +79,7 @@ export default {
     ...mapMutations(["setBlock"]),
 
     async update() {
-      if (this.ready && this.firstUpdate && this.getLink) {
+      if (this.ready && this.firstUpdate && this.getLink && !this.block) {
         this.firstUpdate = false;
         try {
           await this.getBlock({ id: this.id, link: this.getLink });

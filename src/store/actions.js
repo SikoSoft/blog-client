@@ -32,6 +32,11 @@ export default {
     return fetch(process.env.VUE_APP_INIT, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
+        if (json.blocks.length) {
+          for (const block of json.blocks) {
+            commit("setBlock", { block });
+          }
+        }
         commit("setUser", { user: { ...json.user } });
         commit("setRoles", { roles: json.roles });
         commit("setLinks", { links: json.links });
