@@ -133,6 +133,7 @@
   "blockUpdated": "The block has been updated.",
   "blockDeleted": "The block has been deleted.",
   "selectABlock": "Select a block...",
+  "selectAComponent": "Select a component...",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

@@ -6,7 +6,18 @@
       }}</option>
     </select>
     <div class="admin-block-content__content">
-      <textarea v-model="content"></textarea>
+      <template v-if="this.type === blockTypes.BLOCK_TYPE_COMPONENT">
+        <select v-model="content">
+          <option value="">{{ $strings.selectAComponent }}</option>
+          <option v-for="component of blockComponents" :key="component.id">{{
+            component.id
+          }}</option>
+        </select>
+        <admin-block-content-props :props="props" />
+      </template>
+      <template v-else>
+        <textarea v-model="content"></textarea>
+      </template>
     </div>
     <div class="admin-block-content__buttons">
       <blog-button
@@ -34,13 +45,15 @@
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
 import BlogButton from "@/components/BlogButton";
+import AdminBlockContentProps from "@/components/Admin/Blocks/BlockContentProps";
 import linkHandlers from "@/shared/linkHandlers";
-import { blockTypes } from "blog-spec";
+import { blockTypes, typeMap } from "blog-spec";
+import blockComponents from "@/data/blockComponents.json";
 
 export default {
   name: "admin-block-content",
 
-  components: { BlogButton },
+  components: { BlogButton, AdminBlockContentProps },
 
   props: {
     links: Array,
@@ -50,9 +63,12 @@ export default {
 
   data() {
     return {
+      blockTypes,
+      blockComponents,
       types: Object.values(blockTypes),
       type: this?.initial?.type || 0,
-      content: this?.initial?.content || ""
+      content: this?.initial?.content || "",
+      propValues: this?.initial?.props || []
     };
   },
 
@@ -77,6 +93,17 @@ export default {
 
     deleteLink() {
       return this.link("DELETE", "blockContent");
+    },
+
+    props() {
+      return blockComponents
+        .filter(component => component.id === this.content)?.[0]
+        ?.props.map(prop => ({
+          ...prop,
+          value: this.propValues.filter(
+            propValue => propValue.name === prop.id
+          )?.[0][typeMap[prop.type]]
+        }));
     }
   },
 
