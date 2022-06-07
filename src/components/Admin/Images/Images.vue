@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import AdminImageSize from "@/components/Admin/AdminImageSize";
+import AdminImageSize from "@/components/Admin/Images/ImageSize";
 
 export default {
   name: "admin-images",

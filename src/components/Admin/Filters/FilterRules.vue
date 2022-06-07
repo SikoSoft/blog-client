@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import AdminFilterRule from "@/components/Admin/AdminFilterRule";
+import AdminFilterRule from "@/components/Admin/Filters/FilterRule";
 
 export default {
   name: "admin-filter-rules",

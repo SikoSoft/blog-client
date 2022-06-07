@@ -43,7 +43,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import AdminFilter from "@/components/Admin/AdminFilter";
+import AdminFilter from "@/components/Admin/Filters/Filter";
 import BlogToggle from "@/components/BlogToggle";
 
 export default {

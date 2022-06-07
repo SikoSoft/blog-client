@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import AdminBanners from "@/components/Admin/AdminBanners";
+import AdminBanners from "@/components/Admin/Banners/Banners";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

@@ -28,7 +28,7 @@ import { mapState, mapActions, mapGetters } from "vuex";
 import spec from "blog-spec";
 import BlogTabs from "@/components/BlogTabs";
 import BlogTab from "@/components/BlogTab";
-import AdminSetting from "@/components/Admin/AdminSetting";
+import AdminSetting from "@/components/Admin/Settings/Setting";
 
 const settingGroups = {
   roles: ["role_admin", "role_guest"],

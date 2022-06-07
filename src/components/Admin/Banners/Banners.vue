@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import AdminBanner from "@/components/Admin/AdminBanner";
+import AdminBanner from "@/components/Admin/Banners/Banner";
 
 export default {
   name: "admin-banners",

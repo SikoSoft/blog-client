@@ -10,7 +10,7 @@
 
 <script>
 import { mapState, mapActions, mapGetters, mapMutations } from "vuex";
-import AdminFilters from "@/components/Admin/AdminFilters";
+import AdminFilters from "@/components/Admin/Filters/Filters";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

@@ -45,7 +45,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import AdminBlockContent from "@/components/Admin/AdminBlockContent";
+import AdminBlockContent from "@/components/Admin/Blocks/BlockContent";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import BlogButton from "@/components/BlogButton";
 import linkHandlers from "@/shared/linkHandlers";

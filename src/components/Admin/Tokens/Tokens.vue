@@ -17,7 +17,7 @@
 
 <script>
 import { mapActions, mapMutations } from "vuex";
-import AdminToken from "@/components/Admin/AdminToken";
+import AdminToken from "@/components/Admin/Tokens/Token";
 
 export default {
   name: "admin-tokens",

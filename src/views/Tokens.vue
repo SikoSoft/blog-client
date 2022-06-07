@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import AdminTokens from "@/components/Admin/AdminTokens";
+import AdminTokens from "@/components/Admin/Tokens/Tokens";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

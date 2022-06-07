@@ -43,7 +43,7 @@ import { mapActions, mapMutations } from "vuex";
 import spec from "blog-spec";
 import BlogButton from "@/components/BlogButton";
 import BlogRoleSelector from "@/components/BlogRoleSelector";
-import AdminRight from "@/components/Admin/AdminRight";
+import AdminRight from "@/components/Admin/Rights/Right";
 import linkHandlers from "@/shared/linkHandlers";
 
 const rightsGroups = {

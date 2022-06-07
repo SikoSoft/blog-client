@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import AdminBlock from "@/components/Admin/AdminBlock";
+import AdminBlock from "@/components/Admin/Blocks/Block";
 
 export default {
   name: "admin-blocks",

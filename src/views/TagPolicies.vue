@@ -11,7 +11,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
-import AdminTagPolicies from "@/components/Admin/AdminTagPolicies";
+import AdminTagPolicies from "@/components/Admin/TagRoles/TagRoles";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

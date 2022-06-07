@@ -79,7 +79,7 @@ import { mapActions, mapGetters, mapState, mapMutations } from "vuex";
 import BlogButton from "@/components/BlogButton";
 import BlogImageInput from "@/components/BlogImageInput";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
-import AdminFilterRules from "@/components/Admin/AdminFilterRules";
+import AdminFilterRules from "@/components/Admin/Filters/FilterRules";
 import { sanitizeTitle } from "@/util/sanitizeTitle.js";
 import linkHandlers from "@/shared/linkHandlers";
 
