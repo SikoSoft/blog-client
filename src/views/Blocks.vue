@@ -39,6 +39,7 @@ export default {
   },
 
   async updated() {
+    console.log("blocks updated");
     this.update();
   },
 

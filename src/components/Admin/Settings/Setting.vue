@@ -1,36 +1,19 @@
 <template>
   <div class="admin-setting">
-    <div class="admin-setting__label">{{ label }}</div>
-    <div class="admin-setting__input">
-      <template v-if="type === 'list'">
-        <blog-role-selector v-model="value" v-if="listSource === 'roles'" />
-        <blog-banner-selector v-model="value" v-if="listSource === 'banners'" />
-        <blog-block-selector v-model="value" v-if="listSource === 'blocks'" />
-      </template>
-      <template v-if="type === 'number'">
-        <input
-          type="text"
-          class="admin-setting__input-number"
-          :maxlength="maxLength ? maxLength : ''"
-          v-model="value"
-        />
-      </template>
-      <template v-if="type === 'text'">
-        <input type="text" class="admin-setting__input-text" v-model="value" />
-      </template>
-      <template v-if="type === 'toggle'">
-        <blog-toggle v-model="value" />
-      </template>
-    </div>
+    <blog-type-input
+      :id="id"
+      :label="label"
+      :type="type"
+      :listSource="listSource"
+      :initialValue="value"
+      @change="handleChange"
+    />
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import BlogRoleSelector from "@/components/BlogRoleSelector";
-import BlogBannerSelector from "@/components/BlogBannerSelector";
-import BlogBlockSelector from "@/components/BlogBlockSelector";
-import BlogToggle from "@/components/BlogToggle";
+import { mapActions } from "vuex";
+import BlogTypeInput from "@/components/BlogTypeInput";
 
 export default {
   name: "admin-setting",
@@ -49,10 +32,7 @@ export default {
   },
 
   components: {
-    BlogRoleSelector,
-    BlogBannerSelector,
-    BlogBlockSelector,
-    BlogToggle
+    BlogTypeInput
   },
 
   data() {
@@ -61,39 +41,12 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters({ listOptions: "settingListOptions" })
-  },
-
   methods: {
     ...mapActions(["setSetting"]),
 
-    handleChange() {
-      const payload = { links: this.links, id: this.id, value: this.value };
-      this.setSetting(payload);
-    }
-  },
-
-  watch: {
-    value() {
-      this.handleChange();
+    handleChange(value) {
+      this.setSetting({ links: this.links, id: this.id, value });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.admin-setting {
-  margin: 1.5rem 0;
-
-  &__label {
-    margin: 0.5rem 0;
-  }
-
-  &__input {
-    &-text {
-      width: 80vw;
-    }
-  }
-}
-</style>

@@ -134,6 +134,9 @@
   "blockDeleted": "The block has been deleted.",
   "selectABlock": "Select a block...",
   "selectAComponent": "Select a component...",
+  "contentAdded": "The content has been added.",
+  "contentUpdated": "The content has been updated.",
+  "contentDeleted": "The content has been deleted.",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

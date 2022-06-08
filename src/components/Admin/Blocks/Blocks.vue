@@ -4,6 +4,8 @@
       v-for="block of blocks"
       :key="block.id"
       :initial="block"
+      :content="block.content"
+      :context="block.context"
       :links="[...block.links, ...links]"
     />
     <admin-block :links="links" />
@@ -23,6 +25,10 @@ export default {
   props: {
     blocks: Array,
     links: Array
+  },
+
+  updated() {
+    console.log("AdminBlocks updated");
   }
 };
 </script>

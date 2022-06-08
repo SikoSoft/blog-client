@@ -61,6 +61,8 @@ export default {
 
   props: {
     initial: Object,
+    content: [],
+    context: [],
     links: Array
   },
 
@@ -68,8 +70,6 @@ export default {
     return {
       id: this?.initial?.id || 0,
       name: this?.initial?.name || "",
-      content: this?.initial?.content || [],
-      context: this?.initial?.context || [],
       deleteDialogIsOpen: false
     };
   },
@@ -149,8 +149,6 @@ export default {
     reset() {
       this.id = 0;
       this.name = "";
-      this.context = [];
-      this.content = [];
     },
 
     showDeleteDialog() {

@@ -13,7 +13,7 @@
             component.id
           }}</option>
         </select>
-        <admin-block-content-props :props="props" />
+        <admin-block-content-props :props="props" :contentId="id" />
       </template>
       <template v-else>
         <textarea v-model="content"></textarea>
@@ -66,6 +66,7 @@ export default {
       blockTypes,
       blockComponents,
       types: Object.values(blockTypes),
+      id: this?.initial?.id || 0,
       type: this?.initial?.type || 0,
       content: this?.initial?.content || "",
       propValues: this?.initial?.props || []
@@ -110,28 +111,54 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["apiRequest"]),
+    ...mapActions(["apiRequest", "addToast"]),
 
     ...mapMutations(["setBlocks"]),
 
     async addContent() {
-      const { content } = await this.apiRequest({
+      const { blockContent } = await this.apiRequest({
         ...this.addLink,
         body: this.payload
       });
-      console.log("content", content);
+      this.setBlocks({
+        blocks: this.blocks.map(block => ({
+          ...block,
+          content:
+            block.id !== this.blockId
+              ? block.content
+              : [...block.content, blockContent]
+        }))
+      });
+      this.reset();
+      this.addToast(this.$strings.contentAdded);
     },
 
     async updateContent() {
-      const { content } = await this.apiRequest({
+      const { blockContent } = await this.apiRequest({
         ...this.updateLink,
         body: this.payload
       });
-      console.log("content", content);
+      console.log("content", blockContent);
+      this.addToast(this.$strings.contentUpdated);
     },
 
     async deleteContent() {
       await this.apiRequest(this.deleteLink);
+      this.setBlocks({
+        blocks: this.blocks.map(block => ({
+          ...block,
+          content:
+            block.id !== this.blockId
+              ? block.content
+              : block.content.filter(content => content.id !== this.id)
+        }))
+      });
+      this.addToast(this.$strings.contentDeleted);
+    },
+
+    reset() {
+      this.type = 0;
+      this.content = "";
     }
   }
 };
