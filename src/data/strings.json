@@ -137,6 +137,8 @@
   "contentAdded": "The content has been added.",
   "contentUpdated": "The content has been updated.",
   "contentDeleted": "The content has been deleted.",
+  "deleteBlockContent": "Delete block content",
+  "confirmDeleteBlockContent": "Are you sure you want to delete this block content?",
   "githubEventTypes": {
     "IssuesEvent": "{action} issue {issue} in {repo}",
     "IssueCommentEvent": "Posted comment to {issue} in {repo}",

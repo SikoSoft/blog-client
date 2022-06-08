@@ -25,10 +25,6 @@ export default {
   props: {
     blocks: Array,
     links: Array
-  },
-
-  updated() {
-    console.log("AdminBlocks updated");
   }
 };
 </script>

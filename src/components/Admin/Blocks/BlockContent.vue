@@ -35,10 +35,18 @@
       <blog-button
         destroy
         v-if="deleteLink"
-        :action="deleteContent"
+        :action="showDeleteDialog"
         :text="$strings.delete"
       />
     </div>
+    <blog-confirmation-dialog
+      :title="$strings.deleteBlockContent"
+      :message="$strings.confirmDeleteBlockContent"
+      :isOpen="deleteDialogIsOpen"
+    >
+      <blog-button destroy :text="$strings.yes" :action="deleteContent" />
+      <blog-button :text="$strings.no" :action="hideDeleteDialog" />
+    </blog-confirmation-dialog>
   </div>
 </template>
 
@@ -46,6 +54,7 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import BlogButton from "@/components/BlogButton";
 import AdminBlockContentProps from "@/components/Admin/Blocks/BlockContentProps";
+import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import linkHandlers from "@/shared/linkHandlers";
 import { blockTypes, typeMap } from "blog-spec";
 import blockComponents from "@/data/blockComponents.json";
@@ -53,7 +62,7 @@ import blockComponents from "@/data/blockComponents.json";
 export default {
   name: "admin-block-content",
 
-  components: { BlogButton, AdminBlockContentProps },
+  components: { BlogButton, BlogConfirmationDialog, AdminBlockContentProps },
 
   props: {
     links: Array,
@@ -63,6 +72,7 @@ export default {
 
   data() {
     return {
+      deleteDialogIsOpen: false,
       blockTypes,
       blockComponents,
       types: Object.values(blockTypes),
@@ -159,6 +169,14 @@ export default {
     reset() {
       this.type = 0;
       this.content = "";
+    },
+
+    showDeleteDialog() {
+      this.deleteDialogIsOpen = true;
+    },
+
+    hideDeleteDialog() {
+      this.deleteDialogIsOpen = false;
     }
   }
 };

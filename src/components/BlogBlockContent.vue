@@ -61,7 +61,6 @@ export default {
             prop => prop.name === propConfig.id
           )?.[0];
           if (propRow) {
-            console.log("propRow", propRow);
             props[propConfig.id] = propRow[typeMap[propConfig.type]];
           }
         }
