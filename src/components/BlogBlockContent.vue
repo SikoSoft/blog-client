@@ -18,13 +18,14 @@
 <script>
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import BlockGithubFeed from "@/components/Blocks/GithubFeed/GithubFeed";
+import BlockAtAGlance from "@/components/Blocks/AtAGlance/AtAGlance";
 import blockComponents from "@/data/blockComponents.json";
 import { typeMap } from "blog-spec";
 
 export default {
   name: "blog-block-content",
 
-  components: { BlockGithubFeed },
+  components: { BlockGithubFeed, BlockAtAGlance },
 
   props: {
     type: Number,
@@ -49,6 +50,8 @@ export default {
       switch (this.content) {
         case "GithubFeed":
           return BlockGithubFeed;
+        case "AtAGlance":
+          return BlockAtAGlance;
       }
       return BlockGithubFeed;
     },

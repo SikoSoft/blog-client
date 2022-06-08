@@ -1,6 +1,6 @@
 [
   {
-    "id": "BlogGithubFeed",
+    "id": "GithubFeed",
     "description": "Activity feed from a Github user account",
     "props": [
       {
@@ -18,7 +18,7 @@
     ]
   },
   {
-    "id": "BlogAtAGlance",
+    "id": "AtAGlance",
     "description": "Content sorted by with custom filters",
     "props": []
   }

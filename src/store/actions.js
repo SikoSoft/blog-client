@@ -266,22 +266,23 @@ export default {
     });
   },
 
-  async getFilters({ commit, state }) {
+  async getFilters({ commit, state, dispatch }, { link }) {
     if (state.filters.length) {
-      return Promise.resolve();
+      return state.filters;
     }
 
-    return new Promise((resolve, reject) => {
-      fetch(state.links.getFilters.href, {
-        method: state.links.getFilters.method
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setFilters", { filters: json });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    if (typeof promises.getFilters === "undefined") {
+      promises.getFilters = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link)
+          .then(({ filters }) => {
+            commit("setFilters", { filters });
+            resolve(filters);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getFilters;
   },
 
   updateEntryId: ({ commit, getters }, { id, newId }) => {

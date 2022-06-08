@@ -7,28 +7,13 @@
 <script>
 import { mapState } from "vuex";
 import BlogBlockInjector from "@/components/BlogBlockInjector";
-import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "blog-sidebar",
 
   components: { BlogBlockInjector },
 
-  props: {
-    filters: Array
-  },
-
-  data() {
-    return {
-      feed: []
-    };
-  },
-
   mounted() {},
-
-  methods: {
-    ...linkHandlers
-  },
 
   computed: {
     ...mapState(["settings"]),

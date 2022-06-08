@@ -12,7 +12,7 @@
         <blog-loader v-if="isLoading" />
         <router-view :links="routeLinks" />
       </main>
-      <blog-sidebar v-if="showSidebar" :filters="filters" />
+      <blog-sidebar v-if="showSidebar" />
     </div>
     <blog-toasts />
     <blog-progress-bar v-if="showProgressBar" />
