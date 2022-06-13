@@ -113,7 +113,7 @@ export default {
           ...prop,
           value: this.propValues.filter(
             propValue => propValue.name === prop.id
-          )?.[0][typeMap[prop.type]]
+          )?.[0]?.[typeMap[prop.type]]
         }));
     }
   },
