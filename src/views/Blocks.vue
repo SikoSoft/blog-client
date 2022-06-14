@@ -1,7 +1,7 @@
 <template>
   <div class="blocks">
     <admin-blocks
-      v-if="ready && blocks.length"
+      v-if="ready && !firstUpdate"
       :blocks="blocks"
       :links="blocksLinks"
     />
