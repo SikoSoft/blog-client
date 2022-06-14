@@ -139,6 +139,10 @@ export default {
       };
     },
 
+    route() {
+      return this.$route.name === "draft" ? "entry" : this.$route.name;
+    },
+
     showAdminPane() {
       return this.initialized && this.links && this.link("POST", "entry");
     },
@@ -147,12 +151,12 @@ export default {
       return (
         this.initialized &&
         this.settings.show_sidebar &&
-        this.viewsWithSidebar.includes(this.$route.name)
+        this.viewsWithSidebar.includes(this.route)
       );
     },
 
     routeLinks() {
-      return this.linksByEntity(this.$route.name);
+      return this.linksByEntity(this.route);
     }
   },
 

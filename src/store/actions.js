@@ -240,23 +240,18 @@ export default {
     commit("setLoading", { loading: false });
   },
 
-  async getDraft({ state, commit, getters }, { id, force }) {
+  async getDraft({ commit, getters, dispatch }, { id, force, links }) {
     if (getters.draftById(id) && !force) {
       return Promise.resolve();
     }
 
-    return new Promise((resolve, reject) => {
-      fetch(state.links.getDraft.href.replace("{id}", id), {
-        method: state.links.getDraft.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setDraftById", { id: id, draft: json });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    try {
+      const getLink = link("GET", "entry", links);
+      const { entry } = await dispatch("apiRequest", getLink);
+      commit("setDraftById", { id: id, draft: entry });
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   setNextEntriesBatch({ commit, state }, { type }) {
