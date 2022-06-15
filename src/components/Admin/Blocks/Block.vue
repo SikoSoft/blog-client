@@ -1,15 +1,26 @@
 <template>
   <div class="admin-block">
-    <input type="text" v-model="name" :placeholder="$strings.name" />
-    <fieldset class="admin-block__content">
+    <input
+      class="admin-block__name"
+      type="text"
+      v-model="name"
+      :placeholder="$strings.name"
+    />
+    <fieldset class="admin-block__content" v-if="links.length">
       <legend>{{ $strings.content }}</legend>
-      <admin-block-content
-        v-for="contentRow of content"
-        :key="contentRow.id"
-        :initial="contentRow"
-        :blockId="id"
-        :links="contentRow.links"
-      />
+      <blog-sortable-list @orderChanged="updateSortOrder">
+        <blog-sortable-item
+          v-for="contentRow of content"
+          :key="contentRow.id"
+          :id="contentRow.id"
+        >
+          <admin-block-content
+            :initial="contentRow"
+            :blockId="id"
+            :links="contentRow.links"
+          />
+        </blog-sortable-item>
+      </blog-sortable-list>
       <admin-block-content :blockId="id" :links="links" />
     </fieldset>
     <div class="admin-block__buttons">
@@ -47,6 +58,8 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import AdminBlockContent from "@/components/Admin/Blocks/BlockContent";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
+import BlogSortableList from "@/components/BlogSortableList";
+import BlogSortableItem from "@/components/BlogSortableItem";
 import BlogButton from "@/components/BlogButton";
 import linkHandlers from "@/shared/linkHandlers";
 
@@ -56,7 +69,9 @@ export default {
   components: {
     AdminBlockContent,
     BlogButton,
-    BlogConfirmationDialog
+    BlogConfirmationDialog,
+    BlogSortableList,
+    BlogSortableItem
   },
 
   props: {
@@ -109,7 +124,7 @@ export default {
 
     ...mapActions(["apiRequest", "addToast"]),
 
-    ...mapMutations(["setBlocks"]),
+    ...mapMutations(["setBlocks", "setBlockContent"]),
 
     async addBlock() {
       const { block } = await this.apiRequest({
@@ -157,6 +172,24 @@ export default {
 
     hideDeleteDialog() {
       this.deleteDialogIsOpen = false;
+    },
+
+    async updateSortOrder(order) {
+      const newBlockContent = [];
+      for (const contentRow of this.content) {
+        const { blockContent } = await this.apiRequest({
+          ...this.link("PUT", "blockContent", contentRow.links),
+          body: { order: order.indexOf(contentRow.id.toString()) + 1 }
+        });
+        newBlockContent.push(blockContent);
+      }
+      this.setBlockContent({
+        blockId: this.id,
+        content: newBlockContent.sort((a, b) =>
+          a.order < b.order ? -1 : a.order > b.order ? 1 : 0
+        )
+      });
+      this.addToast(this.$strings.blockContentOrderUpdated);
     }
   }
 };
@@ -168,6 +201,10 @@ export default {
 
 .admin-block {
   @include admin-list-item;
+
+  &__name {
+    width: 40%;
+  }
 
   &__context,
   &__content,

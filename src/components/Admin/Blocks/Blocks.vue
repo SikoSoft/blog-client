@@ -6,14 +6,19 @@
       :initial="block"
       :content="block.content"
       :context="block.context"
-      :links="[...block.links, ...links]"
+      :links="[
+        ...block.links,
+        ...(contentLinks ? contentLinks : []),
+        ...(contextLinks ? contextLinks : [])
+      ]"
     />
-    <admin-block :links="links" />
+    <admin-block :links="blockLinks" />
   </div>
 </template>
 
 <script>
 import AdminBlock from "@/components/Admin/Blocks/Block";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-blocks",
@@ -25,6 +30,24 @@ export default {
   props: {
     blocks: Array,
     links: Array
+  },
+
+  computed: {
+    blockLinks() {
+      return this.linksByEntity("block");
+    },
+
+    contentLinks() {
+      return this.linksByEntity("blockContent");
+    },
+
+    contextLinks() {
+      return this.linksByEntity("blockContext");
+    }
+  },
+
+  methods: {
+    ...linkHandlers
   }
 };
 </script>

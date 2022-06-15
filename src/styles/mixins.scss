@@ -65,3 +65,33 @@
   border: 1px $color-secondary-border solid;
   max-width: 100%;
 }
+
+@mixin sortable-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  transform: all 0.3s;
+
+  &--dragging li * {
+    pointer-events: none;
+  }
+
+  li {
+    transition: all 0.3s;
+    cursor: move;
+    border: 0.25rem transparent solid;
+    border-radius: 1rem;
+
+    &.sortable-item--moving {
+      transform: scale(0.9);
+      opacity: 0.25;
+    }
+
+    &.sortable-item--over {
+      border: 0.25rem $color-secondary-border dashed;
+      opacity: 0.9;
+      box-shadow: 0 0 $space-large $color-box-glow;
+    }
+  }
+}
