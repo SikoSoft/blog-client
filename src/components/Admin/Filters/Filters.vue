@@ -8,22 +8,11 @@
     </div>
     <fieldset class="admin-filters__saved">
       <legend></legend>
-      <ul
-        class="admin-filters__list"
-        :class="{ 'admin-filters__list--dragging': isDragging }"
-      >
-        <li
-          :data-id="filter.id"
-          class="admin-filters__list-item"
+      <blog-sortable-list @orderChanged="updateSortOrder">
+        <blog-sortable-item
           v-for="filter in filters"
           :key="filter.id"
-          draggable="true"
-          @dragenter="dragEnter"
-          @dragleave="dragLeave"
-          @dragover="dragOver"
-          @dragstart="dragStart"
-          @dragend="dragEnd"
-          @drop="drop"
+          :id="filter.id"
         >
           <admin-filter
             :initial="{ ...filter }"
@@ -31,8 +20,8 @@
             :links="filter.links"
             :showId="showId"
           />
-        </li>
-      </ul>
+        </blog-sortable-item>
+      </blog-sortable-list>
     </fieldset>
     <fieldset class="admin-filters__new">
       <legend>{{ $strings.newFilter }}</legend>
@@ -42,14 +31,17 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import AdminFilter from "@/components/Admin/Filters/Filter";
 import BlogToggle from "@/components/BlogToggle";
+import BlogSortableList from "@/components/BlogSortableList";
+import BlogSortableItem from "@/components/BlogSortableItem";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-filters",
 
-  components: { BlogToggle, AdminFilter },
+  components: { BlogToggle, BlogSortableList, BlogSortableItem, AdminFilter },
 
   props: {
     filters: Array,
@@ -72,7 +64,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getFilterRules", "setFilterOrder"]),
+    ...mapActions([
+      "getFilterRules",
+      "setFilterOrder",
+      "apiRequest",
+      "addToast"
+    ]),
+
+    ...mapMutations(["setFilters"]),
+
+    ...linkHandlers,
 
     rules(filterId) {
       return (
@@ -80,65 +81,29 @@ export default {
       );
     },
 
-    dragEnter(e) {
-      e.currentTarget.classList.add("admin-filters__list-item--over");
-    },
-
-    dragLeave(e) {
-      e.currentTarget.classList.remove("admin-filters__list-item--over");
-    },
-
-    dragOver(e) {
-      e.preventDefault();
-    },
-
-    dragStart(e) {
-      this.isDragging = true;
-      this.draggedFilter = e.target;
-      e.target.classList.add("admin-filters__list-item--moving");
-      this.orderedFilters = this.filters.map(filter => filter.id);
-    },
-
-    dragEnd() {
-      const draggedId = this.draggedFilter.getAttribute("data-id");
-      const draggedIndex = this.orderedFilters.indexOf(draggedId);
-      const droppedIndex = this.orderedFilters.indexOf(
-        this.droppedFilter.getAttribute("data-id")
-      );
-      this.draggedFilter.classList.remove("admin-filters__list-item--moving");
-      const orderedFilters =
-        draggedIndex === droppedIndex
-          ? this.orderedFilters
-          : this.orderedFilters.filter(filterId => filterId !== draggedId);
-      if (draggedIndex !== droppedIndex) {
-        orderedFilters.splice(droppedIndex, 0, draggedId);
+    async updateSortOrder(order) {
+      const newFilters = [];
+      for (const filterRow of this.filters) {
+        const { filter } = await this.apiRequest({
+          ...this.link("PUT", "filter", filterRow.links),
+          body: { order: order.indexOf(filterRow.id.toString()) + 1 }
+        });
+        newFilters.push(filter);
       }
-      this.droppedFilter.classList.remove("admin-filters__list-item--over");
-      this.isDragging = false;
-      if (
-        JSON.stringify(this.orderedFilters) !== JSON.stringify(orderedFilters)
-      ) {
-        this.setFilterOrder({ orderedFilters });
-      }
-    },
-
-    drop(e) {
-      this.droppedFilter = e.target;
+      this.setFilters({
+        filters: newFilters.sort((a, b) =>
+          a.order < b.order ? -1 : a.order > b.order ? 1 : 0
+        )
+      });
+      this.addToast(this.$strings.filterOrderSaved);
     }
-  },
-
-  mounted() {
-    /*
-    Promise.all([this.getFilters(), this.getFilterRules()]).then(() => {
-      this.initialized = true;
-    });
-    */
   }
 };
 </script>
 
 <style lang="scss">
 @import "@theme/variables";
+@import "@theme/mixins";
 
 .admin-filters {
   &__show-id {
@@ -155,32 +120,7 @@ export default {
   }
 
   &__list {
-    width: 100%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    transform: all 0.3s;
-
-    &--dragging li * {
-      pointer-events: none;
-    }
-
-    &-item {
-      transition: all 0.3s;
-      cursor: move;
-      border: 0.25rem transparent solid;
-      border-radius: 1rem;
-
-      &--moving {
-        transform: scale(0.8);
-        opacity: 0.8;
-      }
-
-      &--over {
-        border: 0.25rem $color-primary-border dashed;
-        opacity: 0.9;
-      }
-    }
+    @include sortable-list;
   }
 
   &__saved {

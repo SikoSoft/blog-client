@@ -18,7 +18,7 @@ export default {
   name: "sortable-list-item",
 
   props: {
-    id: Number
+    id: [Number, String]
   },
 
   methods: {
