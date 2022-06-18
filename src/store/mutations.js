@@ -199,44 +199,6 @@ export default {
     Vue.set(state.entries[type].top, id, top);
   },
 
-  setFilter: (state, { newId, id, label, image }) => {
-    Vue.set(
-      state,
-      "filters",
-      state.filters.map(filter => {
-        if (filter.id === id) {
-          filter.id = newId;
-          filter.label = label;
-          filter.image = image;
-        }
-        return filter;
-      })
-    );
-  },
-
-  addFilter: (state, { id, label, image }) => {
-    Vue.set(state, "filters", [...state.filters, { id, label, image }]);
-  },
-
-  deleteFilter: (state, { id }) => {
-    Vue.set(
-      state,
-      "filters",
-      state.filters.filter(filter => filter.id !== id)
-    );
-  },
-
-  setFilterOrder: (state, { orderedFilters }) => {
-    const newFilters = [];
-    orderedFilters.forEach(filterId => {
-      const filters = state.filters.filter(f => f.id === filterId);
-      if (filters.length) {
-        newFilters.push(filters[0]);
-      }
-    });
-    Vue.set(state, "filters", newFilters);
-  },
-
   setRoleRights: (state, { roleRights }) => {
     Vue.set(state, "roleRights", roleRights);
   },

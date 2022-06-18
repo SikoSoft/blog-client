@@ -93,12 +93,7 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions([
-      "addFilterRule",
-      "deleteFilterRule",
-      "updateFilterRule",
-      "apiRequest"
-    ]),
+    ...mapActions(["apiRequest"]),
 
     ...mapMutations(["setFilters"]),
 

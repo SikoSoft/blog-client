@@ -159,32 +159,6 @@ export default {
       }
     },
 
-    handleUpdate() {
-      if (!this.newId) {
-        return;
-      }
-      if (this.updateTimeout) {
-        clearTimeout(this.updateTimeout);
-      }
-      this.updateTimeout = setTimeout(() => {
-        const filter = {
-          id: this.id,
-          newId: this.newId,
-          label: this.label,
-          image: this.image
-        };
-        if (this.id) {
-          this.updateFilter(filter);
-        } else {
-          this.createFilter(filter).then(() => {
-            this.newId = "";
-            this.label = "";
-            this.image = "";
-          });
-        }
-      }, 500);
-    },
-
     reset() {
       this.id = "";
       this.newId = "";

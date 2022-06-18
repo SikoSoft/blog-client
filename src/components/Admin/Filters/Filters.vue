@@ -64,12 +64,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      "getFilterRules",
-      "setFilterOrder",
-      "apiRequest",
-      "addToast"
-    ]),
+    ...mapActions(["apiRequest", "addToast"]),
 
     ...mapMutations(["setFilters"]),
 
