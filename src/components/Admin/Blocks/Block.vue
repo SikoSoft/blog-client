@@ -6,7 +6,7 @@
       v-model="name"
       :placeholder="$strings.name"
     />
-    <fieldset class="admin-block__content" v-if="links.length">
+    <fieldset class="admin-block__content" v-if="id">
       <legend>{{ $strings.content }}</legend>
       <blog-sortable-list @orderChanged="updateSortOrder">
         <blog-sortable-item
