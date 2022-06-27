@@ -8,13 +8,14 @@
     />
     <fieldset>
       <legend>{{ $strings.newImageSize }}</legend>
-      <admin-image-size :links="links" :initial="{}" />
+      <admin-image-size :links="imageLinks" :initial="{}" />
     </fieldset>
   </div>
 </template>
 
 <script>
 import AdminImageSize from "@/components/Admin/Images/ImageSize";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-images",
@@ -24,6 +25,16 @@ export default {
   props: {
     imageSizes: Array,
     links: Array
+  },
+
+  computed: {
+    imageLinks() {
+      return this.linksByEntity("imageSize");
+    }
+  },
+
+  methods: {
+    ...linkHandlers
   }
 };
 </script>

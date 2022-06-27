@@ -259,7 +259,13 @@ export default {
   },
 
   setImageSizes: (state, { imageSizes }) => {
-    state.imageSizes = imageSizes;
+    Vue.set(
+      state,
+      "imageSizes",
+      imageSizes.sort((a, b) =>
+        a.width < b.width ? -1 : a.width > b.width ? 1 : 0
+      )
+    );
   },
 
   setContext: (state, { context }) => {

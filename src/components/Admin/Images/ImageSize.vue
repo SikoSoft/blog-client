@@ -10,19 +10,19 @@
         </td>
         <td>
           <blog-button
-            v-if="links.add"
+            v-if="addLink"
             create
             :text="$strings.add"
             :action="addSize"
           />
           <blog-button
-            v-if="links.update"
+            v-if="updateLink"
             create
             :text="$strings.update"
             :action="updateSize"
           />
           <blog-button
-            v-if="links.delete"
+            v-if="deleteLink"
             destroy
             :text="$strings.delete"
             :action="showConfirmationDialog"
@@ -32,7 +32,7 @@
     </table>
 
     <blog-confirmation-dialog
-      v-if="links.delete"
+      v-if="deleteLink"
       :isOpen="confirmationDialogOpen"
       :title="$strings.deleteImageSize"
       :message="$strings.confirmDeleteImageSize"
@@ -44,9 +44,10 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import BlogConfirmationDialog from "@/components/BlogConfirmationDialog";
 import BlogButton from "@/components/BlogButton";
+import linkHandlers from "@/shared/linkHandlers";
 
 export default {
   name: "admin-image-size",
@@ -66,30 +67,79 @@ export default {
     };
   },
 
+  computed: {
+    ...mapState(["imageSizes"]),
+
+    addLink() {
+      return this.link("POST", "imageSize");
+    },
+
+    updateLink() {
+      return this.link("PUT", "imageSize");
+    },
+
+    deleteLink() {
+      return this.link("DELETE", "imageSize");
+    }
+  },
+
   methods: {
+    ...linkHandlers,
+
     ...mapActions(["apiRequest", "addToast"]),
 
     ...mapMutations(["setImageSizes"]),
 
     async addSize() {
-      await this.apiRequest({
-        ...this.links.add,
-        body: { width: this.width, height: this.height }
-      });
-      this.addToast(this.$strings.imageSizeAdded);
+      try {
+        const { imageSize } = await this.apiRequest({
+          ...this.addLink,
+          body: { width: this.width, height: this.height }
+        });
+        this.setImageSizes({ imageSizes: [...this.imageSizes, imageSize] });
+        this.addToast(this.$strings.imageSizeAdded);
+        this.width = 0;
+        this.height = 0;
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async updateSize() {
-      await this.apiRequest({
-        ...this.links.update,
-        body: { width: this.width, height: this.height }
-      });
-      this.addToast(this.$strings.imageSizeUpdated);
+      try {
+        const { imageSize } = await this.apiRequest({
+          ...this.updateLink,
+          body: { width: this.width, height: this.height }
+        });
+        this.setImageSizes({
+          imageSizes: [
+            ...this.imageSizes.map(stateImageSize =>
+              stateImageSize.width === this.initial.width
+                ? imageSize
+                : stateImageSize
+            )
+          ]
+        });
+        this.addToast(this.$strings.imageSizeUpdated);
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async deleteSize() {
-      await this.apiRequest(this.links.delete);
-      this.addToast(this.$strings.imageSizeDeleted);
+      try {
+        await this.apiRequest(this.deleteLink);
+        this.setImageSizes({
+          imageSizes: [
+            ...this.imageSizes.filter(
+              imageSize => imageSize.width !== this.width
+            )
+          ]
+        });
+        this.addToast(this.$strings.imageSizeDeleted);
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     hideConfirmationDialog() {

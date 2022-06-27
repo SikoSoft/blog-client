@@ -68,7 +68,7 @@ export default new Router({
     },
     {
       path: "/admin/images",
-      name: "images",
+      name: "imageSizes",
       component: Images
     },
     {

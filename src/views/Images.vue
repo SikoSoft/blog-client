@@ -1,15 +1,15 @@
 <template>
   <div class="images">
     <admin-images
-      v-if="initialized && imageSizes"
+      v-if="initialized && ready"
       :imageSizes="imageSizes"
-      :links="{ add: links.addImageSize }"
+      :links="imageLinks"
     />
   </div>
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from "vuex";
+import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import AdminImages from "@/components/Admin/Images/Images";
 import linkHandlers from "@/shared/linkHandlers";
 
@@ -20,11 +20,18 @@ export default {
 
   data() {
     return {
-      fetched: false
+      context: { id: "view", props: ["imageSizes"] },
+      fetched: false,
+      imageLinks: []
     };
   },
 
+  props: {
+    links: Array
+  },
+
   mounted() {
+    this.addContext(this.context);
     this.update();
   },
 
@@ -32,8 +39,22 @@ export default {
     this.update();
   },
 
+  beforeDestroy() {
+    this.removeContext(this.context);
+  },
+
   computed: {
-    ...mapState(["imageSizes", "initialized", "links"])
+    ...mapState(["imageSizes", "initialized", "user"]),
+
+    ...mapGetters(["contextIsReady"]),
+
+    ready() {
+      return this.contextIsReady(this.context);
+    },
+
+    getLink() {
+      return this.link("GET", "imageSizes");
+    }
   },
 
   methods: {
@@ -44,7 +65,9 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "getRoleRights",
-      "apiRequest"
+      "apiRequest",
+      "addContext",
+      "removeContext"
     ]),
 
     ...mapMutations(["setImageSizes"]),
@@ -56,13 +79,14 @@ export default {
         { href: "/admin/images", label: this.$strings.images }
       ]);
       this.setTitle(this.$strings.images);
-      if (!this.fetched) {
+      if (!this.fetched && this.getLink) {
         this.getImageSizes();
       }
     },
 
     async getImageSizes() {
-      const { imageSizes } = await this.apiRequest(this.links.getImageSizes);
+      const { imageSizes, links } = await this.apiRequest(this.getLink);
+      this.imageLinks = links;
       this.setImageSizes({ imageSizes });
       this.fetched = true;
     }
@@ -70,7 +94,7 @@ export default {
 
   watch: {
     initialized() {
-      if (!this.links.getImageSizes) {
+      if (!this.user.rights.includes("manage_images")) {
         this.$router.push({ path: "/access_denied" });
       }
     }
