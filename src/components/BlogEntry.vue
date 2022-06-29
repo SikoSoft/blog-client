@@ -133,15 +133,22 @@ export default {
       const parsedBody = JSON.parse(this.body);
       const quillConverter = new QuillDeltaToHtmlConverter(parsedBody, {
         customTagAttributes: op => {
+          const returnObj = {};
           if (op.attributes.srcset) {
-            return { srcset: op.attributes.srcset };
+            returnObj.srcset = op.attributes.srcset;
           }
+          if (op.attributes.sizes) {
+            returnObj.sizes = op.attributes.sizes;
+          }
+          return returnObj;
         }
       });
       quillConverter.beforeRender((_, data) => {
         if (typeof data.ops === "object" && data.ops.length) {
           data.ops.forEach(op => {
             if (op.insert.type === "image") {
+              console.log("operating image");
+              op.attributes.sizes = "(min-width: 768px) 920px, 100vw";
               op.attributes.srcset = this.settings.imageSizes
                 .map(
                   size =>
