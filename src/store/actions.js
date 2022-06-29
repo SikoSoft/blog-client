@@ -1,7 +1,7 @@
 import axios from "axios";
 import { uuid } from "@/util/uuid";
 import { arrayUnique, arrayHasObject } from "@/util/array";
-import { link } from "@/shared/linkHandlers";
+import { link, linksByEntity } from "@/shared/linkHandlers";
 import { hash } from "../util/cryptography";
 
 const promises = { getBlockById: {}, getContextLinks: {} };
@@ -97,6 +97,10 @@ export default {
           });
           commit("setEndOfEntries", { type, end: json.end });
           commit("setLoading", { loading: false });
+          const imageLink = linksByEntity("image", json.links);
+          if (imageLink) {
+            commit("setImageLink", { link: imageLink[0] });
+          }
           resolve();
         })
         .catch(e => reject(e));
@@ -116,10 +120,17 @@ export default {
       return Promise.resolve();
     }
     commit("setLoading", { loading: true });
-    const { entry } = await dispatch("apiRequest", link("GET", "entry", links));
+    const { entry, links: entryLinks } = await dispatch(
+      "apiRequest",
+      link("GET", "entry", links)
+    );
     commit("setEntryById", { id, entry });
     if (addToList) {
       dispatch("addEntryToList", { entry });
+    }
+    const imageLink = linksByEntity("image", entryLinks);
+    if (imageLink) {
+      commit("setImageLink", { link: imageLink[0] });
     }
     commit("setLoading", { loading: false });
   },

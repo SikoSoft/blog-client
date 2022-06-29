@@ -147,6 +147,7 @@ export default {
   },
 
   imageLoaded: (state, { entryId }) => {
+    console.log("imageLoaded", entryId);
     Vue.set(
       state.imagesLoaded,
       entryId,
@@ -315,5 +316,9 @@ export default {
         content: block.id === blockId ? content : block.content
       }))
     ]);
+  },
+
+  setImageLink: (state, { link }) => {
+    state.imageLink = link;
   }
 };

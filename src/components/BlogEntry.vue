@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="blog-entry__body">
-        <div class="body-entry__body-content">
+        <div class="body-entry__body-content" v-if="imageLink">
           <runtime-template-compiler :template="renderedBody" />
         </div>
         <div class="blog-entry__body-more" v-if="!fullMode">
@@ -99,7 +99,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["settings"]),
+    ...mapState(["settings", "imageLink"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);
@@ -130,9 +130,34 @@ export default {
     },
 
     renderedBody() {
+      const parsedBody = JSON.parse(this.body);
+      const quillConverter = new QuillDeltaToHtmlConverter(parsedBody, {
+        customTagAttributes: op => {
+          if (op.attributes.srcset) {
+            return { srcset: op.attributes.srcset };
+          }
+        }
+      });
+      quillConverter.beforeRender((_, data) => {
+        if (typeof data.ops === "object" && data.ops.length) {
+          data.ops.forEach(op => {
+            if (op.insert.type === "image") {
+              op.attributes.srcset = this.settings.imageSizes
+                .map(
+                  size =>
+                    `${this.imageLink.href}?file=${
+                      new URL(op.insert.value).pathname
+                    }&width=${size.width} ${size.width}w`
+                )
+                .join(",");
+            }
+          });
+        }
+        return false;
+      });
       return (
         "<div>" +
-        new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
+        quillConverter
           .convert()
           .replace(
             /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,

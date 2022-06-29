@@ -64,5 +64,6 @@ export default {
   banners: [],
   header: {},
   blocks: [],
-  blocksById: {}
+  blocksById: {},
+  imageLink: {}
 };
