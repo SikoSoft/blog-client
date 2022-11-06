@@ -146,8 +146,10 @@ export default {
       quillConverter.beforeRender((_, data) => {
         if (typeof data.ops === "object" && data.ops.length) {
           data.ops.forEach(op => {
-            if (op.insert.type === "image") {
-              console.log("operating image");
+            if (
+              op.insert.type === "image" &&
+              !op.insert.value.match(/^data:/)
+            ) {
               op.attributes.sizes = "(min-width: 768px) 920px, 100vw";
               op.attributes.srcset = this.settings.imageSizes
                 .map(
