@@ -220,7 +220,8 @@
     "header_banner": "Header banner",
     "theme": "Theme",
     "footer_block": "Footer block",
-    "sidebar_block": "Sidebar block"
+    "sidebar_block": "Sidebar block",
+    "use_srcset": "Use responsive image generation"
   },
   "rightsGroups": {
     "entries": "Entries",
