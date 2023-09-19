@@ -134,11 +134,13 @@ export default {
       const quillConverter = new QuillDeltaToHtmlConverter(parsedBody, {
         customTagAttributes: op => {
           const returnObj = {};
-          if (op.attributes.srcset) {
-            returnObj.srcset = op.attributes.srcset;
-          }
-          if (op.attributes.sizes) {
-            returnObj.sizes = op.attributes.sizes;
+          if (this.settings.use_srcset) {
+            if (op.attributes.srcset) {
+              returnObj.srcset = op.attributes.srcset;
+            }
+            if (op.attributes.sizes) {
+              returnObj.sizes = op.attributes.sizes;
+            }
           }
           return returnObj;
         }
