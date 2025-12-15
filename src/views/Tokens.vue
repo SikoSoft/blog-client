@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapState, mapMutations } from "vuex";
-import AdminTokens from "@/components/Admin/AdminTokens";
+import AdminTokens from "@/components/Admin/Tokens/Tokens";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
@@ -20,12 +20,13 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["tokens"] },
       tokensLinks: []
     };
   },
 
   async mounted() {
-    await this.addContext({ id: "view", props: ["tokens"] });
+    await this.addContext(this.context);
     await this.initialize();
     this.setBreadcrumbs([
       { href: "/admin", label: this.$strings.admin },

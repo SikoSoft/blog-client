@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-loader {
   position: absolute;

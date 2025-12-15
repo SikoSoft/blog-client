@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import AdminBanners from "@/components/Admin/AdminBanners";
+import AdminBanners from "@/components/Admin/Banners/Banners";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
@@ -20,15 +20,20 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["banners"] },
       bannerLinks: []
     };
   },
 
   async mounted() {
-    await this.addContext({ id: "view", props: ["banners"] });
+    await this.addContext(this.context);
     await this.initialize();
     const { links } = await this.getBanners();
     this.bannerLinks = links;
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -40,7 +45,7 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["addContext", "initialize", "getBanners"])
+    ...mapActions(["addContext", "removeContext", "initialize", "getBanners"])
   }
 };
 </script>

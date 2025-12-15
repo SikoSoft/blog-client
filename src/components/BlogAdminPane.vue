@@ -1,26 +1,26 @@
 <template>
-  <div class="blog-admin" :class="{ 'blog-admin--open': entryFormIsOpen }">
-    <div class="blog-admin__inner">
-      <div class="blog-admin__bar">
+  <div class="blog-admin-pane" :class="{ 'blog-admin--open': entryFormIsOpen }">
+    <div class="blog-admin-pane__inner">
+      <div class="blog-admin-pane__bar">
         <template v-if="link('POST', 'entry')">
-          <router-link class="blog-admin__link" to="/admin">{{
+          <router-link class="blog-admin-pane__link" to="/admin">{{
             $strings.admin
           }}</router-link>
           <blog-button
-            class="blog-admin__entry-button"
+            class="blog-admin-pane__entry-button"
             :action="showEntryForm"
             v-if="!entryFormIsOpen"
             text="+"
           />
           <blog-button
-            class="blog-admin__entry-button"
+            class="blog-admin-pane__entry-button"
             :action="hideEntryForm"
             v-else
             text="-"
           />
         </template>
       </div>
-      <div class="blog-admin__tool">
+      <div class="blog-admin-pane__tool">
         <blog-entry-form
           v-if="entryFormIsOpen"
           :initial="{
@@ -60,20 +60,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables";
-@import "@/styles/mixins";
+@import "@theme/variables";
+@import "@theme/mixins";
 
-.blog-admin {
+.blog-admin-pane {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: $color-bg-secondary;
+  color: $color-secondary-text;
+  background-color: $color-secondary-bg;
   transition: all 0.3s;
-  border-bottom: 1px $color-border-secondary solid;
+  border-bottom: 1px $color-secondary-border solid;
 
   &--open {
     height: auto;
-    box-shadow: 0 0 500px rgba(0, 0, 0, 1);
+    box-shadow: 0 0 500px $color-box-shadow;
   }
 
   &__bar {
@@ -93,6 +94,7 @@ export default {
   }
 
   &__link {
+    color: $color-secondary-link;
     font-weight: bold;
   }
 

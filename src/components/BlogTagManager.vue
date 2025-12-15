@@ -75,8 +75,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/mixins.scss";
-@import "@/styles/variables.scss";
+@import "@theme/mixins";
+@import "@theme/variables";
 
 .blog-tag-manager {
   display: flex;
@@ -103,7 +103,7 @@ export default {
       margin-right: 1rem;
       font-size: 16px;
       padding: 4px;
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: $color-list-item-bg;
       border: 1px #000 solid;
       border-radius: 4px;
 

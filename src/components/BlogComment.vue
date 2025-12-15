@@ -12,6 +12,7 @@
           class="blog-comment__checkbox"
           type="checkbox"
           :value="id"
+          :checked="isSelected"
           @change="select"
         />
       </div>
@@ -88,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-comment {
   margin: $space-xlarge 0;
@@ -105,12 +106,12 @@ export default {
   &__avatar-image {
     width: 5rem;
     height: 5rem;
-    border: 1px #222 solid;
+    border: 1px $color-secondary-border solid;
     border-radius: $space-xsmall;
   }
 
   &__body {
-    border: 1px #333 solid;
+    border: 1px $color-secondary-border solid;
     border-radius: 4px;
     flex-grow: 10;
     position: relative;
@@ -120,7 +121,7 @@ export default {
       position: absolute;
       left: -10px;
       top: 10px;
-      border-right: 10px solid #333;
+      border-right: 10px solid $color-secondary-border;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
     }
@@ -130,7 +131,7 @@ export default {
       position: absolute;
       left: -8px;
       top: 12px;
-      border-right: 8px solid #222;
+      border-right: 8px solid $color-secondary-border;
       border-top: 8px solid transparent;
       border-bottom: 8px solid transparent;
     }
@@ -146,9 +147,9 @@ export default {
 
   &__meta {
     color: $color-text-subtle;
-    background-color: #222;
+    background-color: $color-secondary-bg;
     padding: $space-small;
-    border-bottom: 1px #333 solid;
+    border-bottom: 1px $color-secondary-border solid;
     position: relative;
   }
 

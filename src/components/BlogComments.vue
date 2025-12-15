@@ -130,7 +130,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-comments {
   &__head {
@@ -152,8 +152,8 @@ export default {
     width: 100%;
     height: 5rem;
     text-align: center;
-    background-color: rgba(0, 0, 0, 0.9);
-    border-top: 3px rgba(50, 50, 50, 0.9) solid;
+    background-color: $color-primary-bg;
+    border-top: 3px $color-secondary-border solid;
     transition: all 0.3s;
 
     &--active {

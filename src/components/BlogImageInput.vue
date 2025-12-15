@@ -28,7 +28,6 @@ export default {
     type: String,
     value: String,
     initial: String
-    //links: Array
   },
 
   data() {
@@ -41,10 +40,8 @@ export default {
     this.addContext(this.context);
   },
 
-  updated() {
-    if (this.ready) {
-      this.setupImageHandler();
-    }
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -54,25 +51,25 @@ export default {
 
     ready() {
       return this.contextIsReady(this.context);
+    },
+
+    imageHandler() {
+      return new imageHandler({
+        setProgress: this.setProgress,
+        uploadImage: {
+          ...this.link("POST", "uploadImage"),
+          headers: this.headers
+        },
+        headers: this.headers,
+        setImage: this.updateImage
+      });
     }
   },
 
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["setProgress", "addContext"]),
-
-    setupImageHandler() {
-      this.imageHandler = new imageHandler({
-        setProgress: this.setProgress,
-        uploadImage: {
-          ...this.link("POST", "uploadImage", this.links),
-          headers: this.headers
-        },
-        headers: this.headers,
-        setImage: this.updateImage
-      });
-    },
+    ...mapActions(["setProgress", "addContext", "removeContext"]),
 
     updateImage(url) {
       this.$emit("input", url);

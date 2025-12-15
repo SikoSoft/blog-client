@@ -10,7 +10,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
-import AdminRoles from "@/components/Admin/AdminRoles";
+import AdminRoles from "@/components/Admin/Roles/Roles";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
@@ -24,6 +24,7 @@ export default {
 
   data() {
     return {
+      firstUpdate: true,
       context: { id: "view", props: ["roles"] },
       rolesLinks: []
     };
@@ -37,8 +38,12 @@ export default {
     await this.update();
   },
 
-  updated() {
-    //this.update();
+  async updated() {
+    await this.update();
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
@@ -55,6 +60,7 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "addContext",
+      "removeContext",
       "apiRequest"
     ]),
 
@@ -62,14 +68,17 @@ export default {
 
     async update() {
       await this.initialize();
-      const response = await this.apiRequest(this.link("GET", "roles"));
-      this.setRoles({ roles: response.roles });
-      this.rolesLinks = response.links;
-      this.setBreadcrumbs([
-        { href: "/admin", label: this.$strings.admin },
-        { href: "/admin/roles", label: this.$strings.roles }
-      ]);
-      this.setTitle(this.$strings.roles);
+      if (this.contextIsReady(this.context) && this.firstUpdate) {
+        this.firstUpdate = false;
+        const response = await this.apiRequest(this.link("GET", "roles"));
+        this.setRoles({ roles: response.roles });
+        this.rolesLinks = response.links;
+        this.setBreadcrumbs([
+          { href: "/admin", label: this.$strings.admin },
+          { href: "/admin/roles", label: this.$strings.roles }
+        ]);
+        this.setTitle(this.$strings.roles);
+      }
     }
   },
 

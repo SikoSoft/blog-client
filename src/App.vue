@@ -12,7 +12,7 @@
         <blog-loader v-if="isLoading" />
         <router-view :links="routeLinks" />
       </main>
-      <blog-sidebar v-if="showSidebar" :filters="filters" />
+      <blog-sidebar v-if="showSidebar" />
     </div>
     <blog-toasts />
     <blog-progress-bar v-if="showProgressBar" />
@@ -58,7 +58,13 @@ export default {
         window.scroll({
           top:
             document.getElementById("blog-breadcrumb").getBoundingClientRect()
-              .top + window.scrollY,
+              .top +
+            window.scrollY -
+            (this.showAdminPane
+              ? document
+                  .querySelector(".blog-admin-pane")
+                  .getBoundingClientRect().height
+              : 0),
           left: 0,
           behavior: "smooth"
         });
@@ -133,6 +139,10 @@ export default {
       };
     },
 
+    route() {
+      return this.$route.name === "draft" ? "entry" : this.$route.name;
+    },
+
     showAdminPane() {
       return this.initialized && this.links && this.link("POST", "entry");
     },
@@ -141,12 +151,12 @@ export default {
       return (
         this.initialized &&
         this.settings.show_sidebar &&
-        this.viewsWithSidebar.includes(this.$route.name)
+        this.viewsWithSidebar.includes(this.route)
       );
     },
 
     routeLinks() {
-      return this.linksByEntity(this.$route.name);
+      return this.linksByEntity(this.route);
     }
   },
 
@@ -175,4 +185,6 @@ export default {
 };
 </script>
 
-<style lang="scss" src="./styles/theme.scss"></style>
+<style lang="scss">
+@import "@theme/theme";
+</style>

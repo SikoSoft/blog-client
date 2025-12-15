@@ -49,24 +49,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/variables";
-@import "@/styles/mixins";
+@import "@theme/variables";
+@import "@theme/mixins";
 
 $height: 6rem;
 
 .blog-breadcrumb {
   background: linear-gradient(
     to bottom,
-    $color-bg-secondary-highlight,
+    $color-secondary-bg-highlight,
     5%,
-    $color-bg-secondary,
+    $color-secondary-bg,
     95%,
-    $color-bg-secondary-highlight
+    $color-secondary-bg-highlight
   );
   font-size: 2rem;
   white-space: nowrap;
-  border-top: 2px $color-border-primary solid;
-  border-bottom: 2px $color-border-primary solid;
+  border-top: 2px $color-primary-border solid;
+  border-bottom: 2px $color-primary-border solid;
 
   .blog-breadcrumb__inner {
     @include container-width;
@@ -93,8 +93,9 @@ $height: 6rem;
   .blog-breadcrumb__list-item-link {
     display: inline-block;
     height: $height;
+    color: $color-secondary-link;
     &--disabled {
-      color: rgba(255, 255, 255, 0.75);
+      color: $color-secondary-text;
       cursor: text;
     }
   }
@@ -107,8 +108,8 @@ $height: 6rem;
     width: ($height * 0.25);
     height: ($height * 0.25);
     border: 0.75rem solid;
-    border-color: rgba(119, 119, 119, 0.5) transparent transparent
-      rgba(119, 119, 119, 0.5);
+    border-color: $color-breadcrumb-arrow transparent transparent
+      $color-breadcrumb-arrow;
     transform: rotate(135deg);
   }
 }

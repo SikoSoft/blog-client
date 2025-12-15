@@ -147,6 +147,7 @@ export default {
   },
 
   imageLoaded: (state, { entryId }) => {
+    console.log("imageLoaded", entryId);
     Vue.set(
       state.imagesLoaded,
       entryId,
@@ -155,7 +156,7 @@ export default {
   },
 
   setFilters: (state, { filters }) => {
-    state.filters = filters;
+    Vue.set(state, "filters", filters);
   },
 
   deleteEntry: (state, { id }) => {
@@ -197,73 +198,6 @@ export default {
 
   setEntryTop: (state, { type, id, top }) => {
     Vue.set(state.entries[type].top, id, top);
-  },
-
-  setFilter: (state, { newId, id, label, image }) => {
-    Vue.set(
-      state,
-      "filters",
-      state.filters.map(filter => {
-        if (filter.id === id) {
-          filter.id = newId;
-          filter.label = label;
-          filter.image = image;
-        }
-        return filter;
-      })
-    );
-  },
-
-  addFilter: (state, { id, label, image }) => {
-    Vue.set(state, "filters", [...state.filters, { id, label, image }]);
-  },
-
-  deleteFilter: (state, { id }) => {
-    Vue.set(
-      state,
-      "filters",
-      state.filters.filter(filter => filter.id !== id)
-    );
-  },
-
-  setFilterOrder: (state, { orderedFilters }) => {
-    const newFilters = [];
-    orderedFilters.forEach(filterId => {
-      const filters = state.filters.filter(f => f.id === filterId);
-      if (filters.length) {
-        newFilters.push(filters[0]);
-      }
-    });
-    Vue.set(state, "filters", newFilters);
-  },
-
-  setFilterRules: (state, { rules }) => {
-    Vue.set(state, "filterRules", rules);
-  },
-
-  addFilterRule: (state, { filterId, id, type, value, operator }) => {
-    Vue.set(state, "filterRules", [
-      ...state.filterRules,
-      { filter_id: filterId, id, type, value, operator }
-    ]);
-  },
-
-  deleteFilterRule: (state, { id }) => {
-    Vue.set(
-      state,
-      "filterRules",
-      state.filterRules.filter(filter => filter.id !== id)
-    );
-  },
-
-  updateFilterRule: (state, payload) => {
-    Vue.set(
-      state,
-      "filterRules",
-      state.filterRules.map(rule =>
-        rule.id === payload.id ? { ...rule, ...payload } : rule
-      )
-    );
   },
 
   setRoleRights: (state, { roleRights }) => {
@@ -326,7 +260,13 @@ export default {
   },
 
   setImageSizes: (state, { imageSizes }) => {
-    state.imageSizes = imageSizes;
+    Vue.set(
+      state,
+      "imageSizes",
+      imageSizes.sort((a, b) =>
+        a.width < b.width ? -1 : a.width > b.width ? 1 : 0
+      )
+    );
   },
 
   setContext: (state, { context }) => {
@@ -355,5 +295,30 @@ export default {
 
   setHeader: (state, { header }) => {
     state.header = header;
+  },
+
+  setBlocks: (state, { blocks }) => {
+    Vue.set(state, "blocks", blocks);
+  },
+
+  setBlock: (state, { block }) => {
+    Vue.set(state.blocksById, block.id, block);
+  },
+
+  setBlockContent: (state, { blockId, content }) => {
+    Vue.set(state.blocksById, blockId, {
+      ...state.blocksById[blockId],
+      content
+    });
+    Vue.set(state, "blocks", [
+      ...state.blocks.map(block => ({
+        ...block,
+        content: block.id === blockId ? content : block.content
+      }))
+    ]);
+  },
+
+  setImageLink: (state, { link }) => {
+    state.imageLink = link;
   }
 };

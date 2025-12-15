@@ -40,7 +40,7 @@
           />
         </div>
         <div class="blog-entry-form__body">
-          <div :id="editorId"></div>
+          <div :id="editorId" :data-context-is-ready="ready"></div>
           <div class="blog-entry-form__entry-finder" :style="entryFinderStyle">
             <blog-entry-finder
               v-if="entryFinderOpen"
@@ -186,7 +186,8 @@ export default {
       entryFinderOpen: false,
       entryFinderRange: null,
       editorSelectionPosition: {},
-      schedulerIsOpen: true
+      schedulerIsOpen: true,
+      toolbarIsSetup: false
     };
   },
 
@@ -225,40 +226,54 @@ export default {
     if (this.body) {
       this.editor.setContents(JSON.parse(this.body));
     }
-    const toolbar = this.editor.getModule("toolbar");
-    if (this.uploadImageLink) {
-      this.setupImageUpload();
-      toolbar.addHandler("image", () => {
-        this.imageHandler.selectLocalImage();
-      });
-    }
-    this.editor.on("text-change", () => {
-      this.updateSelectionPosition();
-      this.saveFormState();
-    });
-    this.editor.on("selection-change", () => {
-      this.updateSelectionPosition();
-    });
-    this.editor.keyboard.addBinding(
-      {
-        key: "e",
-        shiftKey: true,
-        ctrlKey: true
-      },
-      () => {
-        this.showEntryFinder();
-      }
-    );
-    if (localStorage.getItem(this.formId)) {
-      this.loadFormState();
-    }
     this.initialized = true;
+  },
+
+  async updated() {
+    if (this.ready && !this.toolbarIsSetup) {
+      this.toolbarIsSetup = true;
+      const toolbar = this.editor.getModule("toolbar");
+      if (this.uploadImageLink) {
+        this.setupImageUpload();
+        toolbar.addHandler("image", () => {
+          this.imageHandler.selectLocalImage();
+        });
+      }
+      this.editor.on("text-change", () => {
+        this.updateSelectionPosition();
+        this.saveFormState();
+      });
+      this.editor.on("selection-change", () => {
+        this.updateSelectionPosition();
+      });
+      this.editor.keyboard.addBinding(
+        {
+          key: "e",
+          shiftKey: true,
+          ctrlKey: true
+        },
+        () => {
+          this.showEntryFinder();
+        }
+      );
+      if (localStorage.getItem(this.formId)) {
+        this.loadFormState();
+      }
+    }
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
     ...mapState(["user", "drafts", "entryFormIsOpen"]),
 
-    ...mapGetters(["headers"]),
+    ...mapGetters(["headers", "contextIsReady"]),
+
+    ready() {
+      return this.contextIsReady(this.context);
+    },
 
     entryId() {
       return this.entry && this.entry.id ? this.entry.id : false;
@@ -317,7 +332,8 @@ export default {
       "addToast",
       "apiRequest",
       "addEntryToList",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     publishDraft(e) {
@@ -544,7 +560,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-entry-form {
   margin: 16px 0;
@@ -562,9 +578,9 @@ export default {
   &__body {
     margin: 8px 0;
     border-radius: 4px;
-    border: 4px #000 solid;
-    background-color: #fff;
-    color: #000;
+    border: 4px $color-input-border solid;
+    background-color: $color-input-bg;
+    color: $color-input-text;
   }
 
   .blog-entry-form__title {

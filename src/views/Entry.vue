@@ -1,7 +1,7 @@
 <template>
   <div class="entry">
     <blog-entry
-      v-if="initialized && loaded && entry"
+      v-if="initialized && ready && loaded && entry"
       v-bind="entry"
       :fullMode="true"
       :links="entry.links"
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import BlogEntry from "@/components/BlogEntry";
 import linkHandlers from "@/shared/linkHandlers";
 
@@ -24,10 +24,12 @@ export default {
   },
 
   data() {
+    const entityType = this.$route.path.match(/\/draft\//) ? "draft" : "entry";
     return {
+      context: { id: "view", props: ["entry", this.$route.params.id] },
       firstUpdate: true,
       id: this.$route.params.id,
-      routeType: this.$route.path.match(/\/draft\//) ? "draft" : "entry",
+      entityType,
       loaded: false
     };
   },
@@ -35,22 +37,39 @@ export default {
   computed: {
     ...mapState(["initialized"]),
 
+    ...mapGetters(["contextIsReady"]),
+
+    ready() {
+      return this.contextIsReady(this.context);
+    },
+
     entry() {
       return this.$store.getters[
-        this.routeType === "entry" ? "entryById" : "draftById"
+        this.entityType === "entry" ? "entryById" : "draftById"
       ](this.id);
     }
   },
 
-  mounted() {
-    this.addContext({ id: "view", props: ["entry", this.id] });
-    this.update();
+  created() {
+    this.addContext(this.context);
+  },
+
+  async mounted() {
+    await this.update();
+  },
+
+  async updated() {
+    await this.update();
   },
 
   beforeRouteUpdate(to, from, next) {
     this.id = to.params.id;
     this.update();
     next();
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   methods: {
@@ -63,25 +82,28 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "apiRequest",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     ...mapMutations(["setEntryById"]),
 
     async update() {
       await this.initialize();
-      await this[this.routeType === "entry" ? "getEntry" : "getDraft"]({
-        links: this.links,
-        id: this.id
-      });
-      this.loaded = true;
-      this.setBreadcrumbs([
-        {
-          href: `/${this.routeType}/${this.entry.id}`,
-          label: this.entry.title
-        }
-      ]);
-      this.setTitle(this.entry.title);
+      if (this.ready && !this.loaded) {
+        this.loaded = true;
+        await this[this.entityType === "entry" ? "getEntry" : "getDraft"]({
+          links: this.links,
+          id: this.id
+        });
+        this.setBreadcrumbs([
+          {
+            href: `/${this.entityType}/${this.entry.id}`,
+            label: this.entry.title
+          }
+        ]);
+        this.setTitle(this.entry.title);
+      }
     }
   }
 };

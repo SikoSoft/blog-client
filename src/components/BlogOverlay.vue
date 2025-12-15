@@ -18,6 +18,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@theme/variables";
+
 .blog-overlay {
   opacity: 0;
   position: fixed;
@@ -25,7 +27,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(64, 64, 64, 0.75);
+  background-color: $color-overlay-bg;
   pointer-events: none;
   transition: all 0.3s;
 

@@ -1,12 +1,16 @@
 <template>
   <div class="rights">
-    <admin-rights v-if="initialized" :role="role" :links="rightsLinks" />
+    <admin-rights
+      v-if="initialized && contextIsReady(context)"
+      :role="role"
+      :links="rightsLinks"
+    />
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import AdminRights from "@/components/Admin/AdminRights";
+import { mapActions, mapState, mapGetters } from "vuex";
+import AdminRights from "@/components/Admin/Rights/Rights";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
@@ -20,6 +24,7 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["roleRights"] },
       isUpdating: false,
       firstUpdate: true,
       rightsLinks: []
@@ -27,16 +32,22 @@ export default {
   },
 
   mounted() {
-    this.addContext({ id: "view", props: ["roleRights"] });
+    this.addContext(this.context);
     this.update();
   },
 
   updated() {
-    //this.update();
+    this.update();
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   computed: {
     ...mapState(["roleRights", "initialized", "user"]),
+
+    ...mapGetters(["contextIsReady"]),
 
     role() {
       return parseInt(this.$route.params.role);
@@ -51,12 +62,14 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "getRoleRights",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     async update() {
-      if (this.firstUpdate) {
-        await this.initialize();
+      await this.initialize();
+      if (this.firstUpdate && this.contextIsReady(this.context)) {
+        this.firstUpdate = false;
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
           { href: "/admin/rights", label: this.$strings.rights }
@@ -64,7 +77,6 @@ export default {
         this.setTitle(this.$strings.rights);
         const response = await this.getRoleRights({ links: this.links });
         this.rightsLinks = response.links;
-        this.firstUpdate = false;
       }
     }
   },

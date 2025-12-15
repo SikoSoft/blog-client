@@ -11,7 +11,7 @@
 
 <script>
 import { mapActions, mapState, mapGetters } from "vuex";
-import AdminTagPolicies from "@/components/Admin/AdminTagPolicies";
+import AdminTagPolicies from "@/components/Admin/TagRoles/TagRoles";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
@@ -39,6 +39,14 @@ export default {
     this.update();
   },
 
+  async updated() {
+    this.update();
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
+  },
+
   computed: {
     ...mapState(["tagRoles", "initialized", "user"]),
 
@@ -57,12 +65,14 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "getTagRoles",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
     async update() {
+      await this.initialize();
       if (this.firstUpdate && this.contextIsReady(this.context)) {
-        await this.initialize();
+        this.firstUpdate = false;
         this.setBreadcrumbs([
           { href: "/admin", label: this.$strings.admin },
           { href: "/admin/tag_policies", label: this.$strings.tagPolicies }
@@ -71,7 +81,6 @@ export default {
         this.tagRolesFetching = true;
         const response = await this.getTagRoles({ links: this.links });
         this.tagRolesLinks = response.links;
-        this.firstUpdate = false;
       }
     }
   },

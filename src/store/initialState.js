@@ -62,5 +62,8 @@ export default {
   contextSynced: [],
   settingsConfig: [],
   banners: [],
-  header: {}
+  header: {},
+  blocks: [],
+  blocksById: {},
+  imageLink: {}
 };

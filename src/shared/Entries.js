@@ -14,6 +14,7 @@ export default {
 
   data() {
     return {
+      context: { id: "view", props: ["entries"] },
       gettingEntries: false,
       gettingEntriesCoolingDown: false,
       gettingEntriesCoolDown: 1500,
@@ -22,7 +23,7 @@ export default {
   },
 
   mounted() {
-    this.addContext({ id: "view", props: ["entries"] });
+    this.addContext(this.context);
     window.addEventListener("scroll", this.scrollHandler);
     this.setTitle(this.title);
     this.initialize().then(() => {
@@ -31,6 +32,10 @@ export default {
       }
     });
     this.setBreadcrumbs([]);
+  },
+
+  beforeDestroy() {
+    this.removeContext(this.context);
   },
 
   destroyed() {
@@ -48,15 +53,21 @@ export default {
       "setNextEntriesBatch",
       "setTitle",
       "apiRequest",
-      "addContext"
+      "addContext",
+      "removeContext"
     ]),
 
-    ...mapMutations(["setEntries", "setEntryById", "setEndOfEntries"]),
+    ...mapMutations([
+      "setEntries",
+      "setEntryById",
+      "setEndOfEntries",
+      "setImageLink"
+    ]),
 
     async getEntries() {
       const link = this.link("GET", "entries");
       if (link) {
-        const { entries, end } = await this.apiRequest(link);
+        const { entries, end, links } = await this.apiRequest(link);
         this.setEntries({
           entries,
           ...(this.tag && { tag: this.tag }),
@@ -67,6 +78,10 @@ export default {
           this.setEntryById({ id: entry.id, entry });
         });
         this.setEndOfEntries({ type: this.type, end });
+        const imageLink = this.linksByEntity("image", links);
+        if (imageLink) {
+          this.setImageLink({ link: imageLink[0] });
+        }
       }
     },
 

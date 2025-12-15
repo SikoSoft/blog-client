@@ -1,7 +1,7 @@
 <template>
   <div class="blog-header">
     <blog-banner
-      :title="header.title"
+      :heading="header.heading"
       :caption="header.caption"
       :image="header.image"
     />
@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables";
+@import "@theme/variables";
 
 .blog-header {
   background-color: #000;

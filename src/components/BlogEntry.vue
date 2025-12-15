@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="blog-entry__body">
-        <div class="body-entry__body-content">
+        <div class="body-entry__body-content" v-if="imageLink">
           <runtime-template-compiler :template="renderedBody" />
         </div>
         <div class="blog-entry__body-more" v-if="!fullMode">
@@ -99,7 +99,7 @@ export default {
   },
 
   computed: {
-    ...mapState(["settings"]),
+    ...mapState(["settings", "imageLink"]),
 
     editMode() {
       return this.$store.getters.editMode(this.id);
@@ -130,9 +130,45 @@ export default {
     },
 
     renderedBody() {
+      const parsedBody = JSON.parse(this.body);
+      const quillConverter = new QuillDeltaToHtmlConverter(parsedBody, {
+        customTagAttributes: op => {
+          const returnObj = {};
+          if (this.settings.use_srcset) {
+            if (op.attributes.srcset) {
+              returnObj.srcset = op.attributes.srcset;
+            }
+            if (op.attributes.sizes) {
+              returnObj.sizes = op.attributes.sizes;
+            }
+          }
+          return returnObj;
+        }
+      });
+      quillConverter.beforeRender((_, data) => {
+        if (typeof data.ops === "object" && data.ops.length) {
+          data.ops.forEach(op => {
+            if (
+              op.insert.type === "image" &&
+              !op.insert.value.match(/^data:/)
+            ) {
+              op.attributes.sizes = "(min-width: 768px) 920px, 100vw";
+              op.attributes.srcset = this.settings.imageSizes
+                .map(
+                  size =>
+                    `${this.imageLink.href}?file=${
+                      new URL(op.insert.value).pathname
+                    }&width=${size.width} ${size.width}w`
+                )
+                .join(",");
+            }
+          });
+        }
+        return false;
+      });
       return (
         "<div>" +
-        new QuillDeltaToHtmlConverter(JSON.parse(this.body), {})
+        quillConverter
           .convert()
           .replace(
             /\B#(\d*[A-Za-z_]+\w*)\b(?!;)/,
@@ -222,7 +258,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
+@import "@theme/variables";
 
 .blog-entry {
   margin: 4rem 0 12rem 0;
@@ -245,7 +281,7 @@ export default {
 
   &__posted-time {
     color: $color-text-subtle;
-    border-top: 1px $color-link-primary solid;
+    border-top: 1px $color-primary-link solid;
     padding-top: 5px;
     display: inline-block;
     font-size: $font-large;
@@ -268,7 +304,7 @@ export default {
     font-size: 48px;
 
     &--clickable {
-      border-left: 5px $color-link-primary solid;
+      border-left: 5px $color-primary-link solid;
     }
   }
 
@@ -293,7 +329,7 @@ export default {
       top: 22.5rem;
       background: linear-gradient(
         0deg,
-        $color-bg-primary $space,
+        $color-primary-bg $space,
         80%,
         transparent
       );
@@ -323,9 +359,9 @@ export default {
 
   &__comments {
     padding: 5rem 2rem;
-    background-color: $color-bg-secondary;
-    border-top: 1rem #1f1f1f solid;
-    border-bottom: 1rem #333 solid;
+    background-color: $color-secondary-bg;
+    border-top: 1rem $color-primary-bg-highlight solid;
+    border-bottom: 1rem $color-secondary-border solid;
   }
 
   pre {

@@ -6,7 +6,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import AdminHome from "@/components/Admin/AdminHome";
+import AdminHome from "@/components/Admin/Home/Home";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {

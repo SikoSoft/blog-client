@@ -1,11 +1,11 @@
-@import "variables";
+@import "@theme/variables";
 
 @mixin sidebar-block {
   h3 {
     font-size: 1.5rem;
     margin: 0.5rem 0;
     padding-bottom: 1rem;
-    border-bottom: $space-xsmall #333 solid;
+    border-bottom: $space-xsmall $color-secondary-border solid;
   }
 
   ul {
@@ -16,7 +16,7 @@
 
     li {
       padding: 1.5rem 0;
-      border-bottom: 2px #222 solid;
+      border-bottom: 2px $color-secondary-border solid;
       &:last-child {
         border-bottom: none;
       }
@@ -56,4 +56,42 @@
   padding: 0 $space-xlarge;
   max-width: 1920px;
   margin: auto;
+}
+
+@mixin admin-list-item {
+  margin: $space 0;
+  padding: $space;
+  background-color: $color-secondary-bg;
+  border: 1px $color-secondary-border solid;
+  max-width: 100%;
+}
+
+@mixin sortable-list {
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  transform: all 0.3s;
+
+  &--dragging li * {
+    pointer-events: none;
+  }
+
+  li {
+    transition: all 0.3s;
+    cursor: move;
+    border: 0.25rem transparent solid;
+    border-radius: 1rem;
+
+    &.sortable-item--moving {
+      transform: scale(0.9);
+      opacity: 0.25;
+    }
+
+    &.sortable-item--over {
+      border: 0.25rem $color-secondary-border dashed;
+      opacity: 0.9;
+      box-shadow: 0 0 $space-large $color-box-glow;
+    }
+  }
 }

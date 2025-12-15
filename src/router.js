@@ -16,6 +16,7 @@ import Filters from "./views/Filters";
 import Filter from "./views/Filter";
 import Images from "./views/Images";
 import Banners from "./views/Banners";
+import Blocks from "./views/Blocks";
 
 Vue.use(Router);
 
@@ -67,7 +68,7 @@ export default new Router({
     },
     {
       path: "/admin/images",
-      name: "images",
+      name: "imageSizes",
       component: Images
     },
     {
@@ -104,6 +105,11 @@ export default new Router({
       path: "/admin/banners/:banner?",
       name: "banners",
       component: Banners
+    },
+    {
+      path: "/admin/blocks/:block?",
+      name: "blocks",
+      component: Blocks
     },
     {
       path: "/access_denied",

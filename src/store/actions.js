@@ -1,8 +1,10 @@
 import axios from "axios";
 import { uuid } from "@/util/uuid";
 import { arrayUnique, arrayHasObject } from "@/util/array";
-import strings from "@/data/strings.json";
-import { link } from "@/shared/linkHandlers";
+import { link, linksByEntity } from "@/shared/linkHandlers";
+import { hash } from "../util/cryptography";
+
+const promises = { getBlockById: {}, getContextLinks: {} };
 
 export default {
   initialize({ state, commit, getters }, force) {
@@ -29,6 +31,11 @@ export default {
     return fetch(process.env.VUE_APP_INIT, { headers: getters.headers })
       .then(response => response.json())
       .then(json => {
+        if (json.blocks.length) {
+          for (const block of json.blocks) {
+            commit("setBlock", { block });
+          }
+        }
         commit("setUser", { user: { ...json.user } });
         commit("setRoles", { roles: json.roles });
         commit("setLinks", { links: json.links });
@@ -90,6 +97,10 @@ export default {
           });
           commit("setEndOfEntries", { type, end: json.end });
           commit("setLoading", { loading: false });
+          const imageLink = linksByEntity("image", json.links);
+          if (imageLink) {
+            commit("setImageLink", { link: imageLink[0] });
+          }
           resolve();
         })
         .catch(e => reject(e));
@@ -109,10 +120,17 @@ export default {
       return Promise.resolve();
     }
     commit("setLoading", { loading: true });
-    const { entry } = await dispatch("apiRequest", link("GET", "entry", links));
+    const { entry, links: entryLinks } = await dispatch(
+      "apiRequest",
+      link("GET", "entry", links)
+    );
     commit("setEntryById", { id, entry });
     if (addToList) {
       dispatch("addEntryToList", { entry });
+    }
+    const imageLink = linksByEntity("image", entryLinks);
+    if (imageLink) {
+      commit("setImageLink", { link: imageLink[0] });
     }
     commit("setLoading", { loading: false });
   },
@@ -232,23 +250,18 @@ export default {
     commit("setLoading", { loading: false });
   },
 
-  async getDraft({ state, commit, getters }, { id, force }) {
+  async getDraft({ commit, getters, dispatch }, { id, force, links }) {
     if (getters.draftById(id) && !force) {
       return Promise.resolve();
     }
 
-    return new Promise((resolve, reject) => {
-      fetch(state.links.getDraft.href.replace("{id}", id), {
-        method: state.links.getDraft.method,
-        headers: getters.headers
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setDraftById", { id: id, draft: json });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    try {
+      const getLink = link("GET", "entry", links);
+      const { entry } = await dispatch("apiRequest", getLink);
+      commit("setDraftById", { id: id, draft: entry });
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   setNextEntriesBatch({ commit, state }, { type }) {
@@ -258,22 +271,23 @@ export default {
     });
   },
 
-  async getFilters({ commit, state }) {
+  async getFilters({ commit, state, dispatch }, { link }) {
     if (state.filters.length) {
-      return Promise.resolve();
+      return state.filters;
     }
 
-    return new Promise((resolve, reject) => {
-      fetch(state.links.getFilters.href, {
-        method: state.links.getFilters.method
-      })
-        .then(response => response.json())
-        .then(json => {
-          commit("setFilters", { filters: json });
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
+    if (typeof promises.getFilters === "undefined") {
+      promises.getFilters = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link)
+          .then(({ filters }) => {
+            commit("setFilters", { filters });
+            resolve(filters);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getFilters;
   },
 
   updateEntryId: ({ commit, getters }, { id, newId }) => {
@@ -325,160 +339,6 @@ export default {
       .then(json => {
         commit("setEntriesFound", { entriesFound: json });
       });
-  },
-
-  updateFilter: ({ state, commit, getters, dispatch }, payload) => {
-    return new Promise((resolve, reject) => {
-      fetch(state.links.updateFilter.href.replace("{filter}", payload.id), {
-        method: state.links.updateFilter.method,
-        headers: getters.headers,
-        body: JSON.stringify(payload)
-      })
-        .then(result => result.json())
-        .then(() => {
-          commit("setFilter", payload);
-          dispatch("addToast", strings.filterUpdated);
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
-  },
-
-  createFilter: (
-    { state, commit, getters, dispatch },
-    { newId, label, image }
-  ) => {
-    return new Promise((resolve, reject) => {
-      fetch(state.links.newFilter.href, {
-        method: state.links.newFilter.method,
-        headers: getters.headers,
-        body: JSON.stringify({ id: newId, label, image })
-      })
-        .then(result => result.json())
-        .then(() => {
-          commit("addFilter", { id: newId, label, image });
-          dispatch("addToast", strings.filterAdded);
-          resolve();
-        })
-        .catch(e => reject(e));
-    });
-  },
-
-  deleteFilter: ({ state, commit, getters, dispatch }, { id }) => {
-    return new Promise(resolve => {
-      fetch(state.links.deleteFilter.href.replace("{filter}", id), {
-        method: state.links.deleteFilter.method,
-        headers: getters.headers
-      })
-        .then(result => result.json())
-        .then(() => {
-          commit("deleteFilter", { id });
-          dispatch("addToast", strings.filterDeleted);
-          resolve();
-        });
-    });
-  },
-
-  setFilterOrder: (
-    { state, commit, getters, dispatch },
-    { orderedFilters }
-  ) => {
-    return new Promise(resolve => {
-      fetch(state.links.saveFilterOrder.href, {
-        method: state.links.saveFilterOrder.method,
-        headers: getters.headers,
-        body: JSON.stringify({ orderedFilters })
-      })
-        .then(result => result.json())
-        .then(() => {
-          commit("setFilterOrder", { orderedFilters });
-          dispatch("addToast", strings.filterOrderSaved);
-          resolve();
-        });
-    });
-  },
-
-  getFilterRules: ({ state, commit, getters }) => {
-    return new Promise(resolve => {
-      fetch(state.links.getFilterRules.href, {
-        method: state.links.getFilterRules.method,
-        headers: getters.headers
-      })
-        .then(result => result.json())
-        .then(({ rules }) => {
-          commit("setFilterRules", { rules });
-          resolve(rules);
-        });
-    });
-  },
-
-  addFilterRule: (
-    { state, getters, dispatch, commit },
-    { filterId, type, value, operator }
-  ) => {
-    return new Promise(resolve => {
-      fetch(state.links.addFilterRule.href.replace("{filterId}", filterId), {
-        method: state.links.addFilterRule.method,
-        headers: getters.headers,
-        body: JSON.stringify({ type, value, operator })
-      })
-        .then(result => result.json())
-        .then(json => {
-          dispatch("addToast", strings.filterRuleAdded);
-          commit("addFilterRule", {
-            filterId,
-            id: json.id,
-            type,
-            value,
-            operator
-          });
-          resolve();
-        });
-    });
-  },
-
-  deleteFilterRule: (
-    { state, getters, dispatch, commit },
-    { filterId, id }
-  ) => {
-    return new Promise(resolve => {
-      fetch(state.links.deleteFilterRule.href.replace("{filterId}", filterId), {
-        method: state.links.deleteFilterRule.method,
-        headers: getters.headers,
-        body: JSON.stringify({ id })
-      })
-        .then(result => result.json())
-        .then(() => {
-          dispatch("addToast", strings.filterRuleDeleted);
-          commit("deleteFilterRule", { id });
-          resolve();
-        });
-    });
-  },
-
-  updateFilterRule: (
-    { state, getters, dispatch, commit },
-    { filterId, id, type, value, operator }
-  ) => {
-    return new Promise(resolve => {
-      fetch(state.links.saveFilterRule.href.replace("{filterId}", filterId), {
-        method: state.links.saveFilterRule.method,
-        headers: getters.headers,
-        body: JSON.stringify({ id, type, value, operator })
-      })
-        .then(result => result.json())
-        .then(() => {
-          dispatch("addToast", strings.filterRuleAdded);
-          commit("updateFilterRule", {
-            filterId,
-            id,
-            type,
-            value,
-            operator
-          });
-          resolve();
-        });
-    });
   },
 
   getRoleRights: async ({ state, commit, dispatch }, { links }) => {
@@ -615,8 +475,9 @@ export default {
     commit("setContextInitialized", { status: false });
     commit("setContext", { context: [...state.context, context] });
 
+    let response;
     if (state.initialized && !arrayHasObject(state.contextHistory, context)) {
-      await dispatch("getContextLinks");
+      response = await dispatch("getContextLinks");
     } else {
       commit("setContextInitialized", { status: true });
     }
@@ -624,15 +485,39 @@ export default {
     commit("setContextHistory", {
       contextHistory: arrayUnique([...state.contextHistory, context])
     });
+
+    return response;
+  },
+
+  removeContext: async ({ state, commit }, context) => {
+    commit("setContext", {
+      context: [
+        ...state.context.filter(
+          contextRecord =>
+            JSON.stringify(contextRecord) !== JSON.stringify(context)
+        )
+      ]
+    });
   },
 
   getContextLinks: async ({ state, dispatch, commit }) => {
-    const { links } = await dispatch(
-      "apiRequest",
-      link("GET", "contextLinks", state.links)
-    );
-    commit("setLinks", { links: arrayUnique([...state.links, ...links]) });
-    commit("setContextInitialized", { status: true });
+    const digest = await hash(JSON.stringify(state.context));
+
+    if (typeof promises.getContextLinks[digest] === "undefined") {
+      promises.getContextLinks[digest] = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link("GET", "contextLinks", state.links))
+          .then(({ links }) => {
+            commit("setLinks", {
+              links: arrayUnique([...state.links, ...links])
+            });
+            commit("setContextInitialized", { status: true });
+            resolve(links);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getContextLinks[digest];
   },
 
   getSettings: async ({ commit, dispatch }, { links }) => {
@@ -650,5 +535,43 @@ export default {
     );
     commit("setBanners", { banners: response.banners });
     return response;
+  },
+
+  async getBlocks({ commit, state, dispatch }) {
+    if (state.blocks.length) {
+      return state.blocks;
+    }
+
+    if (typeof promises.getBlocks === "undefined") {
+      promises.getBlocks = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link("GET", "blocks", state.links))
+          .then(response => {
+            commit("setBlocks", { blocks: response.blocks });
+            resolve(response);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getBlocks;
+  },
+
+  async getBlock({ commit, state, dispatch }, { id, link }) {
+    if (state.blocksById[id]) {
+      return state.blocksById[id];
+    }
+
+    if (typeof promises.getBlockById[id] === "undefined") {
+      promises.getBlockById[id] = new Promise((resolve, reject) => {
+        dispatch("apiRequest", link)
+          .then(response => {
+            commit("setBlock", { block: response.block });
+            resolve(response);
+          })
+          .catch(error => reject(error));
+      });
+    }
+
+    return promises.getBlockById[id];
   }
 };

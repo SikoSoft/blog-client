@@ -5,7 +5,7 @@
         v-for="entry in entries"
         :key="entry.id"
         v-bind="entry"
-        :fullMode="settings.teaser_mode === 0"
+        :fullMode="parseInt(settings.teaser_mode) === 0"
         :ref="`entry${entry.id}`"
         @loaded="childLoaded"
         @edited="childEdited"

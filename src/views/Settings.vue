@@ -1,7 +1,7 @@
 <template>
   <div class="settings">
     <admin-settings
-      v-if="contextIsReady(context)"
+      v-if="ready && settingsConfig.length"
       v-bind="settings"
       :settingsConfig="settingsConfig"
     />
@@ -10,7 +10,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
-import AdminSettings from "@/components/Admin/AdminSettings";
+import AdminSettings from "@/components/Admin/Settings/Settings";
 import linkHandlers from "@/shared/linkHandlers";
 
 export default {
@@ -34,18 +34,25 @@ export default {
   },
 
   async mounted() {
-    //await this.addContext();
     this.update();
   },
 
-  async unmounted() {
+  async updated() {
+    this.update();
+  },
+
+  beforeDestroy() {
     this.removeContext(this.context);
   },
 
   computed: {
     ...mapState(["initialized", "user", "settings", "settingsConfig"]),
 
-    ...mapGetters(["contextIsReady"])
+    ...mapGetters(["contextIsReady"]),
+
+    ready() {
+      return this.contextIsReady(this.context);
+    }
   },
 
   methods: {
@@ -56,6 +63,7 @@ export default {
       "setBreadcrumbs",
       "setTitle",
       "addContext",
+      "removeContext",
       "getSettings",
       "apiRequest"
     ]),
@@ -63,8 +71,8 @@ export default {
     ...mapMutations(["setSettingsConfig"]),
 
     async update() {
-      if (this.firstUpdate) {
-        await this.initialize();
+      await this.initialize();
+      if (this.ready && !this.settingsConfig.length) {
         const { settings } = await this.apiRequest(
           this.link("GET", "settings")
         );
@@ -74,7 +82,6 @@ export default {
           { href: "/admin/settings", label: this.$strings.settings }
         ]);
         this.setTitle(this.$strings.settings);
-        this.firstUpdate = false;
       }
     }
   },

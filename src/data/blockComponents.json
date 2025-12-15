@@ -1,0 +1,25 @@
+[
+  {
+    "id": "GithubFeed",
+    "description": "Activity feed from a Github user account",
+    "props": [
+      {
+        "id": "user",
+        "label": "User account",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "eventCount",
+        "label": "Number of events",
+        "type": "number",
+        "default": 10
+      }
+    ]
+  },
+  {
+    "id": "AtAGlance",
+    "description": "Content sorted by with custom filters",
+    "props": []
+  }
+]

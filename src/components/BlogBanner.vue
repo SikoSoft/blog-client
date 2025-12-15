@@ -17,12 +17,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   name: "blog-banner",
 
   props: {
+    heading: String,
     caption: String,
     image: String
   },
@@ -35,7 +34,9 @@ export default {
   },
 
   computed: {
-    ...mapState(["title"])
+    title() {
+      return this.heading || this.$store.state.title;
+    }
   },
 
   mounted() {
@@ -52,18 +53,23 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/variables.scss";
-@import "@/styles/mixins";
+@import "@theme/variables";
+@import "@theme/mixins";
 
 .blog-banner {
   @include container-width;
   padding: 0;
   position: relative;
   height: 400px;
-  background: radial-gradient(circle at center, #222 0, #000);
+  background: radial-gradient(
+    circle at center,
+    $color-banner-bg-primary 0,
+    $color-banner-bg-secondary
+  );
+  color: $color-banner-text;
 
   &__image {
-    opacity: 0.2;
+    opacity: 0.7;
     height: 100%;
     width: 100%;
     background-position: right top;
@@ -81,12 +87,12 @@ export default {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 0 10px #000;
+    text-shadow: 0 0 10px $color-text-shadow;
   }
 
   &__heading {
-    font-size: 6rem;
-    margin-bottom: 0;
+    font-size: clamp(64px, 8vw, 172px);
+    margin: 0;
   }
 
   &__caption {
