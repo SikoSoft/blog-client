@@ -19,6 +19,7 @@
   "token": "Token",
   "activate": "Activate",
   "authenticator": "Authenticator",
+  "login": "Login",
   "leaveAComment": "Leave a comment",
   "name": "Name",
   "message": "Message",
