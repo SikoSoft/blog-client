@@ -31,9 +31,9 @@ export default {
     },
 
     userLoggedIn(e) {
-      console.log("User logged in", e);
       const user = e.detail;
       sessionStorage.setItem("accessToken", user.authToken);
+      this.$router.push({ path: "/" });
     }
   }
 };
