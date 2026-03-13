@@ -20,6 +20,8 @@
   "activate": "Activate",
   "authenticator": "Authenticator",
   "login": "Login",
+  "loginSuccess": "Login successful",
+  "loginFailed": "Login failed",
   "leaveAComment": "Leave a comment",
   "name": "Name",
   "message": "Message",

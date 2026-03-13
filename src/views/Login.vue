@@ -22,7 +22,13 @@ export default {
   methods: {
     ...linkHandlers,
 
-    ...mapActions(["initialize", "useToken", "setBreadcrumbs", "setTitle"]),
+    ...mapActions([
+      "initialize",
+      "useToken",
+      "setBreadcrumbs",
+      "setTitle",
+      "addToast"
+    ]),
 
     async update() {
       await this.initialize();
@@ -32,9 +38,15 @@ export default {
 
     userLoggedIn(e) {
       const user = e.detail;
-      localStorage.setItem("sessToken", user.authToken);
-      this.initialize();
-      this.$router.push({ path: "/" });
+      if (user.roles.includes("blog-admin")) {
+        localStorage.setItem("sessToken", user.authToken);
+        this.initialize();
+        this.$router.push({ path: "/" });
+        this.addToast(this.$strings.loginSuccess);
+        return;
+      }
+
+      this.addToast(this.$strings.loginFailed);
     }
   }
 };
