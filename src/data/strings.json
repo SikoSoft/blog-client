@@ -19,6 +19,7 @@
   "token": "Token",
   "activate": "Activate",
   "authenticator": "Authenticator",
+  "logout": "Logout",
   "login": "Login",
   "loginSuccess": "Login successful",
   "loginFailed": "Login failed",

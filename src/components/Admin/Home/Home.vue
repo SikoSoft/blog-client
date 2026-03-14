@@ -7,6 +7,10 @@
         }}</router-link>
       </li>
     </ul>
+
+    <div class="logout">
+      <button @click="logout">{{ $strings.logout }}</button>
+    </div>
   </div>
 </template>
 
@@ -47,6 +51,13 @@ export default {
       if (!this.tools) {
         this.$router.push({ path: "/access_denied" });
       }
+    }
+  },
+
+  methods: {
+    logout() {
+      //localStorage.removeItem("sessToken");
+      this.$router.push({ path: "/logout" });
     }
   }
 };
