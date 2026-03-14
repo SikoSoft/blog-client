@@ -40,7 +40,7 @@ export default {
       const user = e.detail;
       if (user.roles.includes("blog-admin")) {
         localStorage.setItem("sessToken", user.authToken);
-        this.initialize();
+        this.initialize(true);
         this.$router.push({ path: "/" });
         this.addToast(this.$strings.loginSuccess);
         return;
