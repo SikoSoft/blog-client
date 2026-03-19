@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "admin-home",
@@ -55,8 +55,13 @@ export default {
   },
 
   methods: {
+    ...mapActions(["initialize"]),
+
     logout() {
       //localStorage.removeItem("sessToken");
+      localStorage.removeItem("sessToken");
+      localStorage.removeItem("authToken");
+      this.initialize(true);
       this.$router.push({ path: "/logout" });
     }
   }
