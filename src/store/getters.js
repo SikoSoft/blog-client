@@ -1,11 +1,15 @@
 import { arrayHasObject } from "@/util/array";
 
 export default {
-  headers: state => ({
-    "x-functions-key": state.authToken,
-    "sess-token": state.sessToken,
-    context: JSON.stringify(state.context)
-  }),
+  headers: state => {
+    const accessToken = sessionStorage.getItem("accessToken");
+    return {
+      "x-functions-key": state.authToken,
+      "sess-token": state.sessToken,
+      accessToken,
+      context: JSON.stringify(state.context)
+    };
+  },
 
   ready: state => state.initialized && state.contextInitialized,
 

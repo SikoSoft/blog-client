@@ -5,6 +5,7 @@ import Entry from "./views/Entry";
 import Tags from "./views/Tags";
 import Tag from "./views/Tag";
 import Token from "./views/Token";
+import Login from "./views/Login";
 import Settings from "./views/Settings";
 import Roles from "./views/Roles";
 import Rights from "./views/Rights";
@@ -52,6 +53,10 @@ export default new Router({
       path: "/token/:token?",
       name: "token",
       component: Token
+    },
+    {
+      path: "/login",
+      component: Login
     },
     {
       path: "/logout",

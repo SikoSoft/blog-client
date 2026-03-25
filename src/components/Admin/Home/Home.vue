@@ -7,11 +7,15 @@
         }}</router-link>
       </li>
     </ul>
+
+    <div class="logout">
+      <button @click="logout">{{ $strings.logout }}</button>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "admin-home",
@@ -47,6 +51,18 @@ export default {
       if (!this.tools) {
         this.$router.push({ path: "/access_denied" });
       }
+    }
+  },
+
+  methods: {
+    ...mapActions(["initialize"]),
+
+    logout() {
+      //localStorage.removeItem("sessToken");
+      localStorage.removeItem("sessToken");
+      localStorage.removeItem("authToken");
+      this.initialize(true);
+      this.$router.push({ path: "/logout" });
     }
   }
 };

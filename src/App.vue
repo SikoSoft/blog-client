@@ -143,6 +143,16 @@ export default {
       return this.$route.name === "draft" ? "entry" : this.$route.name;
     },
 
+    routeEntity() {
+      if (this.$route.name === "draft") {
+        return "entry";
+      }
+      if (this.$route.name === "entries-filter") {
+        return "filter";
+      }
+      return this.$route.name;
+    },
+
     showAdminPane() {
       return this.initialized && this.links && this.link("POST", "entry");
     },
@@ -156,7 +166,7 @@ export default {
     },
 
     routeLinks() {
-      return this.linksByEntity(this.route);
+      return this.linksByEntity(this.routeEntity);
     }
   },
 
