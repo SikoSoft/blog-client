@@ -78,6 +78,13 @@ export default {
   },
 
   watch: {
+    filterId(newId) {
+      this.removeContext(this.context);
+      this.context = { id: "view", props: ["filter", newId] };
+      this.firstUpdate = true;
+      this.addContext(this.context).then(() => this.update());
+    },
+
     ready(value) {
       if (value && this.firstUpdate && this.links.length) {
         this.update();
