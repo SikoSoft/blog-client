@@ -1,6 +1,6 @@
 <template>
   <aside class="blog-sidebar" v-if="show">
-    <blog-block-injector :id="settings.sidebar_block" />
+    <blog-block-injector :id="parseInt(settings.sidebar_block)" />
   </aside>
 </template>
 
